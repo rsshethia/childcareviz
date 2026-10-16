@@ -1,24 +1,37 @@
+# Render Blueprint — ChildCareViz.
+# Today: static dashboard only (matches this repo: dashboard/*.html + data).
+# Later: uncomment the api + cron sections when the Next.js API / scheduled
+# re-crawl land. Secrets (DATABASE_URL etc.) are NOT needed for the static site.
 services:
   - type: web
-    name: childcareviz-web
-    runtime: node
-    plan: starter
-    buildCommand: npm ci && npm run build
-    startCommand: npm start
-    envVars:
-      - key: DATABASE_URL
-        sync: false
-      - key: MAPBOX_TOKEN
-        sync: false
-      - key: TYPESAFE_API_KEY
-        sync: false
-  - type: worker
-    name: childcareviz-scraper
-    runtime: node
-    plan: starter
-    buildCommand: npm ci
-    startCommand: npm run scrape:fees
-    envVars:
-      - key: DATABASE_URL
-        sync: false
-# Cron: run scraper weekly (Render cron jobs are configured in dashboard; keep ISR 5min in mind — no need for higher frequency)
+    name: childcareviz-dashboard
+    env: static
+    buildCommand: echo "static dashboard, nothing to build"
+    staticPublishPath: ./dashboard
+    # Auto-deploy on every push to main (re-export geo.json/data.json to refresh).
+
+  # --- future: API (uncomment when src/api exists) ---
+  # - type: web
+  #   name: childcareviz-api
+  #   runtime: node
+  #   plan: starter
+  #   buildCommand: npm ci && npm run build
+  #   startCommand: npm start
+  #   envVars:
+  #     - key: DATABASE_URL
+  #       sync: false
+  #     - key: MAPBOX_TOKEN
+  #       sync: false
+  #     - key: TYPESAFE_API_KEY
+  #       sync: false
+
+  # --- future: weekly re-crawl (prefer type: cron in dashboard UI) ---
+  # - type: worker
+  #   name: childcareviz-scraper
+  #   runtime: node
+  #   plan: starter
+  #   buildCommand: npm ci
+  #   startCommand: npm run scrape:fees
+  #   envVars:
+  #     - key: DATABASE_URL
+  #       sync: false
