@@ -88,7 +88,7 @@ npm run db:migrate       # schema + idempotent ALTERs
 npx tsx scripts/db-load-full.mts
 ```
 
-Benchmarks the load must hit: **10,069 providers / 18,183 services / ~77k fee rows / 99.9% SE-join**. Tables: `providers`, `services`, `service_fees_history`, `crawl_log` (+ PostGIS `spatial_ref_sys`).
+Benchmarks the load must hit: **10,070 providers / 18,183 services / 76,083 fee rows** (from 77,354 crawl rows: 1,199 SE-less occasional-care + 72 non-NQF rows excluded) **/ 99.9% SE-join**. Tables: `providers`, `services`, `service_fees_history`, `crawl_log` (+ PostGIS `spatial_ref_sys`).
 
 Wiring: `src/db/pool.ts` reads `DATABASE_URL` or dashboard-style `PGHOST/PGDATABASE/PGUSER/PGPASSWORD` from `.env` (gitignored). `pg` driver suits the current Node batch architecture and the future API alike.
 
