@@ -379,6 +379,17 @@ function initMap() {
   const box = document.getElementById('tok');
   const token = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
   if (token) box.value = token;
+  let map = null, fullFc = null, loaded = false;
+  function checkedTypes() {
+    return [...document.querySelectorAll('[data-t]:checked')].map(x => x.dataset.t);
+  }
+  function applyTypeFilter() {
+    if (!map || !loaded || !fullFc) return;
+    const on = checkedTypes();
+    fullFc.features.forEach(f => { f.properties._show = on.includes(f.properties.t); });
+    map.getSource('svc').setData({ type: 'FeatureCollection', features: fullFc.features.filter(f => f.properties._show) });
+  }
+  document.querySelectorAll('[data-t]').forEach(cb => cb.addEventListener('change', applyTypeFilter));
   function draw() {
     const t = box.value.trim();
     if (!t || typeof mapboxgl === 'undefined') {
@@ -389,10 +400,12 @@ function initMap() {
     mapboxgl.accessToken = t;
     fetch('geo.json').then(r => r.json()).then(g => {
       document.getElementById('mapstat').textContent = g.count.toLocaleString() + ' geocoded services · generated ' + g.generated;
-      const fc = { type: 'FeatureCollection', features: g.points.map(p => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lo, p.la] }, properties: { t: p.t, d: `<b>${p.n}</b><br>${p.s}, ${p.st} · ${p.t}<br>${p.f ? '$' + p.f + '/day avg' : 'no fee reported'}${p.r ? ' · ' + p.r : ''}` } })) };
-      const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/light-v11', center: [134, -28], zoom: 3.5 });
+      fullFc = { type: 'FeatureCollection', features: g.points.map(p => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lo, p.la] }, properties: { t: p.t, d: `<b>${p.n}</b><br>${p.s}, ${p.st} · ${p.t}<br>${p.f ? '$' + p.f + '/day avg' : 'no fee reported'}${p.r ? ' · ' + p.r : ''}` } })) };
+      if (map) { try { map.remove(); } catch (e) {} document.getElementById('map').innerHTML = ''; }
+      loaded = false;
+      map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/light-v11', center: [134, -28], zoom: 3.5 });
       map.on('load', () => {
-        map.addSource('svc', { type: 'geojson', data: fc, cluster: true, clusterMaxZoom: 12, clusterRadius: 50 });
+        map.addSource('svc', { type: 'geojson', data: fullFc, cluster: true, clusterMaxZoom: 12, clusterRadius: 50 });
         map.addLayer({ id: 'cl', type: 'circle', source: 'svc', filter: ['has', 'point_count'], paint: { 'circle-color': '#0284c7', 'circle-radius': ['step', ['get', 'point_count'], 16, 100, 22, 750, 30], 'circle-opacity': 0.75 } });
         map.addLayer({ id: 'clc', type: 'symbol', source: 'svc', filter: ['has', 'point_count'], layout: { 'text-field': '{point_count_abbreviated}', 'text-size': 12 }, paint: { 'text-color': '#fff' } });
         map.addLayer({ id: 'pt', type: 'circle', source: 'svc', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': ['match', ['get', 't'], 'for-profit', '#2563eb', 'nfp-community', '#9333ea', 'nfp-other', '#a855f7', 'govt-local', '#16a34a', '#94a3b8'], 'circle-radius': 5, 'circle-opacity': 0.8, 'circle-stroke-width': 1, 'circle-stroke-color': '#fff' } });
@@ -400,16 +413,14 @@ function initMap() {
           const c = e.features[0].geometry.coordinates.slice();
           new mapboxgl.Popup().setLngLat(c).setHTML(e.features[0].properties.d).addTo(map);
         });
-        document.querySelectorAll('[data-t]').forEach(cb => cb.addEventListener('change', () => {
-          const on = [...document.querySelectorAll('[data-t]:checked')].map(x => x.dataset.t);
-          map.setFilter('pt', ['all', ['!', ['has', 'point_count']], ['in', ['get', 't'], ['literal', on]]]);
-        }));
+        loaded = true;
+        applyTypeFilter();
       });
       map.addControl(new mapboxgl.NavigationControl());
     });
   }
-  document.getElementById('drawBtn').addEventListener('click', () => { document.getElementById('map').innerHTML = ''; draw(); });
-  box.addEventListener('change', () => { document.getElementById('map').innerHTML = ''; draw(); });
+  document.getElementById('drawBtn').addEventListener('click', draw);
+  box.addEventListener('change', draw);
   draw();
 }
 </script>
