@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ChildCareViz — what childcare costs across Australia</title>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.js"></script>
 <style>
   :root { --ink:#1e293b; --mut:#64748b; --acc:#0ea5e9; --bg:#f8fafc; }
   body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink); background: var(--bg); margin: 0; }
@@ -23,6 +25,10 @@
   .bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--acc), #6366f1); margin-top: 4px; }
   .note { color: var(--mut); font-size: .82rem; }
   section { margin: 22px 0; }
+  #map { width: 100%; height: 480px; border-radius: 10px; border: 1px solid #e2e8f0; }
+  .maprow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 8px 0; font-size: .85rem; }
+  .maprow label { display: flex; gap: 4px; align-items: center; }
+  #tok { width: 260px; padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
 </style>
 </head>
 <body>
@@ -36,6 +42,20 @@
   </div>
 </header>
 <main>
+  <section>
+    <h2>Map — every service, coloured by who runs it</h2>
+    <div class="maprow">
+      <span id="mapstat" class="note">loading points…</span>
+      <label><input type="checkbox" data-t="for-profit" checked> For-profit</label>
+      <label><input type="checkbox" data-t="nfp-community" checked> NFP community</label>
+      <label><input type="checkbox" data-t="nfp-other" checked> NFP other</label>
+      <label><input type="checkbox" data-t="govt-local" checked> Council-run</label>
+      <label><input type="checkbox" data-t="govt-state" checked> State govt</label>
+      <input id="tok" placeholder="paste Mapbox public token (?token=… works too)">
+    </div>
+    <div id="map"></div>
+    <p class="note">Token stays in your browser (localStorage) — never committed. Dots: green council-run, blue for-profit, purple NFP, grey state/unknown. Click a dot for name, fee, rating.</p>
+  </section>
   <section>
     <h2>Who runs what — services, places, pricing</h2>
     <table><thead><tr><th>Provider type</th><th>Services</th><th>Approved places</th><th>Long day care</th><th>Preschool</th><th>OSHC</th><th>Family day care</th></tr></thead>
@@ -106,7 +126,46 @@ fetch('data.json').then(r => r.json()).then(d => {
   document.getElementById('qrows').innerHTML = Object.entries(d.quality_vs_fee)
     .sort((a, b) => b[1].n - a[1].n)
     .map(([k, v]) => `<tr><td>${k}</td><td>${v.n.toLocaleString()}</td><td>${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
+  initMap();
 });
+
+const TYPE_COLOR = { 'for-profit': '#2563eb', 'nfp-community': '#9333ea', 'nfp-other': '#a855f7', 'govt-local': '#16a34a', 'govt-state': '#64748b', 'unknown': '#94a3b8' };
+function initMap() {
+  const box = document.getElementById('tok');
+  const token = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
+  if (token) box.value = token;
+  function draw() {
+    const t = box.value.trim();
+    if (!t || typeof mapboxgl === 'undefined') {
+      document.getElementById('mapstat').textContent = t ? 'map library failed to load (offline?)' : 'paste a Mapbox public token to draw the map';
+      return;
+    }
+    localStorage.setItem('mapbox', t);
+    mapboxgl.accessToken = t;
+    fetch('geo.json').then(r => r.json()).then(g => {
+      document.getElementById('mapstat').textContent = g.count.toLocaleString() + ' geocoded services (generated ' + g.generated + ')';
+      const fc = { type: 'FeatureCollection', features: g.points.map(p => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lo, p.la] }, properties: { t: p.t, d: `<b>${p.n}</b><br>${p.s}, ${p.st} · ${p.t}<br>${p.f ? '$' + p.f + '/day avg' : 'no fee reported'}${p.r ? ' · ' + p.r : ''}` } })) };
+      const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/light-v11', center: [134, -28], zoom: 3.5 });
+      map.on('load', () => {
+        map.addSource('svc', { type: 'geojson', data: fc, cluster: true, clusterMaxZoom: 12, clusterRadius: 50 });
+        map.addLayer({ id: 'cl', type: 'circle', source: 'svc', filter: ['has', 'point_count'], paint: { 'circle-color': '#0ea5e9', 'circle-radius': ['step', ['get', 'point_count'], 16, 100, 22, 750, 30], 'circle-opacity': 0.75 } });
+        map.addLayer({ id: 'clc', type: 'symbol', source: 'svc', filter: ['has', 'point_count'], layout: { 'text-field': '{point_count_abbreviated}', 'text-size': 12 }, paint: { 'text-color': '#fff' } });
+        map.addLayer({ id: 'pt', type: 'circle', source: 'svc', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': ['match', ['get', 't'], 'for-profit', '#2563eb', 'nfp-community', '#9333ea', 'nfp-other', '#a855f7', 'govt-local', '#16a34a', '#94a3b8'], 'circle-radius': 5, 'circle-opacity': 0.8, 'circle-stroke-width': 1, 'circle-stroke-color': '#fff' } });
+        map.on('click', 'pt', (e) => {
+          const c = e.features[0].geometry.coordinates.slice();
+          new mapboxgl.Popup().setLngLat(c).setHTML(e.features[0].properties.d).addTo(map);
+        });
+        document.querySelectorAll('[data-t]').forEach(cb => cb.addEventListener('change', () => {
+          const on = [...document.querySelectorAll('[data-t]:checked')].map(x => x.dataset.t);
+          map.setFilter('pt', ['all', ['!', ['has', 'point_count']], ['in', ['get', 't'], ['literal', on]]]);
+        }));
+      });
+      map.addControl(new mapboxgl.NavigationControl());
+    });
+  }
+  box.addEventListener('change', draw);
+  draw();
+}
 </script>
 </body>
 </html>
