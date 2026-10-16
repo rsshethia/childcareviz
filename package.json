@@ -8,7 +8,9 @@
     "scrape:fees": "tsx src/scraper/run.ts",
     "scrape:fees:sample": "tsx src/scraper/run.ts --sample 5",
     "etl:build": "tsx src/etl/build.ts",
-    "db:migrate": "psql $DATABASE_URL -f db/schema.sql",
+    "db:migrate": "tsx scripts/db-migrate.mts",
+    "db:probe": "tsx scripts/db-probe.mts",
+    "db:load-sample": "tsx scripts/db-load-sample.mts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
