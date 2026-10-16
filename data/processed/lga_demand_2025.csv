@@ -1,0 +1,549 @@
+lga_code,lga_name,state,pop_0_4,pop_total
+10050,"Albury","New South Wales",3701,59538
+10180,"Armidale","New South Wales",1631,29652
+10250,"Ballina","New South Wales",2353,48603
+10300,"Balranald","New South Wales",141,2244
+10470,"Bathurst","New South Wales",2637,45359
+10500,"Bayside (NSW)","New South Wales",9898,187770
+10550,"Bega Valley","New South Wales",1629,36921
+10600,"Bellingen","New South Wales",546,13348
+10650,"Berrigan","New South Wales",403,8773
+10750,"Blacktown","New South Wales",30803,449385
+10800,"Bland","New South Wales",398,5455
+10850,"Blayney","New South Wales",532,7831
+10900,"Blue Mountains","New South Wales",3603,79236
+10950,"Bogan","New South Wales",205,2373
+11150,"Bourke","New South Wales",202,2310
+11200,"Brewarrina","New South Wales",81,1396
+11250,"Broken Hill","New South Wales",1044,17515
+11300,"Burwood","New South Wales",1452,43927
+11350,"Byron","New South Wales",1857,38784
+11400,"Cabonne","New South Wales",765,13915
+11450,"Camden","New South Wales",12380,146483
+11500,"Campbelltown (NSW)","New South Wales",13535,191285
+11520,"Canada Bay","New South Wales",4394,93006
+11570,"Canterbury-Bankstown","New South Wales",24115,389687
+11600,"Carrathool","New South Wales",198,2803
+11650,"Central Coast (NSW)","New South Wales",20229,357816
+11700,"Central Darling","New South Wales",97,1773
+11720,"Cessnock","New South Wales",4913,71443
+11730,"Clarence Valley","New South Wales",2744,56874
+11750,"Cobar","New South Wales",325,4019
+11800,"Coffs Harbour","New South Wales",4394,82109
+12000,"Coolamon","New South Wales",315,4742
+12150,"Coonamble","New South Wales",365,3889
+12160,"Cootamundra-Gundagai","New South Wales",573,11429
+12350,"Cowra","New South Wales",692,12721
+12380,"Cumberland","New South Wales",16932,256906
+12390,"Dubbo","New South Wales",4056,57384
+12700,"Dungog","New South Wales",456,10102
+12730,"Edward River","New South Wales",525,8501
+12750,"Eurobodalla","New South Wales",1739,41309
+12850,"Fairfield","New South Wales",10338,213677
+12870,"Federation","New South Wales",658,13247
+12900,"Forbes","New South Wales",592,9301
+12930,"Georges River","New South Wales",7480,163919
+12950,"Gilgandra","New South Wales",317,4304
+13010,"Glen Innes Severn","New South Wales",427,9069
+13310,"Goulburn Mulwaree","New South Wales",1942,33746
+13340,"Greater Hume","New South Wales",652,11742
+13450,"Griffith","New South Wales",1970,27458
+13550,"Gunnedah","New South Wales",969,13502
+13660,"Gwydir","New South Wales",267,4968
+13800,"Hawkesbury","New South Wales",4386,69299
+13850,"Hay","New South Wales",191,2899
+13910,"Hilltops","New South Wales",1142,19347
+14000,"Hornsby","New South Wales",6538,155484
+14100,"Hunters Hill","New South Wales",528,13983
+14170,"Inner West","New South Wales",8981,193125
+14220,"Inverell","New South Wales",1115,18152
+14300,"Junee","New South Wales",310,6403
+14350,"Kempsey","New South Wales",1776,31950
+14400,"Kiama","New South Wales",942,23139
+14500,"Ku-ring-gai","New South Wales",4203,128542
+14550,"Kyogle","New South Wales",452,9707
+14600,"Lachlan","New South Wales",450,6118
+14650,"Lake Macquarie","New South Wales",12435,224540
+14700,"Lane Cove","New South Wales",2348,43094
+14750,"Leeton","New South Wales",680,11475
+14850,"Lismore","New South Wales",2340,43642
+14870,"Lithgow","New South Wales",987,20693
+14900,"Liverpool","New South Wales",17378,261231
+14920,"Liverpool Plains","New South Wales",418,7671
+14950,"Lockhart","New South Wales",182,3509
+15050,"Maitland","New South Wales",6934,100439
+15240,"Mid-Coast","New South Wales",4259,99448
+15270,"Mid-Western","New South Wales",1680,26472
+15300,"Moree Plains","New South Wales",962,12845
+15350,"Mosman","New South Wales",1131,29374
+15520,"Murray River","New South Wales",718,14030
+15560,"Murrumbidgee","New South Wales",244,3695
+15650,"Muswellbrook","New South Wales",1133,16859
+15700,"Nambucca Valley","New South Wales",1045,21237
+15750,"Narrabri","New South Wales",856,12797
+15800,"Narrandera","New South Wales",328,5761
+15850,"Narromine","New South Wales",456,6420
+15900,"Newcastle","New South Wales",9540,178935
+15950,"North Sydney","New South Wales",3398,73705
+15990,"Northern Beaches","New South Wales",13429,272656
+16100,"Oberon","New South Wales",283,5595
+16150,"Orange","New South Wales",3071,44990
+16200,"Parkes","New South Wales",897,14175
+16260,"Parramatta","New South Wales",15002,279014
+16350,"Penrith","New South Wales",15709,231701
+16380,"Port Macquarie-Hastings","New South Wales",4220,92432
+16400,"Port Stephens","New South Wales",3824,80070
+16490,"Queanbeyan-Palerang","New South Wales",4623,67633
+16550,"Randwick","New South Wales",6754,146484
+16610,"Richmond Valley","New South Wales",1350,24044
+16700,"Ryde","New South Wales",6689,141693
+16900,"Shellharbour","New South Wales",5342,83228
+16950,"Shoalhaven","New South Wales",5673,111755
+17000,"Singleton","New South Wales",1624,25841
+17040,"Snowy Monaro","New South Wales",1023,22396
+17080,"Snowy Valleys","New South Wales",732,15058
+17100,"Strathfield","New South Wales",2282,49203
+17150,"Sutherland","New South Wales",13424,241327
+17200,"Sydney","New South Wales",7569,241797
+17310,"Tamworth","New South Wales",4164,66403
+17350,"Temora","New South Wales",363,6050
+17400,"Tenterfield","New South Wales",362,7188
+17420,"The Hills","New South Wales",11373,222675
+17550,"Tweed","New South Wales",5184,101044
+17620,"Upper Hunter","New South Wales",797,14425
+17640,"Upper Lachlan","New South Wales",447,9005
+17650,"Uralla","New South Wales",345,6179
+17750,"Wagga Wagga","New South Wales",4880,69108
+17850,"Walcha","New South Wales",159,2989
+17900,"Walgett","New South Wales",429,5437
+17950,"Warren","New South Wales",187,2606
+18020,"Warrumbungle","New South Wales",467,9246
+18050,"Waverley","New South Wales",3553,73345
+18100,"Weddin","New South Wales",140,3558
+18200,"Wentworth","New South Wales",530,7982
+18250,"Willoughby","New South Wales",3228,80520
+18350,"Wingecarribee","New South Wales",2553,53840
+18400,"Wollondilly","New South Wales",4567,62080
+18450,"Wollongong","New South Wales",12219,224327
+18500,"Woollahra","New South Wales",2229,55218
+18710,"Yass Valley","New South Wales",914,17663
+19399,"Unincorporated NSW","New South Wales",60,975
+20110,"Alpine","Victoria",578,13236
+20260,"Ararat","Victoria",531,11732
+20570,"Ballarat","Victoria",7139,122661
+20660,"Banyule","Victoria",7163,132770
+20740,"Bass Coast","Victoria",1937,44377
+20830,"Baw Baw","Victoria",3935,62784
+20910,"Bayside (Vic.)","Victoria",4235,107164
+21010,"Benalla","Victoria",653,14581
+21110,"Boroondara","Victoria",6351,178601
+21180,"Brimbank","Victoria",10811,198181
+21270,"Buloke","Victoria",287,5887
+21370,"Campaspe","Victoria",1971,37954
+21450,"Cardinia","Victoria",9979,133472
+21610,"Casey","Victoria",29805,414929
+21670,"Central Goldfields","Victoria",540,13753
+21750,"Colac Otway","Victoria",1166,22209
+21830,"Corangamite","Victoria",765,15712
+21890,"Darebin","Victoria",8078,162496
+22110,"East Gippsland","Victoria",2231,49669
+22170,"Frankston","Victoria",9273,145369
+22250,"Gannawarra","Victoria",512,10311
+22310,"Glen Eira","Victoria",7825,163025
+22410,"Glenelg","Victoria",932,19908
+22490,"Golden Plains","Victoria",1577,26620
+22620,"Greater Bendigo","Victoria",7394,126568
+22670,"Greater Dandenong","Victoria",9899,168684
+22750,"Greater Geelong","Victoria",17940,295052
+22830,"Greater Shepparton","Victoria",4421,69865
+22910,"Hepburn","Victoria",633,17011
+22980,"Hindmarsh","Victoria",262,5447
+23110,"Hobsons Bay","Victoria",5769,97031
+23190,"Horsham","Victoria",1170,20252
+23270,"Hume","Victoria",20987,278885
+23350,"Indigo","Victoria",925,17758
+23430,"Kingston (Vic.)","Victoria",8737,168061
+23670,"Knox","Victoria",7976,163820
+23810,"Latrobe (Vic.)","Victoria",4538,79112
+23940,"Loddon","Victoria",331,7718
+24130,"Macedon Ranges","Victoria",2937,54464
+24210,"Manningham","Victoria",5369,132912
+24250,"Mansfield","Victoria",416,10979
+24330,"Maribyrnong","Victoria",5004,94672
+24410,"Maroondah","Victoria",6702,120247
+24600,"Melbourne","Victoria",4234,194481
+24650,"Melton","Victoria",19226,231567
+24700,"Merri-bek","Victoria",10412,189108
+24780,"Mildura","Victoria",3419,57309
+24850,"Mitchell","Victoria",4360,58459
+24900,"Moira","Victoria",1572,30866
+24970,"Monash","Victoria",8196,211833
+25060,"Moonee Valley","Victoria",6109,130501
+25150,"Moorabool","Victoria",2647,40472
+25340,"Mornington Peninsula","Victoria",7601,172217
+25430,"Mount Alexander","Victoria",836,20939
+25490,"Moyne","Victoria",1046,17760
+25620,"Murrindindi","Victoria",678,15648
+25710,"Nillumbik","Victoria",3117,63797
+25810,"Northern Grampians","Victoria",610,11804
+25900,"Port Phillip","Victoria",4202,114434
+25990,"Pyrenees","Victoria",304,7957
+26080,"Queenscliffe","Victoria",96,3317
+26170,"South Gippsland","Victoria",1481,31109
+26260,"Southern Grampians","Victoria",831,16483
+26350,"Stonnington","Victoria",3933,114789
+26430,"Strathbogie","Victoria",491,11839
+26490,"Surf Coast","Victoria",2227,40265
+26610,"Swan Hill","Victoria",1467,20962
+26670,"Towong","Victoria",289,6158
+26700,"Wangaratta","Victoria",1532,30089
+26730,"Warrnambool","Victoria",1959,36255
+26810,"Wellington","Victoria",2447,46551
+26890,"West Wimmera","Victoria",230,3915
+26980,"Whitehorse","Victoria",7367,185256
+27070,"Whittlesea","Victoria",17315,259759
+27170,"Wodonga","Victoria",2852,44717
+27260,"Wyndham","Victoria",28555,347830
+27350,"Yarra","Victoria",3986,101356
+27450,"Yarra Ranges","Victoria",9699,160906
+27630,"Yarriambiack","Victoria",286,6295
+29399,"Unincorporated Vic","Victoria",8,917
+30250,"Aurukun","Queensland",134,1165
+30300,"Balonne","Queensland",314,4350
+30370,"Banana","Queensland",975,15144
+30410,"Barcaldine","Queensland",208,2937
+30450,"Barcoo","Queensland",21,321
+30760,"Blackall Tambo","Queensland",135,1975
+30900,"Boulia","Queensland",41,489
+31000,"Brisbane","Queensland",66282,1375301
+31750,"Bulloo","Queensland",25,347
+31820,"Bundaberg","Queensland",5051,107297
+31900,"Burdekin","Queensland",899,17220
+31950,"Burke","Queensland",16,449
+32080,"Cairns","Queensland",9670,179334
+32250,"Carpentaria","Queensland",150,2247
+32260,"Cassowary Coast","Queensland",1556,30666
+32270,"Central Highlands (Qld)","Queensland",2088,29481
+32310,"Charters Towers","Queensland",603,12088
+32330,"Cherbourg","Queensland",163,1289
+32450,"Cloncurry","Queensland",234,3907
+32500,"Cook","Queensland",244,4876
+32600,"Croydon","Queensland",17,273
+32750,"Diamantina","Queensland",12,265
+32770,"Doomadgee","Queensland",172,1484
+32810,"Douglas","Queensland",609,13169
+33100,"Etheridge","Queensland",47,727
+33200,"Flinders (Qld)","Queensland",126,1545
+33220,"Fraser Coast","Queensland",5154,122924
+33360,"Gladstone","Queensland",4128,69046
+33430,"Gold Coast","Queensland",34607,691230
+33610,"Goondiwindi","Queensland",723,10438
+33620,"Gympie","Queensland",2886,58487
+33800,"Hinchinbrook","Queensland",462,11194
+33830,"Hope Vale","Queensland",125,1073
+33960,"Ipswich","Queensland",19934,268272
+33980,"Isaac","Queensland",1499,23186
+34420,"Kowanyama","Queensland",103,1155
+34530,"Livingstone","Queensland",2188,43668
+34570,"Lockhart River","Queensland",78,702
+34580,"Lockyer Valley","Queensland",2601,46058
+34590,"Logan","Queensland",29038,403515
+34710,"Longreach","Queensland",218,3741
+34770,"Mackay","Queensland",7726,129253
+34800,"McKinlay","Queensland",60,850
+34830,"Mapoon","Queensland",49,494
+34860,"Maranoa","Queensland",979,13370
+34880,"Mareeba","Queensland",1189,24205
+35010,"Moreton Bay","Queensland",30281,532445
+35250,"Mornington","Queensland",123,1099
+35300,"Mount Isa","Queensland",1517,18585
+35600,"Murweh","Queensland",267,4004
+35670,"Napranum","Queensland",90,952
+35740,"Noosa","Queensland",2108,59551
+35760,"North Burnett","Queensland",448,10562
+35780,"Northern Peninsula Area","Queensland",305,2944
+35790,"Palm Island","Queensland",277,2335
+35800,"Paroo","Queensland",114,1724
+36070,"Pormpuraaw","Queensland",48,650
+36150,"Quilpie","Queensland",80,720
+36250,"Redland","Queensland",8604,172831
+36300,"Richmond","Queensland",65,788
+36370,"Rockhampton","Queensland",5294,85794
+36510,"Scenic Rim","Queensland",2248,46947
+36580,"Somerset","Queensland",1339,26936
+36630,"South Burnett","Queensland",1772,35111
+36660,"Southern Downs","Queensland",1846,38064
+36720,"Sunshine Coast","Queensland",18722,381957
+36820,"Tablelands","Queensland",1297,27902
+36910,"Toowoomba","Queensland",11124,186276
+36950,"Torres","Queensland",291,3490
+36960,"Torres Strait Island","Queensland",360,4298
+37010,"Townsville","Queensland",11901,206260
+37300,"Weipa","Queensland",347,4297
+37310,"Western Downs","Queensland",2363,35452
+37340,"Whitsunday","Queensland",2048,41374
+37400,"Winton","Queensland",75,1152
+37550,"Woorabinda","Queensland",102,1087
+37570,"Wujal Wujal","Queensland",46,301
+37600,"Yarrabah","Queensland",269,2669
+40070,"Adelaide","South Australia",508,30173
+40120,"Adelaide Hills","South Australia",1978,42875
+40150,"Adelaide Plains","South Australia",727,11736
+40220,"Alexandrina","South Australia",1162,31427
+40250,"Anangu Pitjantjatjara Yankunytjatjara","South Australia",154,2668
+40310,"Barossa","South Australia",1140,26817
+40430,"Barunga West","South Australia",128,2688
+40520,"Berri Barmera","South Australia",495,10758
+40700,"Burnside","South Australia",1663,48257
+40910,"Campbelltown (SA)","South Australia",2840,58826
+41010,"Ceduna","South Australia",221,3757
+41060,"Charles Sturt","South Australia",6688,130841
+41140,"Clare and Gilbert Valleys","South Australia",472,9467
+41190,"Cleve","South Australia",90,1771
+41330,"Coober Pedy","South Australia",75,1526
+41560,"Copper Coast","South Australia",665,16601
+41750,"Elliston","South Australia",40,1057
+41830,"Flinders Ranges","South Australia",58,1662
+41960,"Franklin Harbour","South Australia",67,1367
+42030,"Gawler","South Australia",1490,27564
+42110,"Goyder","South Australia",171,4141
+42250,"Grant","South Australia",369,9223
+42600,"Holdfast Bay","South Australia",1437,39683
+42750,"Kangaroo Island","South Australia",256,5212
+43080,"Karoonda East Murray","South Australia",44,1026
+43220,"Kimba","South Australia",49,1064
+43360,"Kingston (SA)","South Australia",78,2420
+43650,"Light","South Australia",851,17317
+43710,"Lower Eyre","South Australia",296,6268
+43790,"Loxton Waikerie","South Australia",536,11971
+44000,"Maralinga Tjarutja","South Australia",0,102
+44060,"Marion","South Australia",5235,101229
+44210,"Mid Murray","South Australia",316,9674
+44340,"Mitcham","South Australia",3265,71267
+44550,"Mount Barker","South Australia",2750,45111
+44620,"Mount Gambier","South Australia",1496,28057
+44830,"Mount Remarkable","South Australia",114,2861
+45040,"Murray Bridge","South Australia",1160,23539
+45090,"Naracoorte Lucindale","South Australia",457,8930
+45120,"Northern Areas","South Australia",252,4688
+45290,"Norwood Payneham and St Peters","South Australia",1709,40845
+45340,"Onkaparinga","South Australia",9763,184827
+45400,"Orroroo Carrieton","South Australia",41,884
+45540,"Peterborough","South Australia",55,1701
+45680,"Playford","South Australia",8616,115790
+45890,"Port Adelaide Enfield","South Australia",7966,143022
+46090,"Port Augusta","South Australia",793,14469
+46300,"Port Lincoln","South Australia",821,15065
+46450,"Port Pirie","South Australia",896,17664
+46510,"Prospect","South Australia",1094,23459
+46670,"Renmark Paringa","South Australia",518,10274
+46860,"Robe","South Australia",84,1621
+46970,"Roxby Downs","South Australia",339,4089
+47140,"Salisbury","South Australia",8757,151019
+47290,"Southern Mallee","South Australia",96,2013
+47490,"Streaky Bay","South Australia",132,2292
+47630,"Tatiara","South Australia",394,7088
+47700,"Tea Tree Gully","South Australia",5226,105120
+47800,"Coorong","South Australia",282,5627
+47910,"Tumby Bay","South Australia",150,2963
+47980,"Unley","South Australia",1528,40731
+48050,"Victor Harbor","South Australia",538,17457
+48130,"Wakefield","South Australia",358,6993
+48260,"Walkerville","South Australia",330,8673
+48340,"Wattle Range","South Australia",576,12378
+48410,"West Torrens","South Australia",3285,66547
+48540,"Whyalla","South Australia",1114,21720
+48640,"Wudinna","South Australia",55,1171
+48750,"Yankalilla","South Australia",221,6299
+48830,"Yorke Peninsula","South Australia",554,12242
+49399,"Unincorporated SA","South Australia",122,3001
+50080,"Albany","Western Australia",2087,42308
+50210,"Armadale","Western Australia",7840,113003
+50250,"Ashburton","Western Australia",654,8335
+50280,"Augusta Margaret River","Western Australia",1129,20170
+50350,"Bassendean","Western Australia",944,17413
+50420,"Bayswater","Western Australia",4207,77383
+50490,"Belmont","Western Australia",2610,48221
+50560,"Beverley","Western Australia",74,1815
+50630,"Boddington","Western Australia",133,1840
+50770,"Boyup Brook","Western Australia",98,2000
+50840,"Bridgetown-Greenbushes","Western Australia",250,5931
+50910,"Brookton","Western Australia",42,972
+50980,"Broome","Western Australia",1313,19193
+51080,"Broomehill-Tambellup","Western Australia",68,1117
+51120,"Bruce Rock","Western Australia",55,1073
+51190,"Bunbury","Western Australia",1755,35730
+51260,"Busselton","Western Australia",2236,46184
+51310,"Cambridge","Western Australia",1230,32684
+51330,"Canning","Western Australia",5153,109028
+51400,"Capel","Western Australia",1088,20171
+51470,"Carnamah","Western Australia",34,598
+51540,"Carnarvon","Western Australia",340,5655
+51610,"Chapman Valley","Western Australia",56,1725
+51680,"Chittering","Western Australia",395,7039
+51710,"Christmas Island","Other Territories",59,1889
+51750,"Claremont","Western Australia",419,13091
+51820,"Cockburn","Western Australia",8583,139499
+51860,"Cocos (Keeling) Islands","Other Territories",35,626
+51890,"Collie","Western Australia",490,9561
+51960,"Coolgardie","Western Australia",243,3878
+52030,"Coorow","Western Australia",61,1149
+52100,"Corrigin","Western Australia",56,1052
+52170,"Cottesloe","Western Australia",368,9201
+52240,"Cranbrook","Western Australia",66,1167
+52310,"Cuballing","Western Australia",41,969
+52380,"Cue","Western Australia",6,234
+52450,"Cunderdin","Western Australia",71,1299
+52520,"Dalwallinu","Western Australia",103,1455
+52590,"Dandaragan","Western Australia",188,4089
+52660,"Dardanup","Western Australia",989,16280
+52730,"Denmark","Western Australia",266,6858
+52800,"Derby-West Kimberley","Western Australia",580,8683
+52870,"Donnybrook-Balingup","Western Australia",354,6698
+52940,"Dowerin","Western Australia",40,745
+53010,"Dumbleyung","Western Australia",43,715
+53080,"Dundas","Western Australia",33,735
+53150,"East Fremantle","Western Australia",328,8426
+53220,"East Pilbara","Western Australia",472,10663
+53290,"Esperance","Western Australia",805,14663
+53360,"Exmouth","Western Australia",195,3670
+53430,"Fremantle","Western Australia",2020,37542
+53570,"Gingin","Western Australia",279,6585
+53640,"Gnowangerup","Western Australia",101,1295
+53710,"Goomalling","Western Australia",61,1002
+53780,"Gosnells","Western Australia",8461,144475
+53800,"Greater Geraldton","Western Australia",2549,42882
+53920,"Halls Creek","Western Australia",318,4245
+53990,"Harvey","Western Australia",1791,32208
+54060,"Irwin","Western Australia",119,3899
+54130,"Jerramungup","Western Australia",95,1248
+54170,"Joondalup","Western Australia",8927,176595
+54200,"Kalamunda","Western Australia",3427,65007
+54280,"Kalgoorlie-Boulder","Western Australia",2048,31268
+54310,"Karratha","Western Australia",1925,25429
+54340,"Katanning","Western Australia",294,4345
+54410,"Kellerberrin","Western Australia",45,1146
+54480,"Kent","Western Australia",31,539
+54550,"Kojonup","Western Australia",112,1985
+54620,"Kondinin","Western Australia",66,874
+54690,"Koorda","Western Australia",9,377
+54760,"Kulin","Western Australia",47,805
+54830,"Kwinana","Western Australia",4119,57422
+54900,"Lake Grace","Western Australia",97,1337
+54970,"Laverton","Western Australia",27,1441
+55040,"Leonora","Western Australia",80,1724
+55110,"Mandurah","Western Australia",5386,106827
+55180,"Manjimup","Western Australia",444,9621
+55250,"Meekatharra","Western Australia",70,1292
+55320,"Melville","Western Australia",5005,115945
+55390,"Menzies","Western Australia",12,578
+55460,"Merredin","Western Australia",204,3365
+55530,"Mingenew","Western Australia",29,428
+55600,"Moora","Western Australia",164,2421
+55670,"Morawa","Western Australia",47,703
+55740,"Mosman Park","Western Australia",387,10482
+55810,"Mount Magnet","Western Australia",27,706
+55880,"Mount Marshall","Western Australia",23,469
+55950,"Mukinbudin","Western Australia",31,594
+56090,"Mundaring","Western Australia",2111,43577
+56160,"Murchison","Western Australia",2,111
+56230,"Murray","Western Australia",1080,21447
+56300,"Nannup","Western Australia",49,1743
+56370,"Narembeen","Western Australia",51,853
+56460,"Narrogin","Western Australia",255,4989
+56580,"Nedlands","Western Australia",908,25711
+56620,"Ngaanyatjarraku","Western Australia",61,1483
+56730,"Northam","Western Australia",678,12758
+56790,"Northampton","Western Australia",109,3459
+56860,"Nungarin","Western Australia",13,265
+56930,"Peppermint Grove","Western Australia",60,1828
+57000,"Perenjori","Western Australia",18,665
+57080,"Perth","Western Australia",908,35673
+57140,"Pingelly","Western Australia",55,1108
+57210,"Plantagenet","Western Australia",251,5793
+57280,"Port Hedland","Western Australia",1366,17743
+57350,"Quairading","Western Australia",59,956
+57420,"Ravensthorpe","Western Australia",125,2309
+57490,"Rockingham","Western Australia",9543,159934
+57630,"Sandstone","Western Australia",0,118
+57700,"Serpentine-Jarrahdale","Western Australia",3107,40531
+57770,"Shark Bay","Western Australia",42,1194
+57840,"South Perth","Western Australia",1956,48745
+57910,"Stirling","Western Australia",13807,254821
+57980,"Subiaco","Western Australia",825,20038
+58050,"Swan","Western Australia",12677,187090
+58190,"Tammin","Western Australia",20,395
+58260,"Three Springs","Western Australia",45,606
+58330,"Toodyay","Western Australia",231,5251
+58400,"Trayning","Western Australia",16,304
+58470,"Upper Gascoyne","Western Australia",18,206
+58510,"Victoria Park","Western Australia",2068,43333
+58540,"Victoria Plains","Western Australia",41,825
+58570,"Vincent","Western Australia",1983,42392
+58610,"Wagin","Western Australia",101,1841
+58680,"Wandering","Western Australia",24,558
+58760,"Wanneroo","Western Australia",15353,246147
+58820,"Waroona","Western Australia",212,4665
+58890,"West Arthur","Western Australia",36,801
+59030,"Westonia","Western Australia",18,250
+59100,"Wickepin","Western Australia",41,721
+59170,"Williams","Western Australia",59,1081
+59250,"Wiluna","Western Australia",15,567
+59310,"Wongan-Ballidu","Western Australia",78,1357
+59320,"Woodanilling","Western Australia",27,495
+59330,"Wyalkatchem","Western Australia",11,493
+59340,"Wyndham-East Kimberley","Western Australia",597,8441
+59350,"Yalgoo","Western Australia",11,356
+59360,"Yilgarn","Western Australia",70,1204
+59370,"York","Western Australia",152,3677
+60210,"Break O'Day","Tasmania",225,7230
+60410,"Brighton","Tasmania",1394,20527
+60610,"Burnie","Tasmania",1132,20420
+60810,"Central Coast (Tas.)","Tasmania",1076,23378
+61010,"Central Highlands (Tas.)","Tasmania",92,2603
+61210,"Circular Head","Tasmania",450,8286
+61410,"Clarence","Tasmania",3367,64119
+61510,"Derwent Valley","Tasmania",587,11513
+61610,"Devonport","Tasmania",1366,26994
+61810,"Dorset","Tasmania",325,7059
+62010,"Flinders (Tas.)","Tasmania",37,924
+62210,"George Town","Tasmania",333,7420
+62410,"Glamorgan-Spring Bay","Tasmania",167,5352
+62610,"Glenorchy","Tasmania",2833,50450
+62810,"Hobart","Tasmania",2031,55859
+63010,"Huon Valley","Tasmania",926,19893
+63210,"Kentish","Tasmania",283,6866
+63410,"King Island","Tasmania",96,1647
+63610,"Kingborough","Tasmania",1983,41628
+63810,"Latrobe (Tas.)","Tasmania",580,13264
+64010,"Launceston","Tasmania",3726,71341
+64210,"Meander Valley","Tasmania",1036,21739
+64610,"Northern Midlands","Tasmania",747,14544
+64810,"Sorell","Tasmania",1051,18108
+65010,"Southern Midlands","Tasmania",351,6987
+65210,"Tasman","Tasmania",96,2738
+65410,"Waratah-Wynyard","Tasmania",689,14916
+65610,"West Coast","Tasmania",177,4320
+65810,"West Tamar","Tasmania",1210,26136
+70200,"Alice Springs","Northern Territory",2085,30875
+70420,"Barkly","Northern Territory",633,7448
+70540,"Belyuen","Northern Territory",15,167
+70620,"Central Desert","Northern Territory",309,4170
+70700,"Coomalie","Northern Territory",81,1448
+71000,"Darwin","Northern Territory",5412,90035
+71150,"Darwin Waterfront Precinct","Northern Territory",15,352
+71500,"East Arnhem","Northern Territory",665,8130
+71700,"Groote Archipelago","Northern Territory",85,2095
+72200,"Katherine","Northern Territory",845,11282
+72300,"Litchfield","Northern Territory",1349,24849
+72330,"MacDonnell","Northern Territory",440,6978
+72800,"Palmerston","Northern Territory",3597,43193
+73600,"Roper Gulf","Northern Territory",438,7597
+74050,"Tiwi Islands","Northern Territory",145,2767
+74550,"Victoria Daly","Northern Territory",259,3356
+74560,"Wagait","Northern Territory",12,504
+74660,"West Arnhem","Northern Territory",419,7608
+74680,"West Daly","Northern Territory",207,3495
+79399,"Unincorporated NT","Northern Territory",455,8207
+89399,"Unincorporated ACT","Australian Capital Territory",26208,484630
+99399,"Unincorp. Other Territories","Other Territories",72,2498
