@@ -75,6 +75,8 @@ for (const s of services) {
     state: (s['State'] || '').trim(), postcode: (s['Postcode'] || '').trim(),
     service_type: (s['ServiceType'] || '').trim(), places: s['NumberOfApprovedPlaces'] || '',
     rating: (s['OverallRating'] || '').trim(),
+    ldc: s['Long Day Care'] || '', preschool: [s['Preschool/Kindergarten - Part of a School'], s['Preschool/Kindergarten - Stand alone']].some((v) => (v || '').trim().toLowerCase() === 'yes') ? 'Yes' : 'No',
+    oshc: [s['Outside school Hours Care - After School'], s['Outside school Hours Care - Before School'], s['Outside school Hours Care - Vacation Care']].some((v) => (v || '').trim().toLowerCase() === 'yes') ? 'Yes' : 'No',
     fee_rows: feeRows.length,
     fulldy_median_clean: median(cleanFulldy) ?? '',
     fulldy_n_clean: cleanFulldy.length,
@@ -100,8 +102,8 @@ const aggRows = [...agg.entries()].map(([k, v]) => {
   return { state, provider_type, services: v.services, with_clean_fulldy: v.withFees, fulldy_median: median(v.fees) ?? '', fulldy_mean: mean(v.fees)?.toFixed(2) ?? '' };
 });
 writeFileSync('data/processed/services_enriched.csv',
-  'se,prNo,service,legal,provider_type,provider_type_conf,state,postcode,service_type,places,rating,fee_rows,fulldy_median_clean,fulldy_n_clean\n' +
-  serviceRows.map((r) => [r.se, r.prNo, JSON.stringify(r.service), JSON.stringify(r.legal), r.provider_type, r.provider_type_conf, r.state, r.postcode, JSON.stringify(r.service_type), r.places, JSON.stringify(r.rating), r.fee_rows, r.fulldy_median_clean, r.fulldy_n_clean].join(',')).join('\n'));
+  'se,prNo,service,legal,provider_type,provider_type_conf,state,postcode,service_type,places,rating,ldc,preschool,oshc,fee_rows,fulldy_median_clean,fulldy_n_clean\n' +
+  serviceRows.map((r) => [r.se, r.prNo, JSON.stringify(r.service), JSON.stringify(r.legal), r.provider_type, r.provider_type_conf, r.state, r.postcode, JSON.stringify(r.service_type), r.places, JSON.stringify(r.rating), r.ldc, r.preschool, r.oshc, r.fee_rows, r.fulldy_median_clean, r.fulldy_n_clean].join(',')).join('\n'));
 writeFileSync('data/processed/agg_state_x_providertype.csv',
   'state,provider_type,services,with_clean_fulldy,fulldy_median,fulldy_mean\n' +
   aggRows.map((r) => [r.state, r.provider_type, r.services, r.with_clean_fulldy, r.fulldy_median, r.fulldy_mean].join(',')).join('\n'));

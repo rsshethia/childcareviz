@@ -37,10 +37,16 @@
 </header>
 <main>
   <section>
+    <h2>Who runs what — services, places, pricing</h2>
+    <table><thead><tr><th>Provider type</th><th>Services</th><th>Approved places</th><th>Long day care</th><th>Preschool</th><th>OSHC</th><th>Family day care</th></tr></thead>
+    <tbody id="mixrows"></tbody></table>
+    <p class="note" id="council"></p>
+  </section>
+  <section>
     <h2>Median full-day fee</h2>
     <table><thead><tr><th>State</th><th>Provider type</th><th>Services w/ fees</th><th>Median / day</th></tr></thead>
     <tbody id="rows"></tbody></table>
-    <p class="note">For-profit vs not-for-profit gap is the story: NSW $161 vs $129, QLD $163 vs $131. Govt rows are mostly preschools/OSHC with few daily fees. Outliers (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y) excluded — see methodology.</p>
+    <p class="note">Council-run, community, for-profit and state medians side by side. Outliers (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y) excluded — see methodology.</p>
   </section>
   <section>
     <h2>Quality vs fee</h2>
@@ -61,13 +67,27 @@
 fetch('data.json').then(r => r.json()).then(d => {
   document.getElementById('gen').textContent = '· generated ' + d.generated;
   const cov = d.coverage;
+  const fmt = n => (n || 0).toLocaleString();
+  const mix = d.provider_mix;
+  const total = Object.values(mix).reduce((a, b) => a + b.services, 0);
+  const order = ['for-profit', 'nfp-community', 'nfp-other', 'govt-local', 'govt-state', 'unknown'];
+  const labels = { 'for-profit': 'For-profit', 'nfp-community': 'Not-for-profit · community', 'nfp-other': 'Not-for-profit · other', 'govt-local': 'Council-run', 'govt-state': 'State/territory govt', 'unknown': 'Unknown' };
   const cards = [
     [cov.pages.toLocaleString(), 'service pages crawled'],
     [Math.round(100 * cov.clean_pages / cov.pages) + '%', 'pages report clean fees'],
-    [Object.values(d.provider_mix).reduce((a, b) => a + b.services, 0).toLocaleString(), 'services classified'],
-    [(d.provider_mix['for-profit']?.services || 0).toLocaleString(), 'for-profit services'],
+    [fmt(mix['govt-local']?.services), 'council-run services'],
+    [fmt(mix['for-profit']?.services), 'for-profit services'],
   ];
   document.getElementById('cards').innerHTML = cards.map(c => `<div class="card"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  document.getElementById('mixrows').innerHTML = order.filter(t => mix[t]).map(t => {
+    const m = mix[t];
+    return `<tr><td>${labels[t] || t}</td><td>${fmt(m.services)} (${Math.round(100 * m.services / total)}%)</td><td>${fmt(m.places)}</td><td>${fmt(m.ldc)}</td><td>${fmt(m.preschool)}</td><td>${fmt(m.oshc)}</td><td>${fmt(m.fdc)}</td></tr>`;
+  }).join('');
+  const cb = Object.entries(d.council_by_state || {}).sort((a, b) => b[1] - a[1]);
+  document.getElementById('council').textContent =
+    `Council-run spotlight: ${fmt(mix['govt-local']?.services)} services — ` +
+    cb.map(([s, n]) => `${s || '—'} ${n}`).join(', ') + '. ' +
+    `NSW council median $${(d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'govt-local') || {}).median || '—'}/day vs for-profit $${(d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'for-profit') || {}).median || '—'}.`;
   document.getElementById('cov').textContent =
     `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
     `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;

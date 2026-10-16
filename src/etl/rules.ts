@@ -1,16 +1,26 @@
-// Pure rules shared by ETL + DB loader (no side effects on import).
-export type ProviderType = 'for-profit' | 'nfp' | 'govt' | 'unknown';
+// Provider taxonomy (matches ACECQA PA06 + council-run split for planners).
+export type ProviderType =
+  | 'for-profit'
+  | 'nfp-community'   // community-managed, no profit distribution
+  | 'nfp-other'       // other not-for-profit (incl. Ltd by guarantee, faith-based)
+  | 'govt-local'      // council-run: city/shire/municipal
+  | 'govt-state'      // state/territory managed: departments, directorates
+  | 'unknown';
 
 export function classifyProvider(legalName: string): { t: ProviderType; conf: number } {
   const n = (legalName || '').toLowerCase();
   if (!n) return { t: 'unknown', conf: 0 };
-  if (/city council|shire council|shire of|municipal|city of |district council|borough council|council of |department for education|department of education|education directorate|director-general/.test(n))
-    return { t: 'govt', conf: 0.9 };
-  if (/\binc\b|incorporated|association|community|church|catholic|uniting|ymca|ywca|lutheran|anglican|baptist|presbyterian|goodstart|ku children|thrive group|communities@work|crest|mission|salvation|st vincent|benevolent|charity/.test(n))
-    return { t: 'nfp', conf: 0.75 };
+  if (/city council|shire council|shire of|municipal|city of |district council|borough council|council of |local government/.test(n))
+    return { t: 'govt-local', conf: 0.9 };
+  if (/department for education|department of education|education directorate|director-general|state of |northern territory/.test(n))
+    return { t: 'govt-state', conf: 0.9 };
+  if (/\binc\b|incorporated|association|community|co-operative|cooperative|committee|playgroup|parents/.test(n))
+    return { t: 'nfp-community', conf: 0.78 };
+  if (/church|catholic|uniting|ymca|ywca|lutheran|anglican|baptist|presbyterian|goodstart|ku children|thrive group|communities@work|mission|salvation|st vincent|benevolent|charity|foundation|society|brotherhood|diocese|archdiocese/.test(n))
+    return { t: 'nfp-other', conf: 0.75 };
   if (/pty ltd|pty\.|pty limited|\btrust\b|enterprises|holdings|investments|childcare.*pty|early learning.*pty/.test(n))
     return { t: 'for-profit', conf: 0.8 };
-  if (/\bltd\b(?!.*pty)/.test(n)) return { t: 'nfp', conf: 0.55 };
+  if (/\bltd\b(?!.*pty)/.test(n)) return { t: 'nfp-other', conf: 0.55 }; // public company limited by guarantee
   return { t: 'unknown', conf: 0 };
 }
 

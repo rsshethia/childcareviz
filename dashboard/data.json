@@ -13,22 +13,68 @@
   }
  },
  "provider_mix": {
-  "nfp": {
-   "services": 5974,
-   "withFees": 2544
+  "nfp-community": {
+   "services": 3794,
+   "withFees": 1355,
+   "places": 243533,
+   "ldc": 1139,
+   "preschool": 1687,
+   "oshc": 1303,
+   "fdc": 42
   },
   "for-profit": {
-   "services": 9066,
-   "withFees": 4845
+   "services": 9056,
+   "withFees": 4840,
+   "places": 670014,
+   "ldc": 6346,
+   "preschool": 457,
+   "oshc": 3412,
+   "fdc": 196
+  },
+  "nfp-other": {
+   "services": 2261,
+   "withFees": 1216,
+   "places": 163652,
+   "ldc": 1075,
+   "preschool": 452,
+   "oshc": 945,
+   "fdc": 15
   },
   "unknown": {
-   "services": 1861,
-   "withFees": 967
+   "services": 1780,
+   "withFees": 936,
+   "places": 113188,
+   "ldc": 927,
+   "preschool": 416,
+   "oshc": 617,
+   "fdc": 79
   },
-  "govt": {
-   "services": 1282,
-   "withFees": 165
+  "govt-local": {
+   "services": 557,
+   "withFees": 163,
+   "places": 30814,
+   "ldc": 217,
+   "preschool": 268,
+   "oshc": 97,
+   "fdc": 27
+  },
+  "govt-state": {
+   "services": 735,
+   "withFees": 11,
+   "places": 29262,
+   "ldc": 26,
+   "preschool": 704,
+   "oshc": 7,
+   "fdc": 2
   }
+ },
+ "council_by_state": {
+  "TAS": 11,
+  "VIC": 311,
+  "WA": 13,
+  "SA": 7,
+  "NSW": 205,
+  "QLD": 10
  },
  "state_table": [
   {
@@ -40,45 +86,59 @@
   },
   {
    "state": "ACT",
-   "provider_type": "nfp",
-   "services": 92,
-   "median": 155.47,
-   "mean": 148.27
+   "provider_type": "nfp-community",
+   "services": 63,
+   "median": 165,
+   "mean": 147.04
+  },
+  {
+   "state": "ACT",
+   "provider_type": "nfp-other",
+   "services": 31,
+   "median": 147.96,
+   "mean": 150.28
   },
   {
    "state": "ACT",
    "provider_type": "unknown",
-   "services": 14,
+   "services": 12,
    "median": 157,
-   "mean": 155.32
+   "mean": 157.77
   },
   {
    "state": "NSW",
    "provider_type": "for-profit",
-   "services": 2103,
+   "services": 2099,
    "median": 161,
-   "mean": 157.44
+   "mean": 157.48
   },
   {
    "state": "NSW",
-   "provider_type": "govt",
+   "provider_type": "govt-local",
    "services": 87,
    "median": 130,
    "mean": 130.75
   },
   {
    "state": "NSW",
-   "provider_type": "nfp",
-   "services": 621,
-   "median": 129,
-   "mean": 125.71
+   "provider_type": "nfp-community",
+   "services": 294,
+   "median": 109,
+   "mean": 114.39
+  },
+  {
+   "state": "NSW",
+   "provider_type": "nfp-other",
+   "services": 339,
+   "median": 149,
+   "mean": 136.05
   },
   {
    "state": "NSW",
    "provider_type": "unknown",
-   "services": 456,
-   "median": 159,
-   "mean": 151.28
+   "services": 448,
+   "median": 160,
+   "mean": 151.42
   },
   {
    "state": "NT",
@@ -89,10 +149,24 @@
   },
   {
    "state": "NT",
-   "provider_type": "nfp",
-   "services": 65,
+   "provider_type": "govt-state",
+   "services": 9,
+   "median": 145.5,
+   "mean": 118.94
+  },
+  {
+   "state": "NT",
+   "provider_type": "nfp-community",
+   "services": 27,
+   "median": 122.5,
+   "mean": 120.28
+  },
+  {
+   "state": "NT",
+   "provider_type": "nfp-other",
+   "services": 29,
    "median": 125,
-   "mean": 123.37
+   "mean": 127.62
   },
   {
    "state": "NT",
@@ -110,24 +184,31 @@
   },
   {
    "state": "QLD",
-   "provider_type": "govt",
+   "provider_type": "govt-local",
    "services": 3,
    "median": 125,
    "mean": 126.67
   },
   {
    "state": "QLD",
-   "provider_type": "nfp",
-   "services": 722,
-   "median": 131.15,
-   "mean": 118.9
+   "provider_type": "nfp-community",
+   "services": 279,
+   "median": 103,
+   "mean": 112.1
+  },
+  {
+   "state": "QLD",
+   "provider_type": "nfp-other",
+   "services": 453,
+   "median": 143,
+   "mean": 123.52
   },
   {
    "state": "QLD",
    "provider_type": "unknown",
-   "services": 99,
+   "services": 89,
    "median": 150,
-   "mean": 135.88
+   "mean": 135.61
   },
   {
    "state": "SA",
@@ -138,17 +219,31 @@
   },
   {
    "state": "SA",
-   "provider_type": "govt",
-   "services": 6,
-   "median": 135,
-   "mean": 129
+   "provider_type": "govt-local",
+   "services": 4,
+   "median": 140,
+   "mean": 140
   },
   {
    "state": "SA",
-   "provider_type": "nfp",
-   "services": 328,
-   "median": 129,
-   "mean": 116.86
+   "provider_type": "govt-state",
+   "services": 2,
+   "median": 110,
+   "mean": 107
+  },
+  {
+   "state": "SA",
+   "provider_type": "nfp-community",
+   "services": 276,
+   "median": 86,
+   "mean": 107.76
+  },
+  {
+   "state": "SA",
+   "provider_type": "nfp-other",
+   "services": 52,
+   "median": 167.85,
+   "mean": 165.11
   },
   {
    "state": "SA",
@@ -166,17 +261,24 @@
   },
   {
    "state": "TAS",
-   "provider_type": "govt",
+   "provider_type": "govt-local",
    "services": 4,
    "median": 101,
    "mean": 116.64
   },
   {
    "state": "TAS",
-   "provider_type": "nfp",
-   "services": 83,
-   "median": 146.17,
-   "mean": 130.97
+   "provider_type": "nfp-community",
+   "services": 57,
+   "median": 147.32,
+   "mean": 134.14
+  },
+  {
+   "state": "TAS",
+   "provider_type": "nfp-other",
+   "services": 26,
+   "median": 95,
+   "mean": 124.02
   },
   {
    "state": "TAS",
@@ -188,30 +290,37 @@
   {
    "state": "VIC",
    "provider_type": "for-profit",
-   "services": 1016,
-   "median": 168.75,
+   "services": 1015,
+   "median": 168.62,
    "mean": 165.83
   },
   {
    "state": "VIC",
-   "provider_type": "govt",
+   "provider_type": "govt-local",
    "services": 61,
    "median": 159.7,
    "mean": 155.53
   },
   {
    "state": "VIC",
-   "provider_type": "nfp",
-   "services": 434,
-   "median": 167.85,
-   "mean": 160.42
+   "provider_type": "nfp-community",
+   "services": 223,
+   "median": 159.5,
+   "mean": 155.23
+  },
+  {
+   "state": "VIC",
+   "provider_type": "nfp-other",
+   "services": 223,
+   "median": 171.21,
+   "mean": 165.59
   },
   {
    "state": "VIC",
    "provider_type": "unknown",
-   "services": 249,
-   "median": 167.1,
-   "mean": 156.96
+   "services": 238,
+   "median": 168,
+   "mean": 156.87
   },
   {
    "state": "WA",
@@ -222,17 +331,24 @@
   },
   {
    "state": "WA",
-   "provider_type": "govt",
+   "provider_type": "govt-local",
    "services": 4,
    "median": 135,
    "mean": 133.75
   },
   {
    "state": "WA",
-   "provider_type": "nfp",
-   "services": 199,
-   "median": 159,
-   "mean": 148.4
+   "provider_type": "nfp-community",
+   "services": 136,
+   "median": 142,
+   "mean": 144.12
+  },
+  {
+   "state": "WA",
+   "provider_type": "nfp-other",
+   "services": 63,
+   "median": 165.9,
+   "mean": 157.64
   },
   {
    "state": "WA",
