@@ -22,6 +22,8 @@ create table if not exists services (
   address text, suburb text, state text, postcode text,
   approved_places int,
   overall_rating text,
+  provider_type text, -- for-profit | nfp | govt | unknown (heuristic; Jev upgrade later)
+  provider_type_confidence double precision,
   startingblocks_ulid text unique,
   startingblocks_url text,
   lat double precision, lon double precision, geocode_source text,
@@ -41,6 +43,8 @@ create table if not exists service_fees_history (
   inclusions text[],
   fee_last_updated date,
   has_vacancy boolean,
+  quarantine text, -- null = clean; else no-fee-reported | fulldy-out-of-range | hourly-suspect-daily-rate | oshc-out-of-range | halfdy-out-of-range
+  stale boolean, -- fee_last_updated older than 2y
   source_url text not null,
   fetched_at timestamptz default now()
 );

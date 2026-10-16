@@ -22,4 +22,9 @@ const t = await pool.query(
   "select tablename from pg_tables where schemaname='public' order by 1"
 );
 console.log('tables:', t.rows.map((r) => r.tablename).join(','));
+await pool.query(`alter table service_fees_history add column if not exists quarantine text`);
+await pool.query(`alter table service_fees_history add column if not exists stale boolean`);
+await pool.query(`alter table services add column if not exists provider_type text`);
+await pool.query(`alter table services add column if not exists provider_type_confidence double precision`);
+console.log('columns ok');
 await pool.end();
