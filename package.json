@@ -10,6 +10,10 @@
     "etl:build": "tsx src/etl/build.ts",
     "db:migrate": "tsx scripts/db-migrate.mts",
     "db:load-full": "tsx scripts/db-load-full.mts",
+    "db:verify": "tsx scripts/db-verify.mts",
+    "db:geocheck": "tsx scripts/db-geocheck.mts",
+    "geocode": "tsx scripts/geocode.mts",
+    "geo:export": "tsx scripts/geo-export.mts",
     "db:probe": "tsx scripts/db-probe.mts",
     "db:load-sample": "tsx scripts/db-load-sample.mts",
     "typecheck": "tsc --noEmit"
