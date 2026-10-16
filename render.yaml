@@ -1,37 +1,29 @@
-# Render Blueprint — ChildCareViz.
-# Today: static dashboard only (matches this repo: dashboard/*.html + data).
-# Later: uncomment the api + cron sections when the Next.js API / scheduled
-# re-crawl land. Secrets (DATABASE_URL etc.) are NOT needed for the static site.
+# Render Blueprint — ChildCareViz full app (Node web service).
+# Flow: Render dashboard → New → Blueprint → connect rsshethia/childcareviz → Apply.
+# Service serves dashboard/ static + live Neon API (src/server.ts).
 services:
   - type: web
-    name: childcareviz-dashboard
-    env: static
-    buildCommand: echo "static dashboard, nothing to build"
-    staticPublishPath: ./dashboard
-    # Auto-deploy on every push to main (re-export geo.json/data.json to refresh).
-
-  # --- future: API (uncomment when src/api exists) ---
-  # - type: web
-  #   name: childcareviz-api
-  #   runtime: node
-  #   plan: starter
-  #   buildCommand: npm ci && npm run build
-  #   startCommand: npm start
-  #   envVars:
-  #     - key: DATABASE_URL
-  #       sync: false
-  #     - key: MAPBOX_TOKEN
-  #       sync: false
-  #     - key: TYPESAFE_API_KEY
-  #       sync: false
-
-  # --- future: weekly re-crawl (prefer type: cron in dashboard UI) ---
-  # - type: worker
-  #   name: childcareviz-scraper
-  #   runtime: node
-  #   plan: starter
-  #   buildCommand: npm ci
-  #   startCommand: npm run scrape:fees
-  #   envVars:
-  #     - key: DATABASE_URL
-  #       sync: false
+    name: childcareviz
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 22.18.0
+      - key: DATABASE_URL
+        sync: false
+      # ...or PG* parts (pool.ts accepts either):
+      # - key: PGHOST
+      #   sync: false
+      # - key: PGDATABASE
+      #   sync: false
+      # - key: PGUSER
+      #   sync: false
+      # - key: PGPASSWORD
+      #   sync: false
+      - key: MAPBOX_TOKEN
+        sync: false
+      - key: TYPESAFE_API_KEY
+        sync: false

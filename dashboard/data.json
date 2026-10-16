@@ -13,41 +13,41 @@
   }
  },
  "provider_mix": {
-  "nfp-community": {
-   "services": 3794,
-   "withFees": 1355,
-   "places": 243533,
-   "ldc": 1139,
-   "preschool": 1687,
-   "oshc": 1303,
-   "fdc": 42
-  },
   "for-profit": {
-   "services": 9056,
-   "withFees": 4840,
-   "places": 670014,
-   "ldc": 6346,
-   "preschool": 457,
-   "oshc": 3412,
-   "fdc": 196
+   "services": 10363,
+   "withFees": 5638,
+   "places": 769331,
+   "ldc": 7160,
+   "preschool": 733,
+   "oshc": 3800,
+   "fdc": 214
+  },
+  "nfp-community": {
+   "services": 3210,
+   "withFees": 983,
+   "places": 201281,
+   "ldc": 861,
+   "preschool": 1518,
+   "oshc": 1104,
+   "fdc": 40
   },
   "nfp-other": {
-   "services": 2261,
-   "withFees": 1216,
-   "places": 163652,
-   "ldc": 1075,
-   "preschool": 452,
-   "oshc": 945,
-   "fdc": 15
+   "services": 2174,
+   "withFees": 1254,
+   "places": 154791,
+   "ldc": 1012,
+   "preschool": 479,
+   "oshc": 884,
+   "fdc": 7
   },
   "unknown": {
-   "services": 1780,
-   "withFees": 936,
-   "places": 113188,
-   "ldc": 927,
-   "preschool": 416,
-   "oshc": 617,
-   "fdc": 79
+   "services": 1144,
+   "withFees": 472,
+   "places": 64984,
+   "ldc": 454,
+   "preschool": 282,
+   "oshc": 489,
+   "fdc": 71
   },
   "govt-local": {
    "services": 557,
@@ -80,37 +80,37 @@
   {
    "state": "ACT",
    "provider_type": "for-profit",
-   "services": 64,
+   "services": 71,
    "median": 181,
-   "mean": 169.46
+   "mean": 169.17
   },
   {
    "state": "ACT",
    "provider_type": "nfp-community",
-   "services": 63,
-   "median": 165,
-   "mean": 147.04
+   "services": 59,
+   "median": 150.12,
+   "mean": 144.13
   },
   {
    "state": "ACT",
    "provider_type": "nfp-other",
-   "services": 31,
-   "median": 147.96,
-   "mean": 150.28
+   "services": 34,
+   "median": 163.18,
+   "mean": 154.98
   },
   {
    "state": "ACT",
    "provider_type": "unknown",
-   "services": 12,
-   "median": 157,
-   "mean": 157.77
+   "services": 6,
+   "median": 151.37,
+   "mean": 146.04
   },
   {
    "state": "NSW",
    "provider_type": "for-profit",
-   "services": 2099,
-   "median": 161,
-   "mean": 157.48
+   "services": 2365,
+   "median": 162.8,
+   "mean": 157.47
   },
   {
    "state": "NSW",
@@ -122,30 +122,30 @@
   {
    "state": "NSW",
    "provider_type": "nfp-community",
-   "services": 294,
-   "median": 109,
-   "mean": 114.39
+   "services": 245,
+   "median": 100,
+   "mean": 107.69
   },
   {
    "state": "NSW",
    "provider_type": "nfp-other",
-   "services": 339,
-   "median": 149,
-   "mean": 136.05
+   "services": 310,
+   "median": 159.42,
+   "mean": 140.99
   },
   {
    "state": "NSW",
    "provider_type": "unknown",
-   "services": 448,
-   "median": 160,
-   "mean": 151.42
+   "services": 260,
+   "median": 143.5,
+   "mean": 137.04
   },
   {
    "state": "NT",
    "provider_type": "for-profit",
-   "services": 18,
-   "median": 160.36,
-   "mean": 162.97
+   "services": 35,
+   "median": 135,
+   "mean": 133.68
   },
   {
    "state": "NT",
@@ -164,9 +164,9 @@
   {
    "state": "NT",
    "provider_type": "nfp-other",
-   "services": 29,
-   "median": 125,
-   "mean": 127.62
+   "services": 12,
+   "median": 163.35,
+   "mean": 162.96
   },
   {
    "state": "NT",
@@ -178,9 +178,9 @@
   {
    "state": "QLD",
    "provider_type": "for-profit",
-   "services": 839,
-   "median": 163.22,
-   "mean": 159.24
+   "services": 987,
+   "median": 162.05,
+   "mean": 155.68
   },
   {
    "state": "QLD",
@@ -192,30 +192,30 @@
   {
    "state": "QLD",
    "provider_type": "nfp-community",
-   "services": 279,
-   "median": 103,
-   "mean": 112.1
+   "services": 189,
+   "median": 72.47,
+   "mean": 87.91
   },
   {
    "state": "QLD",
    "provider_type": "nfp-other",
-   "services": 453,
-   "median": 143,
-   "mean": 123.52
+   "services": 455,
+   "median": 152.12,
+   "mean": 130.65
   },
   {
    "state": "QLD",
    "provider_type": "unknown",
-   "services": 89,
-   "median": 150,
-   "mean": 135.61
+   "services": 29,
+   "median": 102,
+   "mean": 110.02
   },
   {
    "state": "SA",
    "provider_type": "for-profit",
-   "services": 156,
-   "median": 167.89,
-   "mean": 167.31
+   "services": 205,
+   "median": 168,
+   "mean": 167.2
   },
   {
    "state": "SA",
@@ -234,30 +234,30 @@
   {
    "state": "SA",
    "provider_type": "nfp-community",
-   "services": 276,
-   "median": 86,
-   "mean": 107.76
+   "services": 202,
+   "median": 103,
+   "mean": 108.47
   },
   {
    "state": "SA",
    "provider_type": "nfp-other",
-   "services": 52,
-   "median": 167.85,
-   "mean": 165.11
+   "services": 106,
+   "median": 153.38,
+   "mean": 122.46
   },
   {
    "state": "SA",
    "provider_type": "unknown",
-   "services": 58,
-   "median": 157,
-   "mean": 136.71
+   "services": 29,
+   "median": 99.21,
+   "mean": 110.04
   },
   {
    "state": "TAS",
    "provider_type": "for-profit",
-   "services": 49,
+   "services": 50,
    "median": 157.6,
-   "mean": 151.09
+   "mean": 150.43
   },
   {
    "state": "TAS",
@@ -269,16 +269,16 @@
   {
    "state": "TAS",
    "provider_type": "nfp-community",
-   "services": 57,
-   "median": 147.32,
-   "mean": 134.14
+   "services": 17,
+   "median": 151,
+   "mean": 143.64
   },
   {
    "state": "TAS",
    "provider_type": "nfp-other",
-   "services": 26,
-   "median": 95,
-   "mean": 124.02
+   "services": 65,
+   "median": 145.01,
+   "mean": 127.85
   },
   {
    "state": "TAS",
@@ -290,9 +290,9 @@
   {
    "state": "VIC",
    "provider_type": "for-profit",
-   "services": 1015,
-   "median": 168.62,
-   "mean": 165.83
+   "services": 1290,
+   "median": 170,
+   "mean": 166.74
   },
   {
    "state": "VIC",
@@ -304,30 +304,30 @@
   {
    "state": "VIC",
    "provider_type": "nfp-community",
-   "services": 223,
-   "median": 159.5,
-   "mean": 155.23
+   "services": 108,
+   "median": 146.16,
+   "mean": 144.02
   },
   {
    "state": "VIC",
    "provider_type": "nfp-other",
-   "services": 223,
-   "median": 171.21,
-   "mean": 165.59
+   "services": 210,
+   "median": 172.89,
+   "mean": 166.18
   },
   {
    "state": "VIC",
    "provider_type": "unknown",
-   "services": 238,
-   "median": 168,
-   "mean": 156.87
+   "services": 91,
+   "median": 135,
+   "mean": 128.01
   },
   {
    "state": "WA",
    "provider_type": "for-profit",
-   "services": 600,
-   "median": 167.7,
-   "mean": 160.54
+   "services": 635,
+   "median": 167,
+   "mean": 160.7
   },
   {
    "state": "WA",
@@ -346,16 +346,16 @@
   {
    "state": "WA",
    "provider_type": "nfp-other",
-   "services": 63,
-   "median": 165.9,
-   "mean": 157.64
+   "services": 62,
+   "median": 166.15,
+   "mean": 157.54
   },
   {
    "state": "WA",
    "provider_type": "unknown",
-   "services": 65,
-   "median": 152.2,
-   "mean": 151.77
+   "services": 31,
+   "median": 144,
+   "mean": 138.83
   }
  ],
  "quality_vs_fee": {
@@ -435,7 +435,7 @@
    "name": "G8 Education Limited",
    "services": 280,
    "with_fees": 280,
-   "type": "unknown",
+   "type": "for-profit",
    "median": 178.35,
    "sd": 12.12
   },
@@ -459,7 +459,7 @@
    "name": "The Creche and Kindergarten Association Limited",
    "services": 182,
    "with_fees": 59,
-   "type": "nfp-community",
+   "type": "nfp-other",
    "median": 159.8,
    "sd": 17.49
   },
@@ -467,7 +467,7 @@
    "name": "Guardian Community Early Learning Centres Pty Ltd",
    "services": 154,
    "with_fees": 151,
-   "type": "nfp-community",
+   "type": "for-profit",
    "median": 184.56,
    "sd": 17.76
   },
@@ -622,20 +622,20 @@
   "services": 18358,
   "with_vacancy": 10066,
   "by_type": {
-   "nfp-community": {
-    "services": 3788,
-    "with_vacancy": 1370,
-    "rate": 36.2
-   },
    "for-profit": {
-    "services": 9005,
-    "with_vacancy": 6004,
-    "rate": 66.7
+    "services": 10305,
+    "with_vacancy": 6820,
+    "rate": 66.2
+   },
+   "nfp-community": {
+    "services": 3205,
+    "with_vacancy": 1050,
+    "rate": 32.8
    },
    "unknown": {
-    "services": 1772,
-    "with_vacancy": 922,
-    "rate": 52
+    "services": 1142,
+    "with_vacancy": 474,
+    "rate": 41.5
    },
    "govt-state": {
     "services": 734,
@@ -648,9 +648,9 @@
     "rate": 31.2
    },
    "nfp-other": {
-    "services": 2255,
-    "with_vacancy": 1471,
-    "rate": 65.2
+    "services": 2168,
+    "with_vacancy": 1423,
+    "rate": 65.6
    }
   }
  }
