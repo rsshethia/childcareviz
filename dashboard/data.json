@@ -1,0 +1,277 @@
+{
+ "generated": "2026-10-16",
+ "coverage": {
+  "fee_rows": 77354,
+  "pages": 18419,
+  "clean_pages": 10289,
+  "quarantine": {
+   "no-fee-reported": 32296,
+   "hourly-suspect-daily-rate": 2980,
+   "fulldy-out-of-range": 650,
+   "halfdy-out-of-range": 80,
+   "oshc-out-of-range": 20
+  }
+ },
+ "provider_mix": {
+  "nfp": {
+   "services": 5974,
+   "withFees": 2544
+  },
+  "for-profit": {
+   "services": 9066,
+   "withFees": 4845
+  },
+  "unknown": {
+   "services": 1861,
+   "withFees": 967
+  },
+  "govt": {
+   "services": 1282,
+   "withFees": 165
+  }
+ },
+ "state_table": [
+  {
+   "state": "ACT",
+   "provider_type": "for-profit",
+   "services": 64,
+   "median": 181,
+   "mean": 169.46
+  },
+  {
+   "state": "ACT",
+   "provider_type": "nfp",
+   "services": 92,
+   "median": 155.47,
+   "mean": 148.27
+  },
+  {
+   "state": "ACT",
+   "provider_type": "unknown",
+   "services": 14,
+   "median": 157,
+   "mean": 155.32
+  },
+  {
+   "state": "NSW",
+   "provider_type": "for-profit",
+   "services": 2103,
+   "median": 161,
+   "mean": 157.44
+  },
+  {
+   "state": "NSW",
+   "provider_type": "govt",
+   "services": 87,
+   "median": 130,
+   "mean": 130.75
+  },
+  {
+   "state": "NSW",
+   "provider_type": "nfp",
+   "services": 621,
+   "median": 129,
+   "mean": 125.71
+  },
+  {
+   "state": "NSW",
+   "provider_type": "unknown",
+   "services": 456,
+   "median": 159,
+   "mean": 151.28
+  },
+  {
+   "state": "NT",
+   "provider_type": "for-profit",
+   "services": 18,
+   "median": 160.36,
+   "mean": 162.97
+  },
+  {
+   "state": "NT",
+   "provider_type": "nfp",
+   "services": 65,
+   "median": 125,
+   "mean": 123.37
+  },
+  {
+   "state": "NT",
+   "provider_type": "unknown",
+   "services": 4,
+   "median": 120,
+   "mean": 106.63
+  },
+  {
+   "state": "QLD",
+   "provider_type": "for-profit",
+   "services": 839,
+   "median": 163.22,
+   "mean": 159.24
+  },
+  {
+   "state": "QLD",
+   "provider_type": "govt",
+   "services": 3,
+   "median": 125,
+   "mean": 126.67
+  },
+  {
+   "state": "QLD",
+   "provider_type": "nfp",
+   "services": 722,
+   "median": 131.15,
+   "mean": 118.9
+  },
+  {
+   "state": "QLD",
+   "provider_type": "unknown",
+   "services": 99,
+   "median": 150,
+   "mean": 135.88
+  },
+  {
+   "state": "SA",
+   "provider_type": "for-profit",
+   "services": 156,
+   "median": 167.89,
+   "mean": 167.31
+  },
+  {
+   "state": "SA",
+   "provider_type": "govt",
+   "services": 6,
+   "median": 135,
+   "mean": 129
+  },
+  {
+   "state": "SA",
+   "provider_type": "nfp",
+   "services": 328,
+   "median": 129,
+   "mean": 116.86
+  },
+  {
+   "state": "SA",
+   "provider_type": "unknown",
+   "services": 58,
+   "median": 157,
+   "mean": 136.71
+  },
+  {
+   "state": "TAS",
+   "provider_type": "for-profit",
+   "services": 49,
+   "median": 157.6,
+   "mean": 151.09
+  },
+  {
+   "state": "TAS",
+   "provider_type": "govt",
+   "services": 4,
+   "median": 101,
+   "mean": 116.64
+  },
+  {
+   "state": "TAS",
+   "provider_type": "nfp",
+   "services": 83,
+   "median": 146.17,
+   "mean": 130.97
+  },
+  {
+   "state": "TAS",
+   "provider_type": "unknown",
+   "services": 22,
+   "median": 100,
+   "mean": 108.18
+  },
+  {
+   "state": "VIC",
+   "provider_type": "for-profit",
+   "services": 1016,
+   "median": 168.75,
+   "mean": 165.83
+  },
+  {
+   "state": "VIC",
+   "provider_type": "govt",
+   "services": 61,
+   "median": 159.7,
+   "mean": 155.53
+  },
+  {
+   "state": "VIC",
+   "provider_type": "nfp",
+   "services": 434,
+   "median": 167.85,
+   "mean": 160.42
+  },
+  {
+   "state": "VIC",
+   "provider_type": "unknown",
+   "services": 249,
+   "median": 167.1,
+   "mean": 156.96
+  },
+  {
+   "state": "WA",
+   "provider_type": "for-profit",
+   "services": 600,
+   "median": 167.7,
+   "mean": 160.54
+  },
+  {
+   "state": "WA",
+   "provider_type": "govt",
+   "services": 4,
+   "median": 135,
+   "mean": 133.75
+  },
+  {
+   "state": "WA",
+   "provider_type": "nfp",
+   "services": 199,
+   "median": 159,
+   "mean": 148.4
+  },
+  {
+   "state": "WA",
+   "provider_type": "unknown",
+   "services": 65,
+   "median": 152.2,
+   "mean": 151.77
+  }
+ ],
+ "quality_vs_fee": {
+  "Meeting NQS": {
+   "n": 6265,
+   "median": 159,
+   "mean": 148.69
+  },
+  "Exceeding NQS": {
+   "n": 1114,
+   "median": 165.36,
+   "mean": 159.28
+  },
+  "Working Towards NQS": {
+   "n": 606,
+   "median": 152,
+   "mean": 141.24
+  },
+  "Significant Improvement Required": {
+   "n": 1,
+   "median": 89.97,
+   "mean": 89.97
+  },
+  "Unrated": {
+   "n": 522,
+   "median": 166,
+   "mean": 156.03
+  },
+  "Excellent": {
+   "n": 13,
+   "median": 142.35,
+   "mean": 145.73
+  }
+ }
+}

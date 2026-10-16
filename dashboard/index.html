@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChildCareViz — what childcare costs across Australia</title>
+<style>
+  :root { --ink:#1e293b; --mut:#64748b; --acc:#0ea5e9; --bg:#f8fafc; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink); background: var(--bg); margin: 0; }
+  header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px 20px; }
+  header { padding-top: 28px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--mut); margin: 0 0 12px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; }
+  .card b { font-size: 1.25rem; display: block; }
+  .card span { color: var(--mut); font-size: .8rem; }
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+  select { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; font-size: .9rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+  th { background: #f1f5f9; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--mut); }
+  .bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--acc), #6366f1); margin-top: 4px; }
+  .note { color: var(--mut); font-size: .82rem; }
+  section { margin: 22px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ChildCareViz 🇦🇺</h1>
+  <p class="sub">Clean daily fees (quarantined) by state × provider type. Data: ACECQA registers + StartingBlocks crawl <span id="gen"></span>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="filters">
+    <label>State <select id="fState"><option value="">All states</option></select></label>
+    <label>Provider <select id="fType"><option value="">All types</option></select></label>
+  </div>
+</header>
+<main>
+  <section>
+    <h2>Median full-day fee</h2>
+    <table><thead><tr><th>State</th><th>Provider type</th><th>Services w/ fees</th><th>Median / day</th></tr></thead>
+    <tbody id="rows"></tbody></table>
+    <p class="note">For-profit vs not-for-profit gap is the story: NSW $161 vs $129, QLD $163 vs $131. Govt rows are mostly preschools/OSHC with few daily fees. Outliers (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y) excluded — see methodology.</p>
+  </section>
+  <section>
+    <h2>Quality vs fee</h2>
+    <table><thead><tr><th>NQS rating</th><th>Services</th><th>Median / day</th></tr></thead>
+    <tbody id="qrows"></tbody></table>
+  </section>
+  <section>
+    <h2>Coverage &amp; methodology</h2>
+    <p class="note" id="cov"></p>
+    <p class="note">Sources: <a href="https://www.acecqa.gov.au/resources/national-registers">ACECQA national registers</a>,
+    <a href="https://startingblocks.gov.au/find-child-care">StartingBlocks Find Child Care</a> (per-service vacanciesAndFees JSON),
+    CCS benchmarks via the <a href="https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports">Dept of Education</a>.
+    Every fee keeps its source URL + fetch date. Full pipeline: <a href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">docs/etl.md</a>.</p>
+  </section>
+</main>
+<footer><p class="note">Code: MIT. Data © its owners — derived aggregates with links back to source.</p></footer>
+<script>
+fetch('data.json').then(r => r.json()).then(d => {
+  document.getElementById('gen').textContent = '· generated ' + d.generated;
+  const cov = d.coverage;
+  const cards = [
+    [cov.pages.toLocaleString(), 'service pages crawled'],
+    [Math.round(100 * cov.clean_pages / cov.pages) + '%', 'pages report clean fees'],
+    [Object.values(d.provider_mix).reduce((a, b) => a + b.services, 0).toLocaleString(), 'services classified'],
+    [(d.provider_mix['for-profit']?.services || 0).toLocaleString(), 'for-profit services'],
+  ];
+  document.getElementById('cards').innerHTML = cards.map(c => `<div class="card"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  document.getElementById('cov').textContent =
+    `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
+    `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;
+  const states = [...new Set(d.state_table.map(r => r.state))].sort();
+  const types = [...new Set(d.state_table.map(r => r.provider_type))].sort();
+  const fs = document.getElementById('fState'), ft = document.getElementById('fType');
+  states.forEach(s => fs.add(new Option(s || '(blank)', s)));
+  types.forEach(t => ft.add(new Option(t, t)));
+  const maxMed = Math.max(...d.state_table.map(r => r.median || 0));
+  function render() {
+    const rows = d.state_table.filter(r =>
+      (!fs.value || r.state === fs.value) && (!ft.value || r.provider_type === ft.value) && r.median);
+    document.getElementById('rows').innerHTML = rows.map(r => `<tr><td>${r.state || '—'}</td><td>${r.provider_type}</td><td>${r.services}</td><td>$${r.median}<div class="bar" style="width:${Math.round(100 * r.median / maxMed)}%"></div></td></tr>`).join('');
+  }
+  fs.onchange = render; ft.onchange = render; render();
+  document.getElementById('qrows').innerHTML = Object.entries(d.quality_vs_fee)
+    .sort((a, b) => b[1].n - a[1].n)
+    .map(([k, v]) => `<tr><td>${k}</td><td>${v.n.toLocaleString()}</td><td>${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
+});
+</script>
+</body>
+</html>
