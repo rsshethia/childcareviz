@@ -3,6 +3,8 @@ dist/
 logs/
 data/raw/*
 !data/raw/_manifest.csv
+data/abs/
+*.zip
 data/processed/
 .env
 *.log
