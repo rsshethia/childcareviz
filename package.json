@@ -1,0 +1,26 @@
+{
+  "name": "childcareviz",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scrape:sitemap": "tsx src/scraper/run.ts --sitemap-only",
+    "scrape:fees": "tsx src/scraper/run.ts",
+    "scrape:fees:sample": "tsx src/scraper/run.ts --sample 5",
+    "db:migrate": "psql $DATABASE_URL -f db/schema.sql",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "latest",
+    "dotenv": "^16.4.5",
+    "pg": "^8.12.0",
+    "p-limit": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": { "node": ">=22" }
+}

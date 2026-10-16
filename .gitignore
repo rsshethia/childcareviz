@@ -1,0 +1,9 @@
+node_modules/
+dist/
+data/raw/*
+!data/raw/_manifest.csv
+data/processed/
+.env
+*.log
+fees-*.jsonl
+sitemap-urls.txt

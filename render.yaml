@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: childcareviz-web
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: MAPBOX_TOKEN
+        sync: false
+      - key: TYPESAFE_API_KEY
+        sync: false
+  - type: worker
+    name: childcareviz-scraper
+    runtime: node
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm run scrape:fees
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+# Cron: run scraper weekly (Render cron jobs are configured in dashboard; keep ISR 5min in mind — no need for higher frequency)
