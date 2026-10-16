@@ -12,6 +12,13 @@ app.use(express.static('dashboard'));
 
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 
+// Public client config. Only ever exposes the *public* Mapbox token
+// (restrict it to your Render domain in Mapbox Studio). Secret keys stay out.
+app.get('/api/config', (_req, res) => {
+  const t = process.env.MAPBOX_TOKEN || process.env.MAPBOX || null;
+  res.json({ mapboxToken: t ? String(t).replace(/^['"]|['"]$/g, '') : null });
+});
+
 // National counters + quarantine split (powers Overview cards).
 app.get('/api/stats', async (_req, res) => {
   try {

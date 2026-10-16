@@ -435,8 +435,13 @@ fetch('data.json').then(r => r.json()).then(d => {
 });
 function initMap() {
   const box = document.getElementById('tok');
-  const token = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
-  if (token) box.value = token;
+  async function serverToken() {
+    try {
+      const r = await fetch('/api/config');
+      const j = await r.json();
+      return j.mapboxToken || '';
+    } catch (e) { return ''; }
+  }
   let map = null, fullFc = null, loaded = false;
   function checkedTypes() {
     return [...document.querySelectorAll('[data-t]:checked')].map(x => x.dataset.t);
@@ -479,7 +484,13 @@ function initMap() {
   }
   document.getElementById('drawBtn').addEventListener('click', draw);
   box.addEventListener('change', draw);
-  draw();
+  (async () => {
+    const token = new URLSearchParams(location.search).get('token')
+      || localStorage.getItem('mapbox')
+      || await serverToken();
+    if (token) { box.value = token; draw(); }
+    else draw();
+  })();
 }
 </script>
 </body>
