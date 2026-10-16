@@ -1,5 +1,6 @@
 node_modules/
 dist/
+logs/
 data/raw/*
 !data/raw/_manifest.csv
 data/processed/

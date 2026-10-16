@@ -6,6 +6,12 @@ import { parse } from 'csv-parse';
 import { createInterface } from 'node:readline';
 import { pool } from '../src/db/pool.js';
 import { classifyProvider, quarantineFee, isStale } from '../src/etl/rules.js';
+import { createLogger, attachDbSink } from '../src/log.js';
+
+attachDbSink(pool);
+const log = createLogger('db-load');
+await pool.query(`insert into load_runs (run_id, stage, target, notes) values ($1,'db-load','all','full load 2026-10-16') on conflict (run_id) do nothing`, [log.runId]);
+log.info('load started');
 
 function streamCsv(path: string, onBatch: (rows: any[]) => Promise<void>, size = 500): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -37,6 +43,7 @@ function streamCsv(path: string, onBatch: (rows: any[]) => Promise<void>, size =
 }
 
 console.log('truncating (fees, services, providers)...');
+log.info('truncating domain tables');
 await pool.query('truncate service_fees_history, services, providers cascade');
 
 let provN = 0;
@@ -60,7 +67,7 @@ await streamCsv('Approved-providers-au-export.csv', async (rows) => {
   );
   provN += ph.length;
 });
-console.log('providers:', provN);
+log.info('providers loaded', { provN });
 
 const provNameByNo = new Map<string, string>();
 const all = await pool.query('select provider_approval_no, legal_name from providers');
@@ -98,7 +105,7 @@ await streamCsv('Education-services-au-export.csv', async (rows) => {
     svcN++;
   }
 });
-console.log('services:', svcN);
+log.info('services loaded', { svcN });
 
 let feeN = 0;
 let batch: any[] = [];
@@ -160,15 +167,18 @@ for await (const line of rl) {
   if (feeBatch.length >= 500) await flush2();
 }
 await flush2();
-console.log('fee rows:', feeN, 'skipped (non-NQF, no service row):', skippedNoService);
+log.info('fee rows loaded', { feeN, skippedNoService });
 
 const v = await pool.query(`select (select count(*) from providers) as providers,
   (select count(*) from services) as services,
   (select count(*) from service_fees_history) as fees,
   (select count(*) from service_fees_history where quarantine is null) as clean,
   (select count(distinct service_approval_no) from service_fees_history where fee is not null) as services_with_fee`);
-console.log('VERIFY:', JSON.stringify(v.rows[0]));
+log.info('verify counts', v.rows[0] as Record<string, unknown>);
 await pool.query(`insert into crawl_log (finished_at, urls_targeted, urls_ok, urls_fee_found, urls_failed, notes)
   values (now(), 18492, 18419, 10454, 73, 'full load 2026-10-16: providers+services+fees with quarantine/stale')`);
+await pool.query(`update load_runs set rows_ok=$2, rows_skipped=$3, finished_at=now(), notes=$4 where run_id=$1`,
+  [log.runId, feeN, skippedNoService, 'providers+services+fees']);
+await log.close();
 await pool.end();
-console.log('FULL LOAD DONE');
+console.log('FULL LOAD DONE run=' + log.runId);

@@ -2,6 +2,9 @@ import { writeFileSync } from 'node:fs';
 import pLimit from 'p-limit';
 import { fetchSitemapUrls } from './sitemap.js';
 import { scrapeServicePage } from './servicePage.js';
+import { createLogger } from '../log.js';
+
+const log = createLogger('scraper');
 
 const args = process.argv.slice(2);
 const sitemapOnly = args.includes('--sitemap-only');
@@ -26,8 +29,9 @@ const targets = limitN > 0 ? base.slice(offsetN, offsetN + limitN) : base.slice(
 console.log(`scraping ${targets.length} pages (concurrency=${CONCURRENCY} offset=${offsetN})`);
 
 const limit = pLimit(CONCURRENCY);
-let ok = 0, feeFound = 0, failed = 0;
+let ok = 0, feeFound = 0, failed = 0, done = 0;
 const out: string[] = [];
+log.info('scrape started', { urls_targeted: targets.length, concurrency: CONCURRENCY, offset: offsetN });
 await Promise.all(targets.map((url) => limit(async () => {
   await sleep(Math.random() * DELAY_MS);
   try {
@@ -37,11 +41,14 @@ await Promise.all(targets.map((url) => limit(async () => {
     for (const r of rows) out.push(JSON.stringify(r));
   } catch (e) {
     failed++;
-    console.error('FAIL', url, (e as Error).message);
+    log.warn('page failed', { url, error: (e as Error).message });
   }
+  done++;
+  if (done % 500 === 0) log.info('progress', { done, total: targets.length, ok, feeFound, failed });
 })));
 
 const stamp = new Date().toISOString().slice(0, 10);
 const fname = sampleN > 0 ? `fees-sample-${stamp}.jsonl` : (limitN > 0 ? `fees-${stamp}-off${offsetN}-lim${limitN}.jsonl` : `fees-${stamp}.jsonl`);
 writeFileSync(fname, out.join('\n'));
-console.log(JSON.stringify({ urls_targeted: targets.length, urls_ok: ok, urls_fee_found: feeFound, urls_failed: failed, file: fname }));
+log.info('scrape finished', { urls_targeted: targets.length, urls_ok: ok, urls_fee_found: feeFound, urls_failed: failed, file: fname });
+await log.close();

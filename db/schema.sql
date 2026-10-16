@@ -57,3 +57,28 @@ create table if not exists crawl_log (
   urls_targeted int, urls_ok int, urls_fee_found int, urls_failed int,
   notes text
 );
+
+-- Operational logging: code-run events + DB load audit trail.
+create table if not exists app_log (
+  id bigserial primary key,
+  run_id text not null,
+  stage text not null, -- scraper | etl | db-load | migrate
+  level text not null, -- info | warn | error
+  message text not null,
+  details jsonb,
+  created_at timestamptz default now()
+);
+create index if not exists idx_app_log_run on app_log(run_id);
+
+create table if not exists load_runs (
+  id bigserial primary key,
+  run_id text not null unique,
+  stage text not null,
+  target text not null, -- providers | services | fees | all
+  rows_ok int default 0,
+  rows_failed int default 0,
+  rows_skipped int default 0,
+  started_at timestamptz default now(),
+  finished_at timestamptz,
+  notes text
+);
