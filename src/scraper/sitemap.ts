@@ -1,10 +1,18 @@
 const UA = 'Mozilla/5.0 (childcareviz research; contact: admin) AppleWebKit/537.36';
 
-export async function fetchText(url: string, timeoutMs = 30000): Promise<string> {
+export async function fetchText(url: string, timeoutMs = 30000, hops = 0): Promise<string> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: ctrl.signal });
+    const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: ctrl.signal, redirect: 'manual' });
+    if ([301, 302, 303, 307, 308].includes(res.status)) {
+      if (hops > 3) throw new Error(`Too many redirects ${url}`);
+      const loc = res.headers.get('location');
+      if (!loc) throw new Error(`HTTP ${res.status} (no location) ${url}`);
+      const next = new URL(loc, url).toString();
+      clearTimeout(t);
+      return fetchText(next, timeoutMs, hops + 1);
+    }
     if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
     return await res.text();
   } finally {
