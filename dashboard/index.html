@@ -3,114 +3,157 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ChildCareViz — what childcare costs across Australia</title>
+<title>ChildCareViz — national childcare analytics</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.js"></script>
 <style>
-  :root { --ink:#1e293b; --mut:#64748b; --acc:#0ea5e9; --bg:#f8fafc; }
+  :root { --ink:#1e293b; --mut:#64748b; --acc:#0ea5e9; --bg:#f1f5f9; --card:#fff; --line:#e2e8f0; }
+  * { box-sizing: border-box; }
   body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink); background: var(--bg); margin: 0; }
-  header, main, footer { max-width: 960px; margin: 0 auto; padding: 16px 20px; }
-  header { padding-top: 28px; }
-  h1 { font-size: 1.6rem; margin: 0 0 4px; }
-  .sub { color: var(--mut); margin: 0 0 12px; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
-  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; }
-  .card b { font-size: 1.25rem; display: block; }
+  .topbar { background: #0f172a; color: #fff; }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 16px 20px 0; }
+  .topbar h1 { font-size: 1.3rem; margin: 0; }
+  .topbar h1 span { color: #38bdf8; }
+  .topbar p { color: #94a3b8; font-size: .85rem; margin: 4px 0 0; }
+  nav.tabs { display: flex; gap: 4px; margin-top: 14px; overflow-x: auto; }
+  nav.tabs button { background: none; border: none; color: #cbd5e1; padding: 10px 14px; font-size: .9rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+  nav.tabs button:hover { color: #fff; }
+  nav.tabs button.active { color: #fff; border-bottom-color: var(--acc); font-weight: 600; }
+  main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0 0 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .card b { font-size: 1.35rem; display: block; }
   .card span { color: var(--mut); font-size: .8rem; }
-  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
-  select { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; font-size: .9rem; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
-  th { background: #f1f5f9; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--mut); }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+  .panel h2 { margin: 0 0 4px; font-size: 1.05rem; }
+  .panel .desc { color: var(--mut); font-size: .83rem; margin: 0 0 10px; }
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; font-size: .88rem; }
+  select, input[type=text] { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #f1f5f9; }
+  th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; color: var(--mut); }
   .bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--acc), #6366f1); margin-top: 4px; }
   .note { color: var(--mut); font-size: .82rem; }
-  section { margin: 22px 0; }
-  #map { width: 100%; height: 480px; border-radius: 10px; border: 1px solid #e2e8f0; }
-  .maprow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 8px 0; font-size: .85rem; }
+  #map { width: 100%; height: 520px; border-radius: 10px; border: 1px solid var(--line); }
+  .maprow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 0 0 10px; font-size: .85rem; }
   .maprow label { display: flex; gap: 4px; align-items: center; }
-  #tok { width: 260px; padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
+  #tok { width: 260px; }
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 20px 30px; }
 </style>
 </head>
 <body>
-<header>
-  <h1>ChildCareViz 🇦🇺</h1>
-  <p class="sub">Clean daily fees (quarantined) by state × provider type. Data: ACECQA registers + StartingBlocks crawl <span id="gen"></span>.</p>
-  <div class="cards" id="cards"></div>
-  <div class="filters">
-    <label>State <select id="fState"><option value="">All states</option></select></label>
-    <label>Provider <select id="fType"><option value="">All types</option></select></label>
-  </div>
-</header>
+<div class="topbar"><div class="topbar-inner">
+  <h1>ChildCareViz <span>· national childcare analytics</span></h1>
+  <p>Who runs it · what it costs · where it is — ACECQA + StartingBlocks, Australia-wide <span id="gen"></span></p>
+  <nav class="tabs" id="tabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="map">Map</button>
+    <button data-tab="pricing">Pricing</button>
+    <button data-tab="providers">Providers</button>
+    <button data-tab="quality">Quality</button>
+    <button data-tab="about">Methodology</button>
+  </nav>
+</div></div>
 <main>
-  <section>
-    <h2>Map — every service, coloured by who runs it</h2>
-    <div class="maprow">
-      <span id="mapstat" class="note">loading points…</span>
-      <label><input type="checkbox" data-t="for-profit" checked> For-profit</label>
-      <label><input type="checkbox" data-t="nfp-community" checked> NFP community</label>
-      <label><input type="checkbox" data-t="nfp-other" checked> NFP other</label>
-      <label><input type="checkbox" data-t="govt-local" checked> Council-run</label>
-      <label><input type="checkbox" data-t="govt-state" checked> State govt</label>
-      <input id="tok" placeholder="paste Mapbox public token (?token=… works too)">
+  <section class="tab active" id="tab-overview">
+    <div class="cards" id="cards"></div>
+    <div class="panel"><h2>Council-run spotlight</h2><p class="desc" id="council"></p></div>
+    <div class="panel"><h2>For-profit premium at a glance</h2><p class="desc" id="premium"></p></div>
+  </section>
+
+  <section class="tab" id="tab-map">
+    <div class="panel"><h2>Every service, coloured by who runs it</h2>
+      <p class="desc">Green council-run · blue for-profit · purple NFP · grey state/unknown. Click a dot for details.</p>
+      <div class="maprow">
+        <span id="mapstat" class="note">loading points…</span>
+        <label><input type="checkbox" data-t="for-profit" checked> For-profit</label>
+        <label><input type="checkbox" data-t="nfp-community" checked> NFP community</label>
+        <label><input type="checkbox" data-t="nfp-other" checked> NFP other</label>
+        <label><input type="checkbox" data-t="govt-local" checked> Council-run</label>
+        <label><input type="checkbox" data-t="govt-state" checked> State govt</label>
+        <input id="tok" type="text" placeholder="Mapbox public token">
+      </div>
+      <div id="map"></div>
+      <p class="note">Token stays in your browser (localStorage) — never committed.</p>
     </div>
-    <div id="map"></div>
-    <p class="note">Token stays in your browser (localStorage) — never committed. Dots: green council-run, blue for-profit, purple NFP, grey state/unknown. Click a dot for name, fee, rating.</p>
   </section>
-  <section>
-    <h2>Who runs what — services, places, pricing</h2>
-    <table><thead><tr><th>Provider type</th><th>Services</th><th>Approved places</th><th>Long day care</th><th>Preschool</th><th>OSHC</th><th>Family day care</th></tr></thead>
-    <tbody id="mixrows"></tbody></table>
-    <p class="note" id="council"></p>
+
+  <section class="tab" id="tab-pricing">
+    <div class="panel"><h2>Median full-day fee by state × provider type</h2>
+      <p class="desc">Clean medians only — quarantined outliers excluded (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y).</p>
+      <div class="filters">
+        <label>State <select id="fState"><option value="">All states</option></select></label>
+        <label>Provider <select id="fType"><option value="">All types</option></select></label>
+      </div>
+      <table><thead><tr><th>State</th><th>Provider type</th><th>Services w/ fees</th><th>Median / day</th></tr></thead>
+      <tbody id="rows"></tbody></table>
+    </div>
   </section>
-  <section>
-    <h2>Median full-day fee</h2>
-    <table><thead><tr><th>State</th><th>Provider type</th><th>Services w/ fees</th><th>Median / day</th></tr></thead>
-    <tbody id="rows"></tbody></table>
-    <p class="note">Council-run, community, for-profit and state medians side by side. Outliers (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y) excluded — see methodology.</p>
+
+  <section class="tab" id="tab-providers">
+    <div class="panel"><h2>Who runs what — services, places, mix</h2>
+      <p class="desc">Service mix per operator type: long day care, preschool, OSHC, family day care + approved places.</p>
+      <table><thead><tr><th>Provider type</th><th>Services</th><th>Places</th><th>Long day care</th><th>Preschool</th><th>OSHC</th><th>Family day care</th></tr></thead>
+      <tbody id="mixrows"></tbody></table>
+    </div>
   </section>
-  <section>
-    <h2>Quality vs fee</h2>
-    <table><thead><tr><th>NQS rating</th><th>Services</th><th>Median / day</th></tr></thead>
-    <tbody id="qrows"></tbody></table>
+
+  <section class="tab" id="tab-quality">
+    <div class="panel"><h2>NQS rating vs fee</h2>
+      <p class="desc">Do higher-rated services charge more? Clean full-day medians per overall rating.</p>
+      <table><thead><tr><th>NQS rating</th><th>Services</th><th>Median / day</th></tr></thead>
+      <tbody id="qrows"></tbody></table>
+    </div>
   </section>
-  <section>
-    <h2>Coverage &amp; methodology</h2>
-    <p class="note" id="cov"></p>
-    <p class="note">Sources: <a href="https://www.acecqa.gov.au/resources/national-registers">ACECQA national registers</a>,
-    <a href="https://startingblocks.gov.au/find-child-care">StartingBlocks Find Child Care</a> (per-service vacanciesAndFees JSON),
-    CCS benchmarks via the <a href="https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports">Dept of Education</a>.
-    Every fee keeps its source URL + fetch date. Full pipeline: <a href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">docs/etl.md</a>.</p>
+
+  <section class="tab" id="tab-about">
+    <div class="panel"><h2>Coverage</h2><p class="desc" id="cov"></p></div>
+    <div class="panel"><h2>Sources &amp; pipeline</h2>
+      <p class="note">Sources: <a href="https://www.acecqa.gov.au/resources/national-registers">ACECQA national registers</a>,
+      <a href="https://startingblocks.gov.au/find-child-care">StartingBlocks Find Child Care</a>,
+      <a href="https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports">Dept of Education CCS reports</a>.
+      Every fee keeps its source URL + fetch date. Pipeline: <a href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">docs/etl.md</a>.
+      Code MIT; data © its owners.</p>
+    </div>
   </section>
 </main>
-<footer><p class="note">Code: MIT. Data © its owners — derived aggregates with links back to source.</p></footer>
+<footer><p class="note">ChildCareViz — open national childcare data platform.</p></footer>
 <script>
+let DB = null, mapDrawn = false;
+document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#tabs button').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('tab-' + b.dataset.tab).classList.add('active');
+  if (b.dataset.tab === 'map' && !mapDrawn) { mapDrawn = true; initMap(); }
+}));
 fetch('data.json').then(r => r.json()).then(d => {
-  document.getElementById('gen').textContent = '· generated ' + d.generated;
-  const cov = d.coverage;
-  const fmt = n => (n || 0).toLocaleString();
-  const mix = d.provider_mix;
+  DB = d;
+  document.getElementById('gen').textContent = '· data ' + d.generated;
+  const cov = d.coverage, mix = d.provider_mix, fmt = n => (n || 0).toLocaleString();
   const total = Object.values(mix).reduce((a, b) => a + b.services, 0);
-  const order = ['for-profit', 'nfp-community', 'nfp-other', 'govt-local', 'govt-state', 'unknown'];
-  const labels = { 'for-profit': 'For-profit', 'nfp-community': 'Not-for-profit · community', 'nfp-other': 'Not-for-profit · other', 'govt-local': 'Council-run', 'govt-state': 'State/territory govt', 'unknown': 'Unknown' };
-  const cards = [
+  document.getElementById('cards').innerHTML = [
     [cov.pages.toLocaleString(), 'service pages crawled'],
     [Math.round(100 * cov.clean_pages / cov.pages) + '%', 'pages report clean fees'],
     [fmt(mix['govt-local']?.services), 'council-run services'],
     [fmt(mix['for-profit']?.services), 'for-profit services'],
-  ];
-  document.getElementById('cards').innerHTML = cards.map(c => `<div class="card"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  ].map(c => `<div class="card"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  const cb = Object.entries(d.council_by_state || {}).sort((a, b) => b[1] - a[1]);
+  const nswC = (d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'govt-local') || {}).median;
+  const nswF = (d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'for-profit') || {}).median;
+  document.getElementById('council').textContent =
+    `${fmt(mix['govt-local']?.services)} council-run services — ` + cb.map(([s, n]) => `${s || '—'} ${n}`).join(', ') + '.';
+  document.getElementById('premium').textContent =
+    `NSW council-run median $${nswC || '—'}/day vs for-profit $${nswF || '—'}. ` +
+    `QLD for-profit $${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'for-profit') || {}).median || '—'} vs NFP community $${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'nfp-community') || {}).median || '—'}.`;
+  const order = ['for-profit', 'nfp-community', 'nfp-other', 'govt-local', 'govt-state', 'unknown'];
+  const labels = { 'for-profit': 'For-profit', 'nfp-community': 'NFP · community', 'nfp-other': 'NFP · other', 'govt-local': 'Council-run', 'govt-state': 'State govt', 'unknown': 'Unknown' };
   document.getElementById('mixrows').innerHTML = order.filter(t => mix[t]).map(t => {
     const m = mix[t];
     return `<tr><td>${labels[t] || t}</td><td>${fmt(m.services)} (${Math.round(100 * m.services / total)}%)</td><td>${fmt(m.places)}</td><td>${fmt(m.ldc)}</td><td>${fmt(m.preschool)}</td><td>${fmt(m.oshc)}</td><td>${fmt(m.fdc)}</td></tr>`;
   }).join('');
-  const cb = Object.entries(d.council_by_state || {}).sort((a, b) => b[1] - a[1]);
-  document.getElementById('council').textContent =
-    `Council-run spotlight: ${fmt(mix['govt-local']?.services)} services — ` +
-    cb.map(([s, n]) => `${s || '—'} ${n}`).join(', ') + '. ' +
-    `NSW council median $${(d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'govt-local') || {}).median || '—'}/day vs for-profit $${(d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'for-profit') || {}).median || '—'}.`;
-  document.getElementById('cov').textContent =
-    `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
-    `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;
   const states = [...new Set(d.state_table.map(r => r.state))].sort();
   const types = [...new Set(d.state_table.map(r => r.provider_type))].sort();
   const fs = document.getElementById('fState'), ft = document.getElementById('fType');
@@ -126,10 +169,10 @@ fetch('data.json').then(r => r.json()).then(d => {
   document.getElementById('qrows').innerHTML = Object.entries(d.quality_vs_fee)
     .sort((a, b) => b[1].n - a[1].n)
     .map(([k, v]) => `<tr><td>${k}</td><td>${v.n.toLocaleString()}</td><td>${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
-  initMap();
+  document.getElementById('cov').textContent =
+    `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
+    `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;
 });
-
-const TYPE_COLOR = { 'for-profit': '#2563eb', 'nfp-community': '#9333ea', 'nfp-other': '#a855f7', 'govt-local': '#16a34a', 'govt-state': '#64748b', 'unknown': '#94a3b8' };
 function initMap() {
   const box = document.getElementById('tok');
   const token = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
@@ -163,7 +206,7 @@ function initMap() {
       map.addControl(new mapboxgl.NavigationControl());
     });
   }
-  box.addEventListener('change', draw);
+  box.addEventListener('change', () => { document.getElementById('map').innerHTML = ''; draw(); });
   draw();
 }
 </script>
