@@ -2,7 +2,7 @@
  "generated": "2026-10-16",
  "coverage": {
   "fee_rows": 77354,
-  "pages": 18419,
+  "pages": 18358,
   "clean_pages": 10289,
   "quarantine": {
    "no-fee-reported": 32296,
@@ -388,6 +388,270 @@
    "n": 13,
    "median": 142.35,
    "mean": 145.73
+  }
+ },
+ "operators": [
+  {
+   "name": "Goodstart Early Learning Ltd",
+   "services": 609,
+   "with_fees": 604,
+   "type": "nfp-other",
+   "median": 168.96,
+   "sd": 12.43
+  },
+  {
+   "name": "TheirCare Pty Ltd",
+   "services": 499,
+   "with_fees": 3,
+   "type": "for-profit",
+   "median": 88,
+   "sd": 21.31
+  },
+  {
+   "name": "Camp Australia Pty Limited",
+   "services": 388,
+   "with_fees": 10,
+   "type": "for-profit",
+   "median": 67.89,
+   "sd": 7.21
+  },
+  {
+   "name": "Department for Education",
+   "services": 382,
+   "with_fees": 2,
+   "type": "govt-state",
+   "median": 110,
+   "sd": 3
+  },
+  {
+   "name": "TEAM HOLIDAY PTY LTD",
+   "services": 281,
+   "with_fees": 14,
+   "type": "for-profit",
+   "median": 75,
+   "sd": 15.1
+  },
+  {
+   "name": "G8 Education Limited",
+   "services": 280,
+   "with_fees": 280,
+   "type": "unknown",
+   "median": 178.35,
+   "sd": 12.12
+  },
+  {
+   "name": "OSHCLUB PTY LTD",
+   "services": 233,
+   "with_fees": 0,
+   "type": "for-profit",
+   "median": null,
+   "sd": 0
+  },
+  {
+   "name": "Affinity Education Group Pty Limited",
+   "services": 217,
+   "with_fees": 216,
+   "type": "for-profit",
+   "median": 181.25,
+   "sd": 21.12
+  },
+  {
+   "name": "The Creche and Kindergarten Association Limited",
+   "services": 182,
+   "with_fees": 59,
+   "type": "nfp-community",
+   "median": 159.8,
+   "sd": 17.49
+  },
+  {
+   "name": "Guardian Community Early Learning Centres Pty Ltd",
+   "services": 154,
+   "with_fees": 151,
+   "type": "nfp-community",
+   "median": 184.56,
+   "sd": 17.76
+  },
+  {
+   "name": "MELBOURNE ARCHDIOCESE CATHOLIC SCHOOLS EARLY YEARS EDUCATION LTD",
+   "services": 148,
+   "with_fees": 10,
+   "type": "nfp-other",
+   "median": 79.4,
+   "sd": 34.93
+  },
+  {
+   "name": "Corporation of the Trustees of the Roman Catholic Archdiocese of Brisbane - Centacare Administration Services",
+   "services": 136,
+   "with_fees": 118,
+   "type": "nfp-other",
+   "median": 68.48,
+   "sd": 21.56
+  },
+  {
+   "name": "Department of Education",
+   "services": 120,
+   "with_fees": 0,
+   "type": "govt-state",
+   "median": null,
+   "sd": 0
+  },
+  {
+   "name": "KU Children's Services",
+   "services": 116,
+   "with_fees": 0,
+   "type": "nfp-other",
+   "median": null,
+   "sd": 0
+  },
+  {
+   "name": "Helping Hands Network Pty Ltd",
+   "services": 104,
+   "with_fees": 0,
+   "type": "for-profit",
+   "median": null,
+   "sd": 0
+  },
+  {
+   "name": "Young Mens Christian Association Of Ballarat Inc",
+   "services": 103,
+   "with_fees": 1,
+   "type": "nfp-community",
+   "median": 114,
+   "sd": 0
+  },
+  {
+   "name": "UNITING (VICTORIA AND TASMANIA) LIMITED",
+   "services": 89,
+   "with_fees": 23,
+   "type": "nfp-other",
+   "median": 106,
+   "sd": 26.16
+  },
+  {
+   "name": "Queensland Police-Citizens Youth Welfare Association",
+   "services": 80,
+   "with_fees": 7,
+   "type": "nfp-community",
+   "median": 76.25,
+   "sd": 9.08
+  },
+  {
+   "name": "NEST EARLY EDUCATION SERVICES PTY LTD",
+   "services": 76,
+   "with_fees": 76,
+   "type": "for-profit",
+   "median": 205.3,
+   "sd": 10.15
+  },
+  {
+   "name": "Extend (Australia) Pty Ltd",
+   "services": 75,
+   "with_fees": 0,
+   "type": "for-profit",
+   "median": null,
+   "sd": 0
+  }
+ ],
+ "age_premium": [
+  {
+   "age": "0–12 months",
+   "n": 6351,
+   "median": 166.88
+  },
+  {
+   "age": "13–24 months",
+   "n": 6558,
+   "median": 166.4
+  },
+  {
+   "age": "25–35 months",
+   "n": 6853,
+   "median": 165
+  },
+  {
+   "age": "36 months to preschool",
+   "n": 7198,
+   "median": 160
+  },
+  {
+   "age": "Outside school hours",
+   "n": 3470,
+   "median": 125
+  }
+ ],
+ "inclusions": [
+  {
+   "name": "Afternoon tea",
+   "n": 33284
+  },
+  {
+   "name": "Education Programs",
+   "n": 33206
+  },
+  {
+   "name": "Morning Tea",
+   "n": 29244
+  },
+  {
+   "name": "Lunch",
+   "n": 27685
+  },
+  {
+   "name": "Breakfast",
+   "n": 26789
+  },
+  {
+   "name": "Nappies",
+   "n": 21200
+  },
+  {
+   "name": "Excursions / Incursions",
+   "n": 20832
+  },
+  {
+   "name": "Other Meals",
+   "n": 18993
+  },
+  {
+   "name": "Transport",
+   "n": 4702
+  }
+ ],
+ "vacancy": {
+  "overall": 54.8,
+  "services": 18358,
+  "with_vacancy": 10066,
+  "by_type": {
+   "nfp-community": {
+    "services": 3788,
+    "with_vacancy": 1370,
+    "rate": 36.2
+   },
+   "for-profit": {
+    "services": 9005,
+    "with_vacancy": 6004,
+    "rate": 66.7
+   },
+   "unknown": {
+    "services": 1772,
+    "with_vacancy": 922,
+    "rate": 52
+   },
+   "govt-state": {
+    "services": 734,
+    "with_vacancy": 34,
+    "rate": 4.6
+   },
+   "govt-local": {
+    "services": 557,
+    "with_vacancy": 174,
+    "rate": 31.2
+   },
+   "nfp-other": {
+    "services": 2255,
+    "with_vacancy": 1471,
+    "rate": 65.2
+   }
   }
  }
 }

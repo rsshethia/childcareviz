@@ -228,6 +228,9 @@
     <button data-tab="map" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
     <button data-tab="pricing" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pricing</button>
     <button data-tab="providers" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Providers</button>
+    <button data-tab="operators" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/></svg>Operators</button>
+    <button data-tab="value" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg>Value</button>
+    <button data-tab="supply" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Supply</button>
     <button data-tab="quality" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Quality</button>
     <button data-tab="about" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Methodology</button>
   </nav>
@@ -288,6 +291,43 @@
       <div class="table-panel-head"><div><h3>Operator mix</h3><p class="desc">Shares are of in-scope services in the current extract.</p></div></div>
       <div class="table-wrap"><table><thead><tr><th>Provider type</th><th class="num">Services</th><th class="num">Places</th><th class="num">Long day care</th><th class="num">Preschool</th><th class="num">OSHC</th><th class="num">Family day care</th></tr></thead>
       <tbody id="mixrows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-operators" role="tabpanel">
+    <div class="page-head"><h2>Chain leaderboard — who sets the price</h2><p>Top 20 operators by service count. Low spread means national uniform pricing; OSHC chains show few full-day fees because they report session prices.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Operators by footprint</h3><p class="desc">Median clean full-day fee + spread (sd). Dashes mean no full-day fees reported.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Operator</th><th>Type</th><th class="num">Services</th><th class="num">W/ fees</th><th class="num">Median / day</th><th class="num">Spread (sd)</th></tr></thead>
+      <tbody id="oprows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-value" role="tabpanel">
+    <div class="page-head"><h2>Where the value is — age premium + inclusions</h2><p>Babies cost ~$9/day more than preschoolers. Inclusions separate otherwise identical $160-days.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Baby premium</h3><p class="desc">Clean full-day medians by age band — monotonic, as expected.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Age band</th><th class="num">Fee rows</th><th class="num">Median / day</th></tr></thead>
+      <tbody id="agerows"></tbody></table></div>
+    </div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Inclusions that differentiate</h3><p class="desc">How often each inclusion appears in reported fees. Transport is rare — a real differentiator.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Inclusion</th><th class="num">Fee rows</th><th></th></tr></thead>
+      <tbody id="incrows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-supply" role="tabpanel">
+    <div class="page-head"><h2>Supply — places share + vacancies</h2><p>For-profits hold 53% of approved places. 54.8% of services report some vacancy.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Places share by operator type</h3><p class="desc">Approved places matter more than service counts for capacity planning.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Provider type</th><th class="num">Places</th><th class="num">Share</th><th></th></tr></thead>
+      <tbody id="placerows"></tbody></table></div>
+    </div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Vacancy rate by operator type</h3><p class="desc">Share of services reporting any vacancy (casual or permanent).</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Provider type</th><th class="num">Services</th><th class="num">With vacancy</th><th class="num">Rate</th></tr></thead>
+      <tbody id="vacrows"></tbody></table></div>
     </div>
   </section>
 
@@ -368,6 +408,24 @@ fetch('data.json').then(r => r.json()).then(d => {
   document.getElementById('qrows').innerHTML = Object.entries(d.quality_vs_fee)
     .sort((a, b) => b[1].n - a[1].n)
     .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td class="num">${v.n.toLocaleString()}</td><td class="num">${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
+  document.getElementById('oprows').innerHTML = (d.operators || []).map(o =>
+    `<tr><td><strong>${o.name.slice(0, 60)}</strong></td><td><span class="pill ${pill(o.type)}">${o.type}</span></td><td class="num">${fmt(o.services)}</td><td class="num">${fmt(o.with_fees)}</td><td class="num">${o.median ? '$' + o.median : '—'}</td><td class="num">${o.with_fees ? '±$' + o.sd : '—'}</td></tr>`).join('');
+  const ageMax = Math.max(...(d.age_premium || []).map(a => a.median || 0));
+  document.getElementById('agerows').innerHTML = (d.age_premium || []).map(a =>
+    `<tr><td><strong>${a.age}</strong></td><td class="num">${fmt(a.n)}</td><td class="num">$${a.median}<div class="bar" style="width:${Math.round(100 * a.median / ageMax)}%"></div></td></tr>`).join('');
+  const incMax = Math.max(...(d.inclusions || []).map(i => i.n));
+  document.getElementById('incrows').innerHTML = (d.inclusions || []).map(i =>
+    `<tr><td><strong>${i.name}</strong></td><td class="num">${fmt(i.n)}</td><td style="min-width:120px"><div class="bar" style="width:${Math.round(100 * i.n / incMax)}%"></div></td></tr>`).join('');
+  const totPlaces = Object.values(mix).reduce((a, b) => a + (b.places || 0), 0);
+  document.getElementById('placerows').innerHTML = order.filter(t => mix[t]).map(t => {
+    const sh = Math.round(100 * (mix[t].places || 0) / totPlaces);
+    return `<tr><td><span class="pill ${pill(t)}">${labels[t] || t}</span></td><td class="num">${fmt(mix[t].places)}</td><td class="num">${sh}%</td><td style="min-width:120px"><div class="bar" style="width:${sh}%"></div></td></tr>`;
+  }).join('');
+  const v = d.vacancy || { by_type: {} };
+  document.getElementById('vacrows').innerHTML = order.filter(t => v.by_type[t]).map(t => {
+    const b = v.by_type[t];
+    return `<tr><td><span class="pill ${pill(t)}">${labels[t] || t}</span></td><td class="num">${fmt(b.services)}</td><td class="num">${fmt(b.with_vacancy)}</td><td class="num">${b.rate}%<div class="bar" style="width:${Math.round(b.rate)}%"></div></td></tr>`;
+  }).join('');
   document.getElementById('cov').textContent =
     `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
     `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;
