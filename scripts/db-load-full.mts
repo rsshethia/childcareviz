@@ -157,17 +157,22 @@ void flushFees;
 const seSet = new Set<string>();
 const allSvc = await pool.query('select service_approval_no from services');
 for (const r of allSvc.rows) seSet.add(r.service_approval_no);
-let skippedNoService = 0;
-for await (const line of rl) {
+log.info('fee phase starting', { seSetSize: seSet.size });
+let skippedNoService = 0, noSe = 0, pushedCount = 0;
+const { readFileSync } = await import('node:fs');
+const feeLines = readFileSync('fees-2026-10-16.jsonl', 'utf8').split('\n');
+for (const line of feeLines) {
   if (!line.trim()) continue;
   const r = JSON.parse(line);
-  if (!r.service_approval_no) continue;
+  if (!r.service_approval_no) { noSe++; continue; }
   if (!seSet.has(r.service_approval_no)) { skippedNoService++; continue; } // non-NQF pages
   feeBatch.push(r);
+  pushedCount++;
   if (feeBatch.length >= 500) await flush2();
 }
 await flush2();
-log.info('fee rows loaded', { feeN, skippedNoService });
+if (feeN !== pushedCount) throw new Error(`fee mismatch: flushed=${feeN} pushed=${pushedCount}`);
+log.info('fee rows loaded', { feeN, skippedNoService, noSe });
 
 const v = await pool.query(`select (select count(*) from providers) as providers,
   (select count(*) from services) as services,

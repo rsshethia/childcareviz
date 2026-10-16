@@ -1,7 +1,8 @@
 // Fee-phase-only loader with full counters (re-runnable: truncates fees first).
+// Reads the whole file into memory (43MB) — readline streams proved flaky
+// (silent early end, ~15-50% rows lost with no error). Fails loudly on mismatch.
 // Usage: npx tsx scripts/db-load-fees.mts
-import { createReadStream } from 'node:fs';
-import { createInterface } from 'node:readline';
+import { readFileSync } from 'node:fs';
 import { pool } from '../src/db/pool.js';
 import { quarantineFee, isStale } from '../src/etl/rules.js';
 
@@ -12,7 +13,8 @@ console.log('services in DB (seSet size):', seSet.size);
 console.log('truncating service_fees_history...');
 await pool.query('truncate service_fees_history');
 
-let lines = 0, pushed = 0, noSe = 0, noSvc = 0, inserted = 0, batches = 0;
+const lines = readFileSync('fees-2026-10-16.jsonl', 'utf8').split('\n');
+let pushed = 0, noSe = 0, noSvc = 0, inserted = 0, batches = 0;
 const feeBatch: any[] = [];
 async function flush() {
   if (!feeBatch.length) return;
@@ -38,10 +40,8 @@ async function flush() {
   if (batches % 30 === 0) console.log(`progress batches=${batches} inserted=${inserted}`);
 }
 
-const rl = createInterface({ input: createReadStream('fees-2026-10-16.jsonl'), crlfDelay: Infinity });
-for await (const line of rl) {
+for (const line of lines) {
   if (!line.trim()) continue;
-  lines++;
   const r = JSON.parse(line);
   if (!r.service_approval_no) { noSe++; continue; }
   if (!seSet.has(r.service_approval_no)) { noSvc++; continue; }
@@ -51,5 +51,11 @@ for await (const line of rl) {
 }
 await flush();
 const v = await pool.query('select count(*) as fees from service_fees_history');
-console.log(JSON.stringify({ lines, pushed, noSe, noSvc, inserted, db: v.rows[0].fees }));
+const dbCount = Number(v.rows[0].fees);
+console.log(JSON.stringify({ file_lines: lines.length, pushed, noSe, noSvc, inserted, db: dbCount }));
+if (inserted !== pushed || dbCount !== pushed) {
+  console.error(`MISMATCH: pushed=${pushed} inserted=${inserted} db=${dbCount} — aborting loudly`);
+  process.exit(1);
+}
+console.log('FEE LOAD OK — counts reconcile');
 await pool.end();
