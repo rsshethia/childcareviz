@@ -7,152 +7,307 @@
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.1/mapbox-gl.js"></script>
 <style>
-  :root { --ink:#1e293b; --mut:#64748b; --acc:#0ea5e9; --bg:#f1f5f9; --card:#fff; --line:#e2e8f0; }
-  * { box-sizing: border-box; }
-  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink); background: var(--bg); margin: 0; }
-  .topbar { background: #0f172a; color: #fff; }
-  .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 16px 20px 0; }
-  .topbar h1 { font-size: 1.3rem; margin: 0; }
-  .topbar h1 span { color: #38bdf8; }
-  .topbar p { color: #94a3b8; font-size: .85rem; margin: 4px 0 0; }
-  nav.tabs { display: flex; gap: 4px; margin-top: 14px; overflow-x: auto; }
-  nav.tabs button { background: none; border: none; color: #cbd5e1; padding: 10px 14px; font-size: .9rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
-  nav.tabs button:hover { color: #fff; }
-  nav.tabs button.active { color: #fff; border-bottom-color: var(--acc); font-weight: 600; }
-  main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; }
-  .tab { display: none; }
-  .tab.active { display: block; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0 0 14px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-  .card b { font-size: 1.35rem; display: block; }
-  .card span { color: var(--mut); font-size: .8rem; }
-  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
-  .panel h2 { margin: 0 0 4px; font-size: 1.05rem; }
-  .panel .desc { color: var(--mut); font-size: .83rem; margin: 0 0 10px; }
-  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; font-size: .88rem; }
-  select, input[type=text] { padding: 6px 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #f1f5f9; }
-  th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; color: var(--mut); }
-  .bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--acc), #6366f1); margin-top: 4px; }
-  .note { color: var(--mut); font-size: .82rem; }
-  #map { width: 100%; height: 520px; border-radius: 10px; border: 1px solid var(--line); }
-  .maprow { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 0 0 10px; font-size: .85rem; }
-  .maprow label { display: flex; gap: 4px; align-items: center; }
-  #tok { width: 260px; }
-  footer { max-width: 1100px; margin: 0 auto; padding: 0 20px 30px; }
+  :root{
+    --bg:#f8fafc; --surface:#ffffff; --surface-2:#f1f5f9;
+    --ink:#0f172a; --mut:#5b6b82; --faint:#8a99ae;
+    --line:#e2e8f0; --line-soft:#eef2f7;
+    --acc:#0284c7; --acc-ink:#075985; --acc-soft:#e0f2fe;
+    --green:#15803d; --purple:#7e22ce; --amber:#b45309;
+    --r-sm:8px; --r-md:12px; --r-lg:16px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+    --shadow:0 1px 2px rgba(15,23,42,.06), 0 8px 24px -12px rgba(15,23,42,.18);
+    --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{ font-family:var(--font); color:var(--ink); background:var(--bg); margin:0; font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  ::selection{ background:#bae6fd; color:#0c4a6e; }
+  :focus-visible{ outline:2px solid var(--acc); outline-offset:2px; border-radius:6px; }
+  a{ color:var(--acc-ink); text-underline-offset:3px; }
+  button, input, select{ font:inherit; }
+
+  /* ---- App chrome ---- */
+  .app-header{ position:sticky; top:0; z-index:30; background:rgba(255,255,255,.92); backdrop-filter:saturate(1.2) blur(10px); border-bottom:1px solid var(--line); }
+  .app-header-inner{ max-width:1200px; margin:0 auto; padding:var(--s3) var(--s5); display:flex; align-items:center; gap:var(--s4); }
+  .brand{ display:flex; align-items:center; gap:var(--s3); min-width:0; }
+  .brand-mark{ width:36px; height:36px; border-radius:10px; background:#0f172a; color:#fff; display:grid; place-items:center; flex:none; box-shadow:var(--shadow); }
+  .brand-mark svg{ display:block; }
+  .brand h1{ font-size:1.02rem; margin:0; letter-spacing:-.01em; line-height:1.2; white-space:nowrap; }
+  .brand h1 small{ display:block; font-weight:500; color:var(--mut); font-size:.76rem; letter-spacing:.02em; white-space:normal; }
+  .env-badge{ font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#075985; background:var(--acc-soft); border:1px solid #bae6fd; padding:3px 8px; border-radius:999px; white-space:nowrap; }
+  .header-meta{ margin-left:auto; display:flex; align-items:center; gap:var(--s3); color:var(--mut); font-size:.82rem; }
+  .dot-live{ width:8px; height:8px; border-radius:50%; background:#16a34a; box-shadow:0 0 0 4px #dcfce7; flex:none; }
+  .header-meta time{ font-variant-numeric:tabular-nums; color:var(--mut); white-space:nowrap; }
+  .btn{ appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px; padding:8px 12px; font-size:.85rem; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+  .btn:hover{ border-color:#cbd5e1; background:#f8fafc; }
+  .btn-primary{ background:#0f172a; border-color:#0f172a; color:#fff; }
+  .btn-primary:hover{ background:#1e293b; border-color:#1e293b; }
+
+  .subnav{ border-bottom:1px solid var(--line); background:var(--surface); position:sticky; top:60px; z-index:20; }
+  .subnav-inner{ max-width:1200px; margin:0 auto; padding:8px var(--s5) 0; display:flex; gap:var(--s1); overflow-x:auto; scrollbar-width:thin; }
+  nav.tabs{ display:flex; gap:2px; }
+  nav.tabs button{ background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); padding:13px 14px 11px; font-size:.88rem; font-weight:550; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:8px; }
+  nav.tabs button svg{ opacity:.7; }
+  nav.tabs button:hover{ color:var(--ink); background:var(--line-soft); }
+  nav.tabs button.active{ color:var(--ink); border-bottom-color:var(--acc); font-weight:700; }
+  nav.tabs button .count{ font-size:.7rem; font-weight:700; background:var(--surface-2); border:1px solid var(--line); color:var(--mut); border-radius:999px; padding:1px 7px; font-variant-numeric:tabular-nums; }
+
+  main{ max-width:1200px; margin:0 auto; padding:var(--s5) var(--s5) var(--s7); }
+  .tab{ display:none; }
+  .tab.active{ display:block; }
+
+  /* ---- Rhythm: page titles ---- */
+  .page-head{ margin:var(--s2) 0 var(--s4); max-width:75ch; }
+  .page-head h2{ margin:0 0 6px; font-size:1.45rem; letter-spacing:-.02em; line-height:1.2; text-wrap:balance; }
+  .page-head p{ margin:0; color:var(--mut); font-size:.92rem; max-width:70ch; }
+
+  /* ---- KPI strip: one surface, divided — not 4 identical cards ---- */
+  .kpi-strip{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--shadow); display:grid; grid-template-columns:1.25fr 1fr 1fr 1fr; overflow:hidden; margin-bottom:var(--s4); }
+  .kpi{ padding:18px 20px 16px; position:relative; min-width:0; }
+  .kpi + .kpi{ border-left:1px solid var(--line-soft); }
+  .kpi:first-child{ background:linear-gradient(180deg, #f0f9ff 0%, #ffffff 70%); }
+  .kpi-label{ font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--mut); margin:0 0 6px; }
+  .kpi-value{ font-size:1.9rem; font-weight:750; letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums; margin:0; }
+  .kpi:first-child .kpi-value{ font-size:2.15rem; }
+  .kpi-sub{ margin:6px 0 0; font-size:.83rem; color:var(--mut); }
+  .kpi-sub strong{ color:var(--green); font-weight:700; }
+
+  /* ---- Content grid ---- */
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s4); margin-bottom:var(--s4); }
+  .panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:20px 22px 18px; box-shadow:0 1px 2px rgba(15,23,42,.04); min-width:0; }
+  .panel + .panel{ margin-top:0; }
+  .panel-eyebrow{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .panel-eyebrow .tag{ font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:999px; border:1px solid var(--line); background:var(--surface-2); color:var(--mut); }
+  .tag.green{ color:#166534; background:#dcfce7; border-color:#bbf7d0; }
+  .tag.blue{ color:#075985; background:#e0f2fe; border-color:#bae6fd; }
+  .panel h3{ margin:0 0 6px; font-size:1.05rem; letter-spacing:-.01em; line-height:1.3; }
+  .panel .desc{ color:var(--mut); font-size:.88rem; margin:0; max-width:65ch; }
+  .panel .desc strong{ color:var(--ink); }
+  .kv{ display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--line-soft); font-size:.88rem; margin-top:12px; }
+  .kv:first-of-type{ margin-top:14px; }
+  .kv dt{ color:var(--mut); } .kv dd{ margin:0; font-weight:650; font-variant-numeric:tabular-nums; text-align:right; }
+
+  /* ---- Tables ---- */
+  .table-panel{ padding:0; overflow:hidden; }
+  .table-panel-head{ padding:20px 22px 14px; border-bottom:1px solid var(--line-soft); display:flex; flex-wrap:wrap; gap:12px; align-items:end; justify-content:space-between; }
+  .table-panel-head h3{ margin:0 0 4px; font-size:1.05rem; letter-spacing:-.01em; }
+  .table-panel-head .desc{ margin:0; color:var(--mut); font-size:.85rem; max-width:68ch; }
+  .filters{ display:flex; gap:var(--s2); flex-wrap:wrap; align-items:end; }
+  .field{ display:grid; gap:5px; font-size:.78rem; font-weight:600; color:var(--mut); }
+  .field select, .field input[type=text]{ min-height:36px; padding:7px 10px; border-radius:9px; border:1px solid #cbd5e1; background:#fff; color:var(--ink); font-size:.88rem; font-weight:500; }
+  .field select:focus, input:focus{ border-color:var(--acc); outline:2px solid #bae6fd; outline-offset:1px; }
+  .table-wrap{ overflow-x:auto; scrollbar-width:thin; }
+  table{ width:100%; border-collapse:collapse; font-size:.89rem; min-width:640px; }
+  thead th{ position:sticky; top:0; background:#f8fafc; z-index:1; font-size:.71rem; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); font-weight:700; text-align:left; padding:10px 16px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  tbody td{ padding:11px 16px; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover td{ background:#f8fafc; }
+  td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td .bar{ height:6px; border-radius:999px; background:var(--acc); opacity:.85; margin-top:6px; min-width:8px; }
+  .pill{ display:inline-flex; align-items:center; font-size:.78rem; font-weight:650; padding:3px 9px; border-radius:999px; border:1px solid var(--line); background:var(--surface-2); color:#334155; white-space:nowrap; }
+  .pill.fp{ background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+  .pill.nfp{ background:#faf5ff; border-color:#ddd6fe; color:#6d28d9; }
+  .pill.gov{ background:#f0fdf4; border-color:#bbf7d0; color:#15803d; }
+  .table-foot{ padding:12px 22px; border-top:1px solid var(--line-soft); color:var(--mut); font-size:.8rem; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; background:#fcfdff; }
+
+  /* ---- Map ---- */
+  .map-toolbar{ display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; padding:14px 0 4px; }
+  .toggle{ display:inline-flex; align-items:center; gap:8px; font-size:.83rem; font-weight:600; border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 12px; cursor:pointer; user-select:none; }
+  .toggle input{ accent-color:var(--acc); width:15px; height:15px; margin:0; }
+  .toggle:has(input:not(:checked)){ opacity:.55; }
+  .toggle .sw{ width:10px; height:10px; border-radius:50%; flex:none; }
+  .map-token{ margin-left:auto; display:flex; gap:8px; align-items:center; min-width:min(360px,100%); }
+  .map-token input{ flex:1; min-height:36px; padding:7px 12px; border-radius:9px; border:1px solid #cbd5e1; font-size:.85rem; }
+  #map{ width:100%; height:560px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--surface-2); overflow:hidden; }
+  .mapwrap{ position:relative; margin-top:12px; }
+  .map-legend{ position:absolute; top:12px; left:12px; z-index:5; background:rgba(255,255,255,.96); border:1px solid var(--line); border-radius:12px; padding:10px 12px; box-shadow:0 4px 14px rgba(15,23,42,.12); max-width:min(230px,70%); }
+  .map-legend .lt{ font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--mut); margin-bottom:6px; }
+  .map-legend label.toggle{ border:none; background:none; padding:4px 0; font-weight:500; }
+  .map-legend label.toggle:has(input:not(:checked)){ opacity:.45; }
+  .legend{ display:flex; flex-wrap:wrap; gap:8px 16px; padding:12px 2px 0; color:var(--mut); font-size:.8rem; }
+  .legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .legend i{ width:10px; height:10px; border-radius:50%; display:inline-block; border:1.5px solid #fff; box-shadow:0 0 0 1px var(--line); }
+
+  .note{ color:var(--mut); font-size:.82rem; }
+  .stack > * + *{ margin-top:var(--s4); }
+  footer{ max-width:1200px; margin:0 auto; padding:0 var(--s5) 36px; }
+  .footer-bar{ border-top:1px solid var(--line); padding-top:16px; display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between; color:var(--mut); font-size:.82rem; }
+
+  ::-webkit-scrollbar{ height:10px; width:10px; }
+  ::-webkit-scrollbar-thumb{ background:#cbd5e1; border-radius:999px; border:2px solid var(--bg); }
+  ::-webkit-scrollbar-track{ background:transparent; }
+
+  @media (max-width: 960px){
+    .kpi-strip{ grid-template-columns:1fr 1fr; }
+    .kpi:nth-child(3){ border-left:none; }
+    .kpi:nth-child(n+3){ border-top:1px solid var(--line-soft); }
+    .grid-2{ grid-template-columns:1fr; }
+    .subnav{ top:64px; }
+    #map{ height:440px; }
+    .map-token{ margin-left:0; width:100%; }
+  }
+  @media (max-width: 600px){
+    .app-header-inner{ padding:12px 16px; flex-wrap:wrap; }
+    .header-meta{ width:100%; justify-content:flex-start; }
+    .header-meta .btn{ display:none; }
+    main{ padding:16px 16px 40px; }
+    .subnav-inner{ padding:0 12px; }
+    .kpi-strip{ grid-template-columns:1fr; }
+    .kpi + .kpi{ border-left:none; border-top:1px solid var(--line-soft); }
+    .kpi-value{ font-size:1.7rem; }
+    .page-head h2{ font-size:1.25rem; }
+    #map{ height:360px; }
+    .map-legend{ top:8px; left:8px; padding:7px 9px; font-size:.78rem; max-width:62%; }
+    .table-panel-head{ padding:16px; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
 </head>
 <body>
-<div class="topbar"><div class="topbar-inner">
-  <h1>ChildCareViz <span>· national childcare analytics</span></h1>
-  <p>Who runs it · what it costs · where it is — ACECQA + StartingBlocks, Australia-wide <span id="gen"></span></p>
-  <nav class="tabs" id="tabs">
-    <button data-tab="overview" class="active">Overview</button>
-    <button data-tab="map">Map</button>
-    <button data-tab="pricing">Pricing</button>
-    <button data-tab="providers">Providers</button>
-    <button data-tab="quality">Quality</button>
-    <button data-tab="about">Methodology</button>
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.2c0 5-3.4 9.3-8 10.8-4.6-1.5-8-5.8-8-10.8V5.5L12 2z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+      </span>
+      <h1>ChildCareViz<small>National childcare analytics · Australia</small></h1>
+    </div>
+    <span class="env-badge">Open data</span>
+    <div class="header-meta">
+      <span class="dot-live" aria-hidden="true"></span>
+      <time id="gen">loading dataset…</time>
+      <a class="btn" href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">Pipeline docs</a>
+    </div>
+  </div>
+</header>
+<div class="subnav"><div class="subnav-inner">
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Analytics sections">
+    <button data-tab="overview" class="active" role="tab" aria-selected="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Overview</button>
+    <button data-tab="map" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
+    <button data-tab="pricing" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Pricing</button>
+    <button data-tab="providers" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Providers</button>
+    <button data-tab="quality" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Quality</button>
+    <button data-tab="about" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Methodology</button>
   </nav>
 </div></div>
 <main>
-  <section class="tab active" id="tab-overview">
-    <div class="cards" id="cards"></div>
-    <div class="panel"><h2>Council-run spotlight</h2><p class="desc" id="council"></p></div>
-    <div class="panel"><h2>For-profit premium at a glance</h2><p class="desc" id="premium"></p></div>
+  <section class="tab active" id="tab-overview" role="tabpanel">
+    <div class="page-head">
+      <h2>Who runs it, what it costs, where it is</h2>
+      <p>ACECQA + StartingBlocks registers, Australia-wide. Clean medians only — quarantined outliers excluded. Select a tab to filter, compare, or map every service.</p>
+    </div>
+    <div class="kpi-strip" id="cards" aria-live="polite"></div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-eyebrow"><span class="tag green">Council-run</span></div><h3>Community footprint</h3><p class="desc" id="council"></p></div>
+      <div class="panel"><div class="panel-eyebrow"><span class="tag blue">For-profit premium</span></div><h3>What the gap looks like</h3><p class="desc" id="premium"></p></div>
+    </div>
   </section>
 
-  <section class="tab" id="tab-map">
-    <div class="panel"><h2>Every service, coloured by who runs it</h2>
-      <p class="desc">Green council-run · blue for-profit · purple NFP · grey state/unknown. Click a dot for details.</p>
-      <div class="maprow">
-        <span id="mapstat" class="note">loading points…</span>
-        <label><input type="checkbox" data-t="for-profit" checked> For-profit</label>
-        <label><input type="checkbox" data-t="nfp-community" checked> NFP community</label>
-        <label><input type="checkbox" data-t="nfp-other" checked> NFP other</label>
-        <label><input type="checkbox" data-t="govt-local" checked> Council-run</label>
-        <label><input type="checkbox" data-t="govt-state" checked> State govt</label>
-        <input id="tok" type="text" placeholder="Mapbox public token">
+  <section class="tab" id="tab-map" role="tabpanel">
+    <div class="page-head"><h2>Every service, coloured by who runs it</h2><p id="mapstat" class="note" style="margin:0">Loading points…</p></div>
+    <div class="panel">
+      <div class="map-toolbar">
+        <div class="map-token"><input id="tok" type="text" placeholder="Mapbox public token — stored locally" aria-label="Mapbox public token"><button class="btn btn-primary" id="drawBtn" type="button">Draw map</button></div>
       </div>
-      <div id="map"></div>
-      <p class="note">Token stays in your browser (localStorage) — never committed.</p>
-    </div>
-  </section>
-
-  <section class="tab" id="tab-pricing">
-    <div class="panel"><h2>Median full-day fee by state × provider type</h2>
-      <p class="desc">Clean medians only — quarantined outliers excluded (hourly&gt;$30, daily &lt;$50/&gt;$300, stale &gt;2y).</p>
-      <div class="filters">
-        <label>State <select id="fState"><option value="">All states</option></select></label>
-        <label>Provider <select id="fType"><option value="">All types</option></select></label>
+      <div class="mapwrap">
+        <div id="map" role="application" aria-label="Map of childcare services"></div>
+        <div class="map-legend" role="group" aria-label="Provider-type layers">
+          <div class="lt">Who runs it</div>
+          <label class="toggle"><input type="checkbox" data-t="for-profit" checked><span class="sw" style="background:#2563eb"></span>For-profit</label>
+          <label class="toggle"><input type="checkbox" data-t="nfp-community" checked><span class="sw" style="background:#9333ea"></span>NFP community</label>
+          <label class="toggle"><input type="checkbox" data-t="nfp-other" checked><span class="sw" style="background:#a855f7"></span>NFP other</label>
+          <label class="toggle"><input type="checkbox" data-t="govt-local" checked><span class="sw" style="background:#16a34a"></span>Council-run</label>
+          <label class="toggle"><input type="checkbox" data-t="govt-state" checked><span class="sw" style="background:#94a3b8"></span>State govt</label>
+        </div>
       </div>
-      <table><thead><tr><th>State</th><th>Provider type</th><th>Services w/ fees</th><th>Median / day</th></tr></thead>
-      <tbody id="rows"></tbody></table>
+      <p class="note" style="margin:10px 0 0">Token stays in your browser (localStorage) — never committed. Clusters aggregate at low zoom; click a dot for service detail.</p>
     </div>
   </section>
 
-  <section class="tab" id="tab-providers">
-    <div class="panel"><h2>Who runs what — services, places, mix</h2>
-      <p class="desc">Service mix per operator type: long day care, preschool, OSHC, family day care + approved places.</p>
-      <table><thead><tr><th>Provider type</th><th>Services</th><th>Places</th><th>Long day care</th><th>Preschool</th><th>OSHC</th><th>Family day care</th></tr></thead>
-      <tbody id="mixrows"></tbody></table>
+  <section class="tab" id="tab-pricing" role="tabpanel">
+    <div class="page-head"><h2>Median full-day fee by state × provider type</h2><p>Clean medians only — hourly &gt;$30, daily &lt;$50 / &gt;$300, and stale &gt;2y records quarantined before aggregation.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head">
+        <div><h3>Fee comparison</h3><p class="desc">Filter to a state or operator type. Bars scale to the national maximum.</p></div>
+        <div class="filters">
+          <label class="field">State<select id="fState"><option value="">All states</option></select></label>
+          <label class="field">Provider type<select id="fType"><option value="">All types</option></select></label>
+        </div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>State</th><th>Provider type</th><th class="num">Services w/ fees</th><th class="num">Median / day</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="4" class="note" style="padding:18px">Loading fee medians…</td></tr></tbody></table></div>
+      <div class="table-foot"><span id="rowCount"></span><span>Source: StartingBlocks fee disclosures, cleaned via ETL quarantine rules.</span></div>
     </div>
   </section>
 
-  <section class="tab" id="tab-quality">
-    <div class="panel"><h2>NQS rating vs fee</h2>
-      <p class="desc">Do higher-rated services charge more? Clean full-day medians per overall rating.</p>
-      <table><thead><tr><th>NQS rating</th><th>Services</th><th>Median / day</th></tr></thead>
-      <tbody id="qrows"></tbody></table>
+  <section class="tab" id="tab-providers" role="tabpanel">
+    <div class="page-head"><h2>Who runs what — services, places, mix</h2><p>Service mix per operator type: long day care, preschool, OSHC, family day care, plus approved places.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Operator mix</h3><p class="desc">Shares are of in-scope services in the current extract.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Provider type</th><th class="num">Services</th><th class="num">Places</th><th class="num">Long day care</th><th class="num">Preschool</th><th class="num">OSHC</th><th class="num">Family day care</th></tr></thead>
+      <tbody id="mixrows"></tbody></table></div>
     </div>
   </section>
 
-  <section class="tab" id="tab-about">
-    <div class="panel"><h2>Coverage</h2><p class="desc" id="cov"></p></div>
-    <div class="panel"><h2>Sources &amp; pipeline</h2>
-      <p class="note">Sources: <a href="https://www.acecqa.gov.au/resources/national-registers">ACECQA national registers</a>,
-      <a href="https://startingblocks.gov.au/find-child-care">StartingBlocks Find Child Care</a>,
-      <a href="https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports">Dept of Education CCS reports</a>.
-      Every fee keeps its source URL + fetch date. Pipeline: <a href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">docs/etl.md</a>.
-      Code MIT; data © its owners.</p>
+  <section class="tab" id="tab-quality" role="tabpanel">
+    <div class="page-head"><h2>NQS rating vs fee</h2><p>Do higher-rated services charge more? Clean full-day medians per overall NQS rating.</p></div>
+    <div class="panel table-panel">
+      <div class="table-panel-head"><div><h3>Rating premium</h3><p class="desc">Ranked by service count so the dominant ratings read first.</p></div></div>
+      <div class="table-wrap"><table><thead><tr><th>NQS rating</th><th class="num">Services</th><th class="num">Median / day</th></tr></thead>
+      <tbody id="qrows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-about" role="tabpanel">
+    <div class="page-head"><h2>Methodology &amp; coverage</h2><p>How the numbers are built, what is excluded, and where to verify.</p></div>
+    <div class="stack">
+      <div class="panel"><div class="panel-eyebrow"><span class="tag">Coverage</span></div><h3>Current extract</h3><p class="desc" id="cov">Loading coverage…</p></div>
+      <div class="panel"><div class="panel-eyebrow"><span class="tag">Provenance</span></div><h3>Sources &amp; pipeline</h3>
+        <p class="note" style="margin:0">Sources: <a href="https://www.acecqa.gov.au/resources/national-registers">ACECQA national registers</a>,
+        <a href="https://startingblocks.gov.au/find-child-care">StartingBlocks Find Child Care</a>,
+        <a href="https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports">Dept of Education CCS reports</a>.
+        Every fee keeps its source URL + fetch date. Pipeline: <a href="https://github.com/rsshethia/childcareviz/blob/main/docs/etl.md">docs/etl.md</a>.
+        Code MIT; data © its owners.</p>
+      </div>
     </div>
   </section>
 </main>
-<footer><p class="note">ChildCareViz — open national childcare data platform.</p></footer>
+<footer><div class="footer-bar"><span>ChildCareViz — open national childcare data platform.</span><span>ACECQA · StartingBlocks · Dept of Education</span></div></footer>
 <script>
 let DB = null, mapDrawn = false;
-document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('#tabs button').forEach(x => x.classList.remove('active'));
+const tabs = document.querySelectorAll('#tabs button');
+tabs.forEach(b => b.addEventListener('click', () => {
+  tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
+  b.classList.add('active'); b.setAttribute('aria-selected','true');
   document.getElementById('tab-' + b.dataset.tab).classList.add('active');
   if (b.dataset.tab === 'map' && !mapDrawn) { mapDrawn = true; initMap(); }
 }));
 fetch('data.json').then(r => r.json()).then(d => {
   DB = d;
-  document.getElementById('gen').textContent = '· data ' + d.generated;
+  document.getElementById('gen').textContent = 'data ' + d.generated;
   const cov = d.coverage, mix = d.provider_mix, fmt = n => (n || 0).toLocaleString();
   const total = Object.values(mix).reduce((a, b) => a + b.services, 0);
-  document.getElementById('cards').innerHTML = [
-    [cov.pages.toLocaleString(), 'service pages crawled'],
-    [Math.round(100 * cov.clean_pages / cov.pages) + '%', 'pages report clean fees'],
-    [fmt(mix['govt-local']?.services), 'council-run services'],
-    [fmt(mix['for-profit']?.services), 'for-profit services'],
-  ].map(c => `<div class="card"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  const pct = v => Math.round(100 * v / total);
+  document.getElementById('cards').innerHTML =
+    `<div class="kpi"><p class="kpi-label">Services crawled</p><p class="kpi-value">${cov.pages.toLocaleString()}</p><p class="kpi-sub"><strong>${Math.round(100 * cov.clean_pages / cov.pages)}%</strong> report clean fees</p></div>` +
+    `<div class="kpi"><p class="kpi-label">For-profit</p><p class="kpi-value">${fmt(mix['for-profit']?.services)}</p><p class="kpi-sub">${pct(mix['for-profit']?.services || 0)}% of services</p></div>` +
+    `<div class="kpi"><p class="kpi-label">NFP community</p><p class="kpi-value">${fmt(mix['nfp-community']?.services)}</p><p class="kpi-sub">${pct(mix['nfp-community']?.services || 0)}% of services</p></div>` +
+    `<div class="kpi"><p class="kpi-label">Council-run</p><p class="kpi-value">${fmt(mix['govt-local']?.services)}</p><p class="kpi-sub">${pct(mix['govt-local']?.services || 0)}% of services</p></div>`;
   const cb = Object.entries(d.council_by_state || {}).sort((a, b) => b[1] - a[1]);
   const nswC = (d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'govt-local') || {}).median;
   const nswF = (d.state_table.find(r => r.state === 'NSW' && r.provider_type === 'for-profit') || {}).median;
-  document.getElementById('council').textContent =
-    `${fmt(mix['govt-local']?.services)} council-run services — ` + cb.map(([s, n]) => `${s || '—'} ${n}`).join(', ') + '.';
-  document.getElementById('premium').textContent =
-    `NSW council-run median $${nswC || '—'}/day vs for-profit $${nswF || '—'}. ` +
-    `QLD for-profit $${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'for-profit') || {}).median || '—'} vs NFP community $${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'nfp-community') || {}).median || '—'}.`;
+  document.getElementById('council').innerHTML =
+    `<strong>${fmt(mix['govt-local']?.services)} council-run services</strong> — ` + cb.map(([s, n]) => `${s || '—'} ${n}`).join(' · ') + '.';
+  document.getElementById('premium').innerHTML =
+    `NSW council-run median <strong>$${nswC || '—'}/day</strong> vs for-profit <strong>$${nswF || '—'}</strong>. ` +
+    `QLD for-profit <strong>$${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'for-profit') || {}).median || '—'}</strong> vs NFP community <strong>$${(d.state_table.find(r => r.state === 'QLD' && r.provider_type === 'nfp-community') || {}).median || '—'}</strong>.`;
   const order = ['for-profit', 'nfp-community', 'nfp-other', 'govt-local', 'govt-state', 'unknown'];
   const labels = { 'for-profit': 'For-profit', 'nfp-community': 'NFP · community', 'nfp-other': 'NFP · other', 'govt-local': 'Council-run', 'govt-state': 'State govt', 'unknown': 'Unknown' };
+  const pill = t => t === 'for-profit' ? 'fp' : (t.startsWith('nfp') ? 'nfp' : (t.startsWith('govt') ? 'gov' : ''));
   document.getElementById('mixrows').innerHTML = order.filter(t => mix[t]).map(t => {
     const m = mix[t];
-    return `<tr><td>${labels[t] || t}</td><td>${fmt(m.services)} (${Math.round(100 * m.services / total)}%)</td><td>${fmt(m.places)}</td><td>${fmt(m.ldc)}</td><td>${fmt(m.preschool)}</td><td>${fmt(m.oshc)}</td><td>${fmt(m.fdc)}</td></tr>`;
+    return `<tr><td><span class="pill ${pill(t)}">${labels[t] || t}</span></td><td class="num">${fmt(m.services)} (${Math.round(100 * m.services / total)}%)</td><td class="num">${fmt(m.places)}</td><td class="num">${fmt(m.ldc)}</td><td class="num">${fmt(m.preschool)}</td><td class="num">${fmt(m.oshc)}</td><td class="num">${fmt(m.fdc)}</td></tr>`;
   }).join('');
   const states = [...new Set(d.state_table.map(r => r.state))].sort();
   const types = [...new Set(d.state_table.map(r => r.provider_type))].sort();
@@ -163,15 +318,20 @@ fetch('data.json').then(r => r.json()).then(d => {
   function render() {
     const rows = d.state_table.filter(r =>
       (!fs.value || r.state === fs.value) && (!ft.value || r.provider_type === ft.value) && r.median);
-    document.getElementById('rows').innerHTML = rows.map(r => `<tr><td>${r.state || '—'}</td><td>${r.provider_type}</td><td>${r.services}</td><td>$${r.median}<div class="bar" style="width:${Math.round(100 * r.median / maxMed)}%"></div></td></tr>`).join('');
+    document.getElementById('rows').innerHTML = rows.length ? rows.map(r => `<tr><td><strong>${r.state || '—'}</strong></td><td><span class="pill ${pill(r.provider_type)}">${r.provider_type}</span></td><td class="num">${r.services}</td><td class="num">$${r.median}<div class="bar" style="width:${Math.round(100 * r.median / maxMed)}%"></div></td></tr>`).join('')
+      : `<tr><td colspan="4" class="note" style="padding:18px">No rows match this filter.</td></tr>`;
+    document.getElementById('rowCount').textContent = rows.length + ' combinations shown';
   }
   fs.onchange = render; ft.onchange = render; render();
   document.getElementById('qrows').innerHTML = Object.entries(d.quality_vs_fee)
     .sort((a, b) => b[1].n - a[1].n)
-    .map(([k, v]) => `<tr><td>${k}</td><td>${v.n.toLocaleString()}</td><td>${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
+    .map(([k, v]) => `<tr><td><strong>${k}</strong></td><td class="num">${v.n.toLocaleString()}</td><td class="num">${v.median ? '$' + v.median : '—'}</td></tr>`).join('');
   document.getElementById('cov').textContent =
     `${cov.fee_rows.toLocaleString()} fee rows from ${cov.pages.toLocaleString()} pages. ` +
     `Quarantined: ${Object.entries(cov.quarantine).map(([k, v]) => k + ' ' + v.toLocaleString()).join(', ')}.`;
+}).catch(() => {
+  document.getElementById('gen').textContent = 'data unavailable';
+  document.getElementById('cards').innerHTML = '<div class="kpi"><p class="kpi-label">Dataset</p><p class="kpi-value">—</p><p class="kpi-sub">data.json not found beside index.html</p></div>';
 });
 function initMap() {
   const box = document.getElementById('tok');
@@ -180,18 +340,18 @@ function initMap() {
   function draw() {
     const t = box.value.trim();
     if (!t || typeof mapboxgl === 'undefined') {
-      document.getElementById('mapstat').textContent = t ? 'map library failed to load (offline?)' : 'paste a Mapbox public token to draw the map';
+      document.getElementById('mapstat').textContent = t ? 'Map library failed to load (offline?)' : 'Paste a Mapbox public token to draw the map';
       return;
     }
     localStorage.setItem('mapbox', t);
     mapboxgl.accessToken = t;
     fetch('geo.json').then(r => r.json()).then(g => {
-      document.getElementById('mapstat').textContent = g.count.toLocaleString() + ' geocoded services (generated ' + g.generated + ')';
+      document.getElementById('mapstat').textContent = g.count.toLocaleString() + ' geocoded services · generated ' + g.generated;
       const fc = { type: 'FeatureCollection', features: g.points.map(p => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [p.lo, p.la] }, properties: { t: p.t, d: `<b>${p.n}</b><br>${p.s}, ${p.st} · ${p.t}<br>${p.f ? '$' + p.f + '/day avg' : 'no fee reported'}${p.r ? ' · ' + p.r : ''}` } })) };
       const map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/light-v11', center: [134, -28], zoom: 3.5 });
       map.on('load', () => {
         map.addSource('svc', { type: 'geojson', data: fc, cluster: true, clusterMaxZoom: 12, clusterRadius: 50 });
-        map.addLayer({ id: 'cl', type: 'circle', source: 'svc', filter: ['has', 'point_count'], paint: { 'circle-color': '#0ea5e9', 'circle-radius': ['step', ['get', 'point_count'], 16, 100, 22, 750, 30], 'circle-opacity': 0.75 } });
+        map.addLayer({ id: 'cl', type: 'circle', source: 'svc', filter: ['has', 'point_count'], paint: { 'circle-color': '#0284c7', 'circle-radius': ['step', ['get', 'point_count'], 16, 100, 22, 750, 30], 'circle-opacity': 0.75 } });
         map.addLayer({ id: 'clc', type: 'symbol', source: 'svc', filter: ['has', 'point_count'], layout: { 'text-field': '{point_count_abbreviated}', 'text-size': 12 }, paint: { 'text-color': '#fff' } });
         map.addLayer({ id: 'pt', type: 'circle', source: 'svc', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': ['match', ['get', 't'], 'for-profit', '#2563eb', 'nfp-community', '#9333ea', 'nfp-other', '#a855f7', 'govt-local', '#16a34a', '#94a3b8'], 'circle-radius': 5, 'circle-opacity': 0.8, 'circle-stroke-width': 1, 'circle-stroke-color': '#fff' } });
         map.on('click', 'pt', (e) => {
@@ -206,6 +366,7 @@ function initMap() {
       map.addControl(new mapboxgl.NavigationControl());
     });
   }
+  document.getElementById('drawBtn').addEventListener('click', () => { document.getElementById('map').innerHTML = ''; draw(); });
   box.addEventListener('change', () => { document.getElementById('map').innerHTML = ''; draw(); });
   draw();
 }
