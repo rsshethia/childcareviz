@@ -1,6 +1,7 @@
 import { pool } from '../src/db/pool.js';
-const nat = await pool.query(`select sum(s.approved_places) filter (where s.service_type='Centre-Based Care') as ldc_places,
-  (select sum(pop_0_4) from sa2_demand) as kids_0_4`);
+const nat = await pool.query(`select sum(approved_places) filter (where service_type='Centre-Based Care') as ldc_places,
+  sum(approved_places) as all_places,
+  (select sum(pop_0_4) from sa2_demand) as kids_0_4 from services`);
 console.log('national:', JSON.stringify(nat.rows[0]));
 const top = await pool.query(`select sa2_code, sa2_name, state, pop_0_4,
   round(100.0*pop_0_4/pop_total,1) as pct_kids from sa2_demand order by pop_0_4 desc limit 15`);
