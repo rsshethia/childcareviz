@@ -93,8 +93,27 @@ for await (const line of rl) {
 }
 
 const ratingBands = Object.fromEntries(
-  Object.entries(byRating).map(([k, v]) => [k, { n: v.length, median: med(v), mean: mean(v) }])
+  Object.entries(byRating).map(([k, v]) => {
+    const s = v.slice().sort((x, y) => x - y);
+    const q = (p: number) => s[Math.min(s.length - 1, Math.floor(s.length * p))];
+    return [k, { n: v.length, min: s[0], q1: q(0.25), median: med(v), q3: q(0.75), max: s[s.length - 1], mean: mean(v) }];
+  })
 );
+// Distribution bins ($10) of clean per-service FULLDY medians, by provider type (story beeswarm/histogram).
+const dist: Record<string, { bin: number; n: number }[]> = {};
+{
+  const buckets: Record<string, Record<number, number>> = {};
+  for (const r of enriched) {
+    if (r.fulldy_n_clean && Number(r.fulldy_n_clean) > 0) {
+      const t = r.provider_type || 'unknown';
+      const b = Math.floor(Number(r.fulldy_median_clean) / 10) * 10;
+      buckets[t] = buckets[t] || {};
+      buckets[t][b] = (buckets[t][b] || 0) + 1;
+    }
+  }
+  for (const [t, m] of Object.entries(buckets))
+    dist[t] = Object.entries(m).map(([bin, n]) => ({ bin: Number(bin), n })).sort((a, b) => a.bin - b.bin);
+}
 
 const sdev = (a: number[]) => { if (a.length < 2) return 0; const m = mean(a)!; return Math.round(Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / a.length) * 100) / 100; };
 const operators = Object.entries(ops).sort((a, b) => b[1].n - a[1].n).slice(0, 20).map(([name, v]) => ({
@@ -123,7 +142,7 @@ writeFileSync('dashboard/data.json', JSON.stringify({
   provider_mix: typeTotals,
   council_by_state: councilByState,
   state_table: cells.sort((a, b) => a.state.localeCompare(b.state) || a.provider_type.localeCompare(b.provider_type)),
-  quality_vs_fee: ratingBands,
+  quality_vs_fee: ratingBands, dist,
   operators, age_premium: agePremium, inclusions, vacancy,
 }, null, 1));
 console.log('dashboard/data.json written');

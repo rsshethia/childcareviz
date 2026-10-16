@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Who sets the price of childcare? — ChildCareViz Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script type="module">
+import { TYPE_COLOR, TYPE_LABEL, fmt$, svg, axes, overallMedian, initStory } from '../assets/scrolly.js';
+const d = await (await fetch('../../data.json')).json();
+const W = 680, H = 420;
+
+function histFig(mode) {
+  return (el) => {
+    const { g, iw, ih } = svg(el, W, H);
+    const types = mode === 'split'
+      ? ['for-profit', 'nfp-community', 'nfp-other', 'govt-local']
+      : Object.keys(d.dist);
+    const bins = [...new Set(Object.values(d.dist).flatMap((r) => r.map((b) => b.bin)))].sort((a, b) => a - b)
+      .filter((b) => b >= 50 && b <= 300);
+    const x = d3.scaleBand().domain(bins.map(String)).range([0, iw]).padding(0.15);
+    const stack = bins.map((b) => {
+      const o = { bin: b };
+      let tot = 0;
+      for (const t of types) { const f = (d.dist[t] || []).find((r) => r.bin === b); o[t] = f ? f.n : 0; tot += o[t]; }
+      o.total = tot;
+      return o;
+    });
+    const y = d3.scaleLinear().domain([0, d3.max(stack, (s) => s.total)]).nice().range([ih, 0]);
+    const series = d3.stack().keys(types)(stack);
+    g.selectAll('g.layer').data(series).join('g').attr('class', 'layer').attr('fill', (s) => TYPE_COLOR[s.key])
+      .selectAll('rect').data((s) => s).join('rect')
+      .attr('x', (s) => x(String(s.data.bin))).attr('width', x.bandwidth())
+      .attr('y', (s) => y(s[1])).attr('height', (s) => y(s[0]) - y(s[1]));
+    axes(g, x, y, iw, ih, { xticks: 8 });
+    g.append('text').attr('x', iw / 2).attr('y', ih + 30).attr('text-anchor', 'middle').style('font-size', '12px').text('Clean full-day fee ($/day, $10 bins)');
+  };
+}
+
+const STEPS = [
+  { label: 'The market', render(el) {
+    const m = overallMedian(d.dist);
+    el.innerHTML = `<div class="hero"><div class="hero-num">$${m}</div><div class="hero-sub">national median full-day fee · ${d.coverage.pages.toLocaleString()} services · ${Object.values(d.provider_mix).reduce((a, b) => a + b.services, 0).toLocaleString()} classified</div></div>`;
+  }},
+  { label: 'One market', render: histFig('all') },
+  { label: 'Two markets', render: histFig('split') },
+  { label: 'Chains price nationally', render(el) {
+    const ops = (d.operators || []).filter((o) => o.with_fees >= 10).slice(0, 10);
+    const { g, iw, ih } = svg(el, W, H);
+    const x = d3.scaleLinear().domain([100, 220]).range([0, iw]);
+    const y = d3.scaleBand().domain(ops.map((o) => o.name)).range([0, ih]).padding(0.35);
+    axes(g, x, y, iw, ih, {});
+    g.selectAll('line.wh').data(ops).join('line').attr('class', 'wh')
+      .attr('x1', (o) => x(o.median - o.sd)).attr('x2', (o) => x(o.median + o.sd))
+      .attr('y1', (o) => y(o.name) + y.bandwidth() / 2).attr('y2', (o) => y(o.name) + y.bandwidth() / 2)
+      .attr('stroke', '#94a3b8').attr('stroke-width', 2);
+    g.selectAll('circle').data(ops).join('circle')
+      .attr('cx', (o) => x(o.median)).attr('cy', (o) => y(o.name) + y.bandwidth() / 2).attr('r', 6)
+      .attr('fill', (o) => TYPE_COLOR[o.type] || '#94a3b8').append('title').text((o) => `${o.name}\n$${o.median} ± $${o.sd} · ${o.services} services`);
+    g.selectAll('text.lbl').data(ops).join('text').attr('class', 'lbl')
+      .attr('x', (o) => x(o.median) + 9).attr('y', (o) => y(o.name) + y.bandwidth() / 2 + 4)
+      .style('font-size', '11px').text((o) => `$${o.median}`);
+  }},
+  { label: 'Babies cost more', render(el) {
+    const ages = (d.age_premium || []).filter((a) => a.median && !/Outside|Vacation/.test(a.age));
+    const { g, iw, ih } = svg(el, W, H);
+    const x = d3.scalePoint().domain(ages.map((a) => a.age)).range([0, iw]).padding(0.5);
+    const y = d3.scaleLinear().domain([145, 170]).range([ih, 0]);
+    axes(g, x, y, iw, ih, {});
+    const line = d3.line().x((a) => x(a.age)).y((a) => y(a.median));
+    g.append('path').datum(ages).attr('fill', 'none').attr('stroke', '#0ea5e9').attr('stroke-width', 3).attr('d', line);
+    g.selectAll('circle').data(ages).join('circle').attr('cx', (a) => x(a.age)).attr('cy', (a) => y(a.median)).attr('r', 6).attr('fill', '#0ea5e9').append('title').text((a) => `${a.age}: $${a.median}`);
+    g.selectAll('text.v').data(ages).join('text').attr('x', (a) => x(a.age)).attr('y', (a) => y(a.median) - 10).attr('text-anchor', 'middle').style('font-size', '12px').style('font-weight', '700').text((a) => '$' + a.median);
+  }},
+  { label: 'Quality premium is small', render(el) {
+    const bands = Object.entries(d.quality_vs_fee).filter(([, v]) => v.n > 10 && v.q1);
+    const { g, iw, ih } = svg(el, W, H);
+    const x = d3.scaleLinear().domain([100, 200]).range([0, iw]);
+    const y = d3.scaleBand().domain(bands.map(([k]) => k)).range([0, ih]).padding(0.4);
+    axes(g, x, y, iw, ih, {});
+    bands.forEach(([k, v]) => {
+      const yc = y(k) + y.bandwidth() / 2;
+      g.append('line').attr('x1', x(v.min)).attr('x2', x(v.max)).attr('y1', yc).attr('y2', yc).attr('stroke', '#cbd5e1').attr('stroke-width', 2);
+      g.append('rect').attr('x', x(v.q1)).attr('width', Math.max(2, x(v.q3) - x(v.q1))).attr('y', y(k)).attr('height', y.bandwidth()).attr('fill', '#bae6fd').attr('rx', 4);
+      g.append('line').attr('x1', x(v.median)).attr('x2', x(v.median)).attr('y1', y(k)).attr('y2', y(k) + y.bandwidth()).attr('stroke', '#0284c7').attr('stroke-width', 3);
+    });
+  }},
+  { label: 'What to do', render(el) {
+    el.innerHTML = `<div class="takeaways">
+      <div><b>Parents</b> — compare after-subsidy cost, not sticker price; check the Value tab for age bands.</div>
+      <div><b>Planners</b> — council-run is 2.4% of places and the cheapest LDC in NSW; scale changes the mix.</div>
+      <div><b>Policymakers</b> — no scale economies (r=0.03), 4,567 stale fees, OSHC reports sessions not days.</div>
+      <p><a href="../../">Open the full dashboard →</a></p></div>`;
+  }},
+];
+
+const COPY = [
+  ['The market', 'Childcare is a $160-a-day market hiding in plain sight — 18,000 services, 1.25 million approved places, one national median.'],
+  ['One market?', 'Every service plotted by clean full-day fee. It looks like one market — until you colour it by who runs each centre.'],
+  ['Two markets', 'Blue (for-profit) mass sits right of purple/green (NFP, council-run). Operator type predicts price better than postcode.'],
+  ['Chains price nationally', 'Goodstart runs 609 centres within ±$12 of $169. Big chains behave like national retailers, not local shops.'],
+  ['Babies cost more', 'Under-12-months care medians $163.90 vs $154.50 for preschoolers — a $9-a-day age premium, every state.'],
+  ['Quality premium is small', 'Exceeding NQS ($165) vs Meeting ($159) vs Working Towards ($152). Boxes overlap: parents pay ~4% for top-rated.'],
+  ['What to do Monday', 'Three takeaways, one per audience. The dashboard tabs carry the full numbers behind each claim.'],
+];
+
+document.getElementById('steps').innerHTML = COPY.map(([h, p]) =>
+  `<div class="step"><h2>${h}</h2><p>${p}</p></div>`).join('');
+initStory(STEPS.map((s, i) => s));
+</script>
+<style>
+  body { font-family: Inter, system-ui, sans-serif; margin: 0; color: #1e293b; background: #f8fafc; }
+  header.hero-top { max-width: 720px; margin: 0 auto; padding: 56px 20px 8px; }
+  .kicker { color: #0284c7; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 8px 0; }
+  .dek { color: #475569; font-size: 1.05rem; }
+  .scrolly { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 20px; }
+  #figbox { position: sticky; top: 16px; align-self: start; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; min-height: 440px; }
+  #fig svg { width: 100%; height: auto; }
+  .hero { text-align: center; padding: 120px 0; }
+  .hero-num { font-size: clamp(4rem, 10vw, 7rem); font-weight: 800; color: #0284c7; }
+  .hero-sub { color: #475569; }
+  .step { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+  .step h2 { margin: 0 0 6px; }
+  .step p { color: #475569; line-height: 1.6; margin: 0; }
+  .step.active h2 { color: #0284c7; }
+  .takeaways div { background: #f0f9ff; border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+  #rail { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+  #rail a { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; }
+  #rail a.active { background: #0284c7; }
+  @media (max-width: 800px) { .scrolly { grid-template-columns: 1fr; } #figbox { position: static; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="hero-top">
+  <div class="kicker">ChildCareViz story nº 1 · pricing</div>
+  <h1>Who sets the price of childcare?</h1>
+  <p class="dek">Not your postcode — your provider. Scroll through 18,000 centres to see how operator type, chains, age and ratings shape the $160-a-day market.</p>
+  <p><a href="../">← All stories</a> · <a href="../../">Full dashboard</a></p>
+</header>
+<div class="scrolly">
+  <div>
+    <div id="steps"></div>
+  </div>
+  <div id="figbox"><div id="fig"></div></div>
+</div>
+<div id="rail"></div>
+</body>
+</html>

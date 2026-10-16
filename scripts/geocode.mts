@@ -51,23 +51,31 @@ log.info('geocode batch started', { n: rows.length, offset: OFFSET });
 let ok = 0, miss = 0, done = 0;
 for (const s of rows) {
   const q = [s.address, s.suburb, s.state, s.postcode, 'Australia'].filter(Boolean).join(', ');
-  try {
-    const g = await geocode(q);
-    if (g) {
-      await pool.query(`update services set lat=$2, lon=$3, geocode_source='mapbox' where service_approval_no=$1`,
-        [s.service_approval_no, g.lat, g.lon]);
-      ok++;
-    } else {
+  if (cache[q]) {
+    // Warm cache: DB write only, no delay, no re-billing.
+    const g = cache[q];
+    await pool.query(`update services set lat=$2, lon=$3, geocode_source='mapbox-cache' where service_approval_no=$1`,
+      [s.service_approval_no, g.lat, g.lon]);
+    ok++;
+  } else {
+    try {
+      const g = await geocode(q);
+      if (g) {
+        await pool.query(`update services set lat=$2, lon=$3, geocode_source='mapbox' where service_approval_no=$1`,
+          [s.service_approval_no, g.lat, g.lon]);
+        ok++;
+      } else {
+        miss++;
+        log.warn('no result', { se: s.service_approval_no, q });
+      }
+    } catch (e) {
       miss++;
-      log.warn('no result', { se: s.service_approval_no, q });
+      log.warn('geocode failed', { se: s.service_approval_no, error: (e as Error).message });
     }
-  } catch (e) {
-    miss++;
-    log.warn('geocode failed', { se: s.service_approval_no, error: (e as Error).message });
+    await new Promise((r) => setTimeout(r, 220)); // rate-limit live calls only
   }
   done++;
-  if (done % 200 === 0) log.info('progress', { done, total: rows.length, ok, miss });
-  await new Promise((r) => setTimeout(r, 220)); // ~4/s, under free-tier rate
+  if (done % 500 === 0) log.info('progress', { done, total: rows.length, ok, miss });
 }
 if (cacheDirty) writeFileSync(CACHE_FILE, JSON.stringify(cache));
 log.info('geocode batch finished', { done, ok, miss, cacheSize: Object.keys(cache).length });
