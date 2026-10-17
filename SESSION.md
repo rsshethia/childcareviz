@@ -90,13 +90,18 @@ for-profit · nfp-community · nfp-other · govt-local · govt-state · unknown 
 - Approved hours ≠ actual operating hours (ACECQA register field)
 - AEDC attribution required (© AEDC, Data Guidelines); ABS/SEIFA/ERP attribution
 - LGA rollup deferred — no offline SA2→LGA allocation table (note as limitation)
-- Mapbox public token must stay URL-locked to onrender.com
+- Mapbox PUBLIC token (pk.*) must be URL-restricted to https://childcareviz.onrender.com/
+  (+ http://localhost:3000/ for local dev). The token is visible in the front-end by design;
+  the URL restriction is what keeps a copied key unusable elsewhere. /api/config only serves
+  it to first-party pages.
 
 ## Running / pending when session paused
-- Nothing committed yet this session — all changes local and verified. Next: `npm run build`,
-  commit, push to `main` → Render auto-deploys (start `npm start` = `node dist/src/server.js`).
-- Optional follow-ups: story nº 3, LGA rollup, PT catchments, address-checker check
-  against the live domain's restricted token.
+- B1–B6 committed (`f37222f`) and pushed to `main`; Render deploy verified live —
+  `/api/equity`, `/api/sa2/:code`, Equity tab and story nº 2 all return 200.
+- `/api/config` hardened to first-party pages only (Referer/Origin allowlist).
+  **Owner action:** re-add the Mapbox URL restriction on the public token — it is
+  currently unlocked and works from any origin.
+- Optional follow-ups: story nº 3, LGA rollup, PT catchments.
 
 ## Next up (in order)
 1. Final pipeline rerun + spot checks (Mickleham, Rockbank, Schofields, NT desert).

@@ -60,7 +60,7 @@ npm run abs:trends && npm run seifa:load && npm run aedc:load   # ABS inputs
 npm run sa2:join && npm run isochrones && npm run sa2:access:iso && npm run equity:export
 ```
 
-Copy `.env.example` to `.env` and set `DATABASE_URL` (Neon), `TYPESAFE_API_KEY` (Jev classification), `MAPBOX_TOKEN` (maps).
+Copy `.env.example` to `.env` and set `DATABASE_URL` (Neon), `TYPESAFE_API_KEY` (Jev classification), `MAPBOX_TOKEN` (maps — a **public** `pk.*` token, URL-restricted; see Deployment).
 
 ## How scraping works
 
@@ -76,6 +76,15 @@ src/scraper/   sitemap + service-page parser + runner (JSONL output)
 db/schema.sql  Neon/PostGIS tables
 render.yaml    Render web + scraper worker
 ```
+
+## Deployment (Render)
+
+- **Live:** https://childcareviz.onrender.com · blueprint [`render.yaml`](render.yaml) — build `npm ci && npm run build`, start `npm start`.
+- **Env vars (Render dashboard, never in the repo):** `DATABASE_URL`, `MAPBOX_TOKEN`, `TYPESAFE_API_KEY`.
+- **Mapbox front-end key:** the dashboard receives the token from `/api/config`, which answers first-party pages only (this domain + localhost). A browser map key is always visible in the front-end, so the token must be a **public** `pk.*` token with a **URL restriction** in [Mapbox → Account → Tokens](https://account.mapbox.com/access-tokens/) covering:
+  - `https://childcareviz.onrender.com/`
+  - `http://localhost:3000/` (only if local dev should use it — otherwise use the Map tab token box or `?token=pk...`)
+  This makes a copied key useless on any other domain. A secret `sk.*` token must never be set as `MAPBOX_TOKEN`.
 
 ## Contributing
 

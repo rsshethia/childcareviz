@@ -2,6 +2,7 @@
   "name": "childcareviz",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://childcareviz.onrender.com",
   "type": "module",
   "scripts": {
     "scrape:sitemap": "tsx src/scraper/run.ts --sitemap-only",

@@ -12,9 +12,16 @@ app.use(express.static('dashboard'));
 
 app.get('/healthz', (_req, res) => res.json({ ok: true }));
 
-// Public client config. Only ever exposes the *public* Mapbox token
-// (restrict it to your Render domain in Mapbox Studio). Secret keys stay out.
-app.get('/api/config', (_req, res) => {
+// Public client config. Only ever exposes the *public* Mapbox token (pk.*),
+// and only to first-party pages (Referer/Origin allowlist) — bare scrapers get
+// a 403. The real firewall is the Mapbox *URL restriction* on the token itself
+// (README → Deployment): a browser map key is always visible in the front-end,
+// so the restriction is what makes a copied key useless anywhere else.
+// Never set a secret (sk.*) token here.
+const CONFIG_SRC_ALLOW = /^(https:\/\/childcareviz\.onrender\.com|https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?)(\/|$)/;
+app.get('/api/config', (req, res) => {
+  const src = String(req.get('origin') || req.get('referer') || '');
+  if (!CONFIG_SRC_ALLOW.test(src)) return res.status(403).json({ error: 'served to first-party pages only' });
   const t = process.env.MAPBOX_TOKEN || process.env.MAPBOX || null;
   res.json({ mapboxToken: t ? String(t).replace(/^['"]|['"]$/g, '') : null });
 });

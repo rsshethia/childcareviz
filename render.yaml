@@ -24,6 +24,6 @@ services:
       # - key: PGPASSWORD
       #   sync: false
       - key: MAPBOX_TOKEN
-        sync: false
+        sync: false # public pk.* token — URL-restrict in Mapbox → Tokens
       - key: TYPESAFE_API_KEY
         sync: false
