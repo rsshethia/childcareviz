@@ -331,7 +331,7 @@
     <div class="page-head"><h2>Every service, coloured by who runs it</h2><p id="mapstat" class="note" style="margin:0">Loading points…</p></div>
     <div class="panel">
       <div class="map-toolbar">
-        <div class="map-token"><input id="tok" type="text" placeholder="Mapbox public token — stored locally" aria-label="Mapbox public token"><button class="btn btn-primary" id="drawBtn" type="button">Draw map</button></div>
+        <div class="map-token"><input id="tok" type="text" placeholder="Optional: paste your own Mapbox token" aria-label="Mapbox public token"><button class="btn btn-primary" id="drawBtn" type="button">Draw map</button></div>
       </div>
       <div class="mapwrap">
         <div id="map" role="application" aria-label="Map of childcare services"></div>
@@ -344,7 +344,7 @@
           <label class="toggle"><input type="checkbox" data-t="govt-state" checked><span class="sw" style="background:#94a3b8"></span>State govt</label>
         </div>
       </div>
-      <p class="note" style="margin:10px 0 0">Token stays in your browser (localStorage) — never committed. Clusters aggregate at low zoom; click a dot for service detail.</p>
+      <p class="note" style="margin:10px 0 0">Keys are never shown here: the built-in token is used automatically, and any token you paste is saved in your browser only. Clusters aggregate at low zoom; click a dot for service detail.</p>
     </div>
   </section>
 
@@ -637,7 +637,7 @@ function initMap() {
       return j.mapboxToken || '';
     } catch (e) { return ''; }
   }
-  let map = null, fullFc = null, loaded = false;
+  let map = null, fullFc = null, loaded = false, activeToken = '';
   function checkedTypes() {
     return [...document.querySelectorAll('[data-t]:checked')].map(x => x.dataset.t);
   }
@@ -649,12 +649,11 @@ function initMap() {
   }
   document.querySelectorAll('[data-t]').forEach(cb => cb.addEventListener('change', applyTypeFilter));
   function draw() {
-    const t = box.value.trim();
+    const t = activeToken;
     if (!t || typeof mapboxgl === 'undefined') {
       document.getElementById('mapstat').textContent = t ? 'Map library failed to load (offline?)' : 'Paste a Mapbox public token to draw the map';
       return;
     }
-    localStorage.setItem('mapbox', t);
     mapboxgl.accessToken = t;
     fetch('geo.json').then(r => r.json()).then(g => {
       document.getElementById('mapstat').textContent = g.count.toLocaleString() + ' geocoded services · generated ' + g.generated;
@@ -689,14 +688,23 @@ function initMap() {
       map.addControl(new mapboxgl.NavigationControl());
     });
   }
-  document.getElementById('drawBtn').addEventListener('click', draw);
-  box.addEventListener('change', draw);
+  function applyTokenInput() {
+    const t = box.value.trim();
+    if (!t) { draw(); return; }
+    activeToken = t;
+    localStorage.setItem('mapbox', t);
+    box.value = '';
+    box.placeholder = 'Token saved — paste a new one to replace';
+    draw();
+  }
+  document.getElementById('drawBtn').addEventListener('click', applyTokenInput);
+  box.addEventListener('change', applyTokenInput);
   (async () => {
-    const token = new URLSearchParams(location.search).get('token')
-      || localStorage.getItem('mapbox')
-      || await serverToken();
-    if (token) { box.value = token; draw(); }
-    else draw();
+    const urlTok = new URLSearchParams(location.search).get('token');
+    const saved = localStorage.getItem('mapbox');
+    activeToken = urlTok || saved || await serverToken();
+    if (saved && !urlTok) box.placeholder = 'Using your saved token — paste a new one to replace';
+    draw();
   })();
 }
 
