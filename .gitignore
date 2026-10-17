@@ -10,3 +10,5 @@ data/processed/
 *.log
 fees-*.jsonl
 sitemap-urls.txt
+Approved-providers-au-export.csv
+Education-services-au-export.csv

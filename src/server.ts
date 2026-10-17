@@ -84,4 +84,39 @@ app.get('/api/geo', async (req, res) => {
   } catch (e) { res.status(500).json({ error: (e as Error).message }); }
 });
 
+// Equity: priority SA2s (access x vulnerability x growth). Filters: band, state, min_kids, limit.
+app.get('/api/equity', async (req, res) => {
+  try {
+    const band = String(req.query.band || '').trim();
+    const state = String(req.query.state || '').trim();
+    const minKids = Math.max(parseInt(String(req.query.min_kids || '100'), 10) || 100, 0);
+    const limit = Math.min(parseInt(String(req.query.limit || '60'), 10) || 60, 500);
+    const conds: string[] = ['pop_0_4 >= $1', 'array_length(priority_flags,1) >= 2'];
+    const vals: unknown[] = [minKids];
+    if (band) { vals.push(band); conds.push(`access_band = $${vals.length}`); }
+    if (state) { vals.push(state); conds.push(`state = $${vals.length}`); }
+    vals.push(limit);
+    const r = await pool.query(`select sa2_code, sa2_name, state, pop_0_4, access_band, score_30_iso,
+        services_n, ldc_places, places_per_100, irsad_decile, aedc_dv_pct,
+        kids_added_5y, cagr_5y, future_band, kids_2030_proj, places_per_100_2030_proj, priority_flags
+      from equity_sa2 where ${conds.join(' and ')}
+      order by (case when 'desert-access' = any(priority_flags) then 2 when 'constrained-access' = any(priority_flags) then 1 else 0 end)
+        + (case when 'high-vulnerability' = any(priority_flags) then 2 else 0 end)
+        + (case when 'fast-growth' = any(priority_flags) then 1 else 0 end) desc, pop_0_4 desc
+      limit $${vals.length}`, vals);
+    res.json({ count: r.rows.length, rows: r.rows });
+  } catch (e) { res.status(500).json({ error: (e as Error).message }); }
+});
+
+// Equity: single SA2 detail (access + supply + SEIFA + AEDC + growth merged).
+app.get('/api/sa2/:code', async (req, res) => {
+  try {
+    const code = String(req.params.code).trim();
+    if (!/^\d{9}$/.test(code)) { res.status(400).json({ error: 'sa2_code must be 9 digits' }); return; }
+    const r = await pool.query(`select * from equity_sa2 where sa2_code = $1`, [code]);
+    if (!r.rows.length) { res.status(404).json({ error: 'unknown SA2' }); return; }
+    res.json(r.rows[0]);
+  } catch (e) { res.status(500).json({ error: (e as Error).message }); }
+});
+
 app.listen(PORT, () => console.log(`childcareviz listening on ${PORT}`));

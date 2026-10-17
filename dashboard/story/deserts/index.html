@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Where the deserts are — ChildCareViz Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script type="module">
+import { svg, initStory } from '../assets/scrolly.js';
+const eq = await (await fetch('../../equity.json')).json();
+const hrs = await (await fetch('../../hours.json')).json();
+const W = 680, H = 420;
+const fmt = (n) => Number(n || 0).toLocaleString();
+
+const by = eq.by_code;
+const entries = Object.entries(by).map(([code, a]) => ({
+  code, pop: a[0] || 0, band: a[1], score: a[2], ir: a[3], dv: a[4], g5: a[5],
+  ldc: a[6], pp: a[7], fb: a[8], name: a[9] || code,
+}));
+const BAND_COLOR = { desert: '#dc2626', constrained: '#f59e0b', adequate: '#16a34a', 'no-data': '#94a3b8', 'no-service': '#7f1d1d' };
+const BAND_LABEL = { desert: 'Desert (bottom third)', constrained: 'Constrained (middle third)', adequate: 'Adequate (top third)', 'no-service': 'No service within 30 min', 'no-data': 'No data' };
+const nat = eq.national;
+
+// Growth corridors (top 12 by kids added).
+const growthTop = entries.filter((e) => e.g5 != null).sort((a, b) => b.g5 - a.g5).slice(0, 12);
+const growthSum = growthTop.reduce((a, e) => a + e.g5, 0);
+const growthStress = growthTop.filter((e) => e.band === 'desert' || e.band === 'constrained' || e.band === 'no-service').length;
+
+// Desert share by IRSAD decile.
+const deciles = Array.from({ length: 10 }, (_, i) => ({ d: i + 1, n: 0, desert: 0 }));
+for (const e of entries) {
+  if (e.ir == null) continue;
+  const t = deciles[e.ir - 1];
+  if (!t) continue;
+  t.n++;
+  if (e.band === 'desert') t.desert++;
+}
+const decRows = deciles.filter((t) => t.n > 0).map((t) => ({ d: t.d, pct: (100 * t.desert) / t.n, n: t.n }));
+const natDesertShare = (100 * nat.desert_sa2s) / entries.length;
+const bandCounts = {};
+for (const e of entries) bandCounts[e.band] = (bandCounts[e.band] || 0) + 1;
+const d1Pct = Math.round(decRows[0].pct);
+const hiPct = Math.round(Math.max(...decRows.slice(1, 5).map((r) => r.pct)));
+const advPct = Math.round(Math.min(...decRows.slice(8, 10).map((r) => r.pct)));
+
+// The 6pm cliff (all dynamic — mirrors hours.json).
+const cliffPct = hrs.six_pm_cliff.pct_closes_before_18;
+const before16Pct = hrs.close_distribution[0].pct;
+const nt = hrs.close_by_state_ldc.find((r) => r.state === 'NT') || {};
+const vic = hrs.close_by_state_ldc.find((r) => r.state === 'VIC') || {};
+const lateFee = hrs.late_fee_ldc.find((r) => !r.closes_before_18) || {};
+const earlyFee = hrs.late_fee_ldc.find((r) => r.closes_before_18) || {};
+const feeGap = Math.round((lateFee.median_fulldy_fee || 0) - (earlyFee.median_fulldy_fee || 0));
+
+// Need x access matrix (top-quartile AEDC vulnerability vs rest, SA2s with >=100 kids).
+const P75 = eq.thresholds.dv_top_quartile_pct;
+let mDD = 0, mDN = 0, mND = 0, mNN = 0;
+for (const e of entries) {
+  if (e.dv == null || e.pop < 100) continue;
+  const desert = e.band === 'desert' || e.band === 'no-service';
+  const hv = e.dv >= P75;
+  if (desert && hv) mDD++; else if (desert) mDN++; else if (hv) mND++; else mNN++;
+}
+
+const cliff = hrs.close_distribution;
+const cliffLabels = { 'before 16:00': '<16:00', '16:00-16:59': '16:00–17:00', '17:00-17:59': '17:00–18:00', '18:00-18:29': '18:00–18:30', '18:30+': '18:30+' };
+const cliffColors = { 'before 16:00': '#7f1d1d', '16:00-16:59': '#dc2626', '17:00-17:59': '#f87171', '18:00-18:29': '#0284c7', '18:30+': '#075985' };
+
+const STEPS = [
+  { label: 'The number', render(el) {
+    el.innerHTML = `<div class="hero">
+      <div class="hero-num">${fmt(nat.kids_in_deserts)}</div>
+      <p class="hero-sub">children aged 0–4 live in access <b>deserts</b> — SA2s in the bottom third of national drive-time access to long day care</p>
+      <p class="hero-sub" style="font-size:.88rem;margin-top:12px">${fmt(nat.desert_sa2s)} SA2s · 2SFCA v2 over 15- and 30-minute driving catchments (Mapbox isochrones) · ABS ERP 2025 demand · LDC supply only</p>
+    </div>`;
+  }},
+  { label: 'How we measure', render(el) {
+    const bands = ['desert', 'constrained', 'adequate', 'no-service'];
+    const rows = bands.map((b) => ({
+      b,
+      kids: entries.filter((e) => e.band === b).reduce((a, e) => a + e.pop, 0),
+      n: entries.filter((e) => e.band === b).length,
+    })).filter((r) => r.n > 0).sort((a, b) => b.kids - a.kids);
+    const { g, iw, ih } = svg(el, W, H, { t: 10, r: 86, b: 40, l: 150 });
+    const x = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.kids)]).range([0, iw]).nice();
+    const y = d3.scaleBand().domain(rows.map((r) => BAND_LABEL[r.b])).range([0, ih]).padding(0.35);
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).ticks(4).tickFormat(d3.format('.2s'))).selectAll('text').style('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y)).selectAll('text').style('font-size', '11px');
+    g.selectAll('.domain,.tick line').attr('stroke', '#e2e8f0');
+    rows.forEach((r) => {
+      const yc = y(BAND_LABEL[r.b]);
+      g.append('rect').attr('x', 0).attr('y', yc).attr('height', y.bandwidth()).attr('width', x(r.kids)).attr('fill', BAND_COLOR[r.b]).attr('rx', 4);
+      g.append('text').attr('x', x(r.kids) + 8).attr('y', yc + y.bandwidth() / 2 + 4).style('font-size', '13px').style('font-weight', '700').text(fmt(r.kids) + ' kids');
+      g.append('text').attr('x', x(r.kids) + 8).attr('y', yc + y.bandwidth() / 2 + 19).style('font-size', '10.5px').style('fill', '#64748b').text(r.n + ' SA2s');
+    });
+  }},
+  { label: 'Growth corridors', render(el) {
+    const { g, iw, ih } = svg(el, W, H, { t: 10, r: 84, b: 40, l: 176 });
+    const x = d3.scaleLinear().domain([0, d3.max(growthTop, (e) => e.g5)]).range([0, iw]).nice();
+    const y = d3.scaleBand().domain(growthTop.map((e) => e.name)).range([0, ih]).padding(0.3);
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).ticks(4).tickFormat(d3.format(','))).selectAll('text').style('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).tickFormat((t) => (t.length > 25 ? t.slice(0, 24) + '…' : t))).selectAll('text').style('font-size', '10.5px');
+    g.selectAll('.domain,.tick line').attr('stroke', '#e2e8f0');
+    growthTop.forEach((e) => {
+      const yc = y(e.name);
+      g.append('rect').attr('x', 0).attr('y', yc).attr('height', y.bandwidth()).attr('width', x(e.g5)).attr('fill', BAND_COLOR[e.band] || '#94a3b8').attr('rx', 4).append('title').text(`${e.name}: +${e.g5} kids 0–4 (${e.band}) · ${fmt(e.pop)} kids now · ${e.pp == null ? '—' : e.pp} LDC places/100`);
+      g.append('text').attr('x', x(e.g5) + 8).attr('y', yc + y.bandwidth() / 2 + 4).style('font-size', '12px').style('font-weight', '700').text('+' + fmt(e.g5));
+    });
+  }},
+  { label: 'Not just poverty', render(el) {
+    const { g, iw, ih } = svg(el, W, H);
+    const x = d3.scaleBand().domain(decRows.map((r) => String(r.d))).range([0, iw]).padding(0.25);
+    const y = d3.scaleLinear().domain([0, 50]).range([ih, 0]);
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x)).selectAll('text').style('font-size', '11px');
+    g.append('text').attr('x', iw / 2).attr('y', ih + 30).attr('text-anchor', 'middle').style('font-size', '10.5px').style('fill', '#64748b').text('SEIFA IRSAD decile — 1 = most disadvantaged');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat((d) => d + '%')).selectAll('text').style('font-size', '11px');
+    g.selectAll('.domain,.tick line').attr('stroke', '#e2e8f0');
+    g.append('line').attr('x1', 0).attr('x2', iw).attr('y1', y(natDesertShare)).attr('y2', y(natDesertShare)).attr('stroke', '#0284c7').attr('stroke-dasharray', '5 4');
+    g.append('text').attr('x', 4).attr('y', y(natDesertShare) - 6).style('font-size', '10.5px').style('fill', '#0284c7').text(`national desert share (${natDesertShare.toFixed(0)}% of SA2s)`);
+    decRows.forEach((r) => {
+      g.append('rect').attr('x', x(String(r.d))).attr('y', y(r.pct)).attr('width', x.bandwidth()).attr('height', ih - y(r.pct)).attr('fill', r.pct >= natDesertShare ? '#dc2626' : '#94a3b8').attr('rx', 4).append('title').text(`Decile ${r.d}: ${r.pct.toFixed(1)}% of ${r.n} SA2s are deserts`);
+      g.append('text').attr('x', x(String(r.d)) + x.bandwidth() / 2).attr('y', y(r.pct) - 6).attr('text-anchor', 'middle').style('font-size', '11px').style('font-weight', '700').text(Math.round(r.pct) + '%');
+    });
+  }},
+  { label: 'Need × access', render(el) {
+    el.innerHTML = `<div class="matrix">
+      <div class="mh"></div><div class="mh"><b>High vulnerability</b><br><span>top-quartile AEDC (≥ ${P75}%)</span></div><div class="mh"><b>Lower vulnerability</b><br><span>everyone else</span></div>
+      <div class="mh"><b>Access desert</b><br><span>bottom third of 2SFCA</span></div>
+      <div class="cell bad">${fmt(mDD)}<span>SA2s flagged both ways — <b>the priority list</b></span></div>
+      <div class="cell warn">${fmt(mDN)}<span>deserts where development indicators are holding up</span></div>
+      <div class="mh"><b>Not a desert</b><br><span>middle third or better</span></div>
+      <div class="cell">${fmt(mND)}<span>vulnerable areas with reasonable drive-time access</span></div>
+      <div class="cell good">${fmt(mNN)}<span>no flag on either axis</span></div>
+    </div>`;
+  }},
+  { label: 'The 6pm cliff', render(el) {
+    const { g, iw, ih } = svg(el, W, H);
+    const x = d3.scaleBand().domain(cliff.map((r) => cliffLabels[r.bucket] || r.bucket)).range([0, iw]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, 60]).range([ih, 0]);
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x)).selectAll('text').style('font-size', '10.5px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat((d) => d + '%')).selectAll('text').style('font-size', '11px');
+    g.selectAll('.domain,.tick line').attr('stroke', '#e2e8f0');
+    cliff.forEach((r) => {
+      const xc = x(cliffLabels[r.bucket] || r.bucket);
+      g.append('rect').attr('x', xc).attr('y', y(r.pct)).attr('width', x.bandwidth()).attr('height', ih - y(r.pct)).attr('fill', cliffColors[r.bucket] || '#94a3b8').attr('rx', 4).append('title').text(`${r.bucket}: ${r.n} services (${r.pct}%)`);
+      g.append('text').attr('x', xc + x.bandwidth() / 2).attr('y', y(r.pct) - 8).attr('text-anchor', 'middle').style('font-size', '13px').style('font-weight', '700').text(r.pct + '%');
+      g.append('text').attr('x', xc + x.bandwidth() / 2).attr('y', y(r.pct) - 22).attr('text-anchor', 'middle').style('font-size', '10.5px').style('fill', '#64748b').text(fmt(r.n));
+    });
+    g.append('text').attr('x', 4).attr('y', 14).style('font-size', '11.5px').style('fill', '#7f1d1d').style('font-weight', '700').text(`${cliffPct}% close before 18:00 — ${before16Pct}% before 16:00`);
+  }},
+  { label: 'What to do', render(el) {
+    el.innerHTML = `<div class="takeaways">
+      <div><b>Parents</b> — check any address on the dashboard's new <a href="../../#equity">Equity tab</a>: 15- and 30-minute drive-time catchments, places, median fees and closing times, computed in your browser.</div>
+      <div><b>Planners</b> — the 12 biggest growth corridors added ${fmt(growthSum)} kids in five years, and ${growthStress} of them are already deserts or constrained. Plan against 2030 projections, not 2025 ratios.</div>
+      <div><b>Policymakers</b> — ${fmt(nat.priority_sa2s)} SA2s flag on two or more of access, vulnerability and growth (${fmt(nat.high_dv_sa2s)} are high-vulnerability). And one in five LDC services closes before 6pm — the flexibility tax late-closers charge is ~$22/day.</div>
+      <p><a href="../../#equity">Open the Equity tab →</a> · <a href="../../">Full dashboard</a> · <a href="../../equity.json">equity.json</a></p></div>`;
+  }},
+];
+
+const COPY = [
+  ['The number', `${fmt(nat.kids_in_deserts)} children aged 0–4 — ${((100 * nat.kids_in_deserts / nat.kids)).toFixed(0)}% of all Australian kids that age — live in neighbourhoods in the bottom third of drive-time access to long day care.`],
+  ['Access is measured, not assumed', `Every SA2 gets 15- and 30-minute driving catchments from a point inside it; approved long-day-care places are shared across the demand they can reach (2SFCA v2). National tertiles then split ${entries.length.toLocaleString()} areas into desert (${bandCounts.desert}), constrained (${bandCounts.constrained}) and adequate (${bandCounts.adequate}) — plus ${bandCounts['no-service']} with no reachable service at all.`],
+  ['Growth comes first', `The fastest-growing corridors aren't waiting for centres: Rockbank–Mount Cottrell added 2,650 kids in five years, Mickleham–Yuroke 2,067. The top 12 corridors added ${fmt(growthSum)} kids — and ${growthStress} of the 12 are already deserts or constrained.`],
+  ['Not just a poverty story', `Desert share by SEIFA advantage: the most advantaged deciles have the fewest deserts (${advPct}%), but the worst sit in deciles 2–5 (up to ${hiPct}%) — even the most disadvantaged decile (${d1Pct}%) isn't the worst. Deserts follow growth, geometry and commuting patterns as much as income.`],
+  ['Need and access only partly overlap', `${fmt(mDD)} SA2s are both high-vulnerability and access deserts; ${fmt(mND)} vulnerable areas have reasonable access, and ${fmt(mDN)} deserts sit where development indicators are holding up. The overlay's job is to find the ${fmt(mDD)} intersections — not to assume disadvantage means no services.`],
+  ['The 6pm cliff', `${cliffPct}% of long-day-care services have approved hours that end before 6pm — ${before16Pct}% before 4pm. NT closes earliest (${nt.pct_before_18}%), VIC latest (${vic.pct_before_18}%). Median full-day fee: $${Math.round(lateFee.median_fulldy_fee)} at late-closing centres vs $${Math.round(earlyFee.median_fulldy_fee)} at early closers — flexibility costs ~$${feeGap}/day.`],
+  ['What to do Monday', `Three takeaways, one per audience. The Equity tab carries the full map, the priority list and the address checker; everything links back to equity.json.`],
+];
+
+document.getElementById('steps').innerHTML = COPY.map(([h, p]) =>
+  `<div class="step"><h2>${h}</h2><p>${p}</p></div>`).join('');
+initStory(STEPS);
+</script>
+<style>
+  body { font-family: Inter, system-ui, sans-serif; margin: 0; color: #1e293b; background: #f8fafc; }
+  header.hero-top { max-width: 720px; margin: 0 auto; padding: 56px 20px 8px; }
+  .kicker { color: #0284c7; font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 8px 0; }
+  .dek { color: #475569; font-size: 1.05rem; }
+  .scrolly { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 20px; }
+  #figbox { position: sticky; top: 16px; align-self: start; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; min-height: 440px; }
+  #fig svg { width: 100%; height: auto; }
+  .hero { text-align: center; padding: 120px 0; }
+  .hero-num { font-size: clamp(4rem, 10vw, 7rem); font-weight: 800; color: #dc2626; }
+  .hero-sub { color: #475569; max-width: 430px; margin: 6px auto 0; line-height: 1.55; }
+  .step { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; }
+  .step h2 { margin: 0 0 6px; }
+  .step p { color: #475569; line-height: 1.6; margin: 0; }
+  .step.active h2 { color: #0284c7; }
+  .takeaways div { background: #f0f9ff; border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+  .takeaways p a { color: #0284c7; }
+  .matrix { display: grid; grid-template-columns: 128px 1fr 1fr; gap: 8px; align-items: stretch; padding: 8px 0; }
+  .matrix .mh { font-size: .82rem; color: #475569; display: flex; flex-direction: column; justify-content: center; line-height: 1.35; }
+  .matrix .mh span { font-weight: 400; font-size: .75rem; color: #94a3b8; }
+  .matrix .cell { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; font-size: 1.7rem; font-weight: 800; background: #fff; letter-spacing: -.02em; }
+  .matrix .cell span { display: block; font-size: .76rem; font-weight: 500; color: #475569; margin-top: 4px; line-height: 1.4; }
+  .matrix .cell.bad { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+  .matrix .cell.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+  .matrix .cell.good { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  #rail { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+  #rail a { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; }
+  #rail a.active { background: #0284c7; }
+  @media (max-width: 800px) { .scrolly { grid-template-columns: 1fr; } #figbox { position: static; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="hero-top">
+  <div class="kicker">ChildCareViz story nº 2 · access</div>
+  <h1>Where the deserts are</h1>
+  <p class="dek">Nearly half a million kids under five live in neighbourhoods in the bottom third of drive-time access to long day care. Scroll through the map maths, the growth corridors, the vulnerability overlap and the 6pm cliff.</p>
+  <p><a href="../">← All stories</a> · <a href="../../">Full dashboard</a></p>
+</header>
+<div class="scrolly">
+  <div>
+    <div id="steps"></div>
+  </div>
+  <div id="figbox"><div id="fig"></div></div>
+</div>
+<div id="rail"></div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+{
+ "generated": "2026-10-17",
+ "method": "2SFCA v2 — Mapbox driving isochrones (15/30 min), stepped decay w=1 / w=0.5, symmetric-catchment approximation",
+ "cutoffs": {
+  "p33": "0.39",
+  "median": "0.50",
+  "p67": "0.58"
+ },
+ "bands": [
+  {
+   "band": "constrained",
+   "sa2": "770",
+   "kids": "573591"
+  },
+  {
+   "band": "adequate",
+   "sa2": "769",
+   "kids": "497773"
+  },
+  {
+   "band": "desert",
+   "sa2": "791",
+   "kids": "444087"
+  },
+  {
+   "band": "no-service",
+   "sa2": "124",
+   "kids": "1992"
+  }
+ ],
+ "qc": {
+  "corr_v1_iso": "0.893",
+  "iso_missing": "152",
+  "band_changed": "536"
+ },
+ "top_access_gaps": [
+  {
+   "sa2_code": "118011341",
+   "sa2_name": "Bondi Junction - Waverly",
+   "state": "New South Wales",
+   "services_30min": 1,
+   "pop_0_4": 812,
+   "score_30": "0.0",
+   "aedc_dv_pct": null,
+   "irsad_decile": 10,
+   "kids_added_5y": -170
+  },
+  {
+   "sa2_code": "127031524",
+   "sa2_name": "Holsworthy - Wattle Grove",
+   "state": "New South Wales",
+   "services_30min": 3,
+   "pop_0_4": 1414,
+   "score_30": "0.0",
+   "aedc_dv_pct": "20.2",
+   "irsad_decile": 8,
+   "kids_added_5y": -111
+  },
+  {
+   "sa2_code": "209041224",
+   "sa2_name": "Wallan",
+   "state": "Victoria",
+   "services_30min": 2,
+   "pop_0_4": 2778,
+   "score_30": "0.0",
+   "aedc_dv_pct": "21.3",
+   "irsad_decile": 5,
+   "kids_added_5y": 789
+  },
+  {
+   "sa2_code": "318021474",
+   "sa2_name": "Douglas",
+   "state": "Queensland",
+   "services_30min": 2,
+   "pop_0_4": 373,
+   "score_30": "0.0",
+   "aedc_dv_pct": "20.0",
+   "irsad_decile": 8,
+   "kids_added_5y": -44
+  },
+  {
+   "sa2_code": "501021010",
+   "sa2_name": "Dardanup",
+   "state": "Western Australia",
+   "services_30min": 1,
+   "pop_0_4": 199,
+   "score_30": "0.0",
+   "aedc_dv_pct": "9.8",
+   "irsad_decile": 6,
+   "kids_added_5y": 24
+  },
+  {
+   "sa2_code": "401021003",
+   "sa2_name": "Adelaide Hills",
+   "state": "South Australia",
+   "services_30min": 1,
+   "pop_0_4": 301,
+   "score_30": "0.0",
+   "aedc_dv_pct": "26.7",
+   "irsad_decile": 7,
+   "kids_added_5y": -18
+  },
+  {
+   "sa2_code": "405011113",
+   "sa2_name": "Mallala",
+   "state": "South Australia",
+   "services_30min": 4,
+   "pop_0_4": 157,
+   "score_30": "0.0",
+   "aedc_dv_pct": "28.0",
+   "irsad_decile": 2,
+   "kids_added_5y": -5
+  },
+  {
+   "sa2_code": "128021533",
+   "sa2_name": "Heathcote - Waterfall",
+   "state": "New South Wales",
+   "services_30min": 11,
+   "pop_0_4": 339,
+   "score_30": "0.0",
+   "aedc_dv_pct": null,
+   "irsad_decile": 8,
+   "kids_added_5y": -59
+  },
+  {
+   "sa2_code": "112021247",
+   "sa2_name": "Kyogle",
+   "state": "New South Wales",
+   "services_30min": 1,
+   "pop_0_4": 376,
+   "score_30": "0.0",
+   "aedc_dv_pct": "29.1",
+   "irsad_decile": 2,
+   "kids_added_5y": 21
+  },
+  {
+   "sa2_code": "319031511",
+   "sa2_name": "Cooloola",
+   "state": "Queensland",
+   "services_30min": 1,
+   "pop_0_4": 192,
+   "score_30": "0.0",
+   "aedc_dv_pct": "11.1",
+   "irsad_decile": 1,
+   "kids_added_5y": 13
+  },
+  {
+   "sa2_code": "309041242",
+   "sa2_name": "Tamborine - Canungra",
+   "state": "Queensland",
+   "services_30min": 3,
+   "pop_0_4": 741,
+   "score_30": "0.0",
+   "aedc_dv_pct": "13.5",
+   "irsad_decile": 6,
+   "kids_added_5y": -8
+  },
+  {
+   "sa2_code": "604021091",
+   "sa2_name": "Sheffield - Railton",
+   "state": "Tasmania",
+   "services_30min": 1,
+   "pop_0_4": 286,
+   "score_30": "0.0",
+   "aedc_dv_pct": "24.1",
+   "irsad_decile": 2,
+   "kids_added_5y": -4
+  },
+  {
+   "sa2_code": "311041571",
+   "sa2_name": "Yarrabilba",
+   "state": "Queensland",
+   "services_30min": 5,
+   "pop_0_4": 1552,
+   "score_30": "0.0",
+   "aedc_dv_pct": null,
+   "irsad_decile": 2,
+   "kids_added_5y": 163
+  },
+  {
+   "sa2_code": "115021297",
+   "sa2_name": "Dural - Kenthurst - Wisemans Ferry",
+   "state": "New South Wales",
+   "services_30min": 13,
+   "pop_0_4": 882,
+   "score_30": "0.0",
+   "aedc_dv_pct": "18.5",
+   "irsad_decile": 9,
+   "kids_added_5y": -113
+  },
+  {
+   "sa2_code": "107031140",
+   "sa2_name": "Kiama Hinterland - Gerringong",
+   "state": "New South Wales",
+   "services_30min": 10,
+   "pop_0_4": 327,
+   "score_30": "0.0",
+   "aedc_dv_pct": "11.7",
+   "irsad_decile": 8,
+   "kids_added_5y": -104
+  },
+  {
+   "sa2_code": "104011081",
+   "sa2_name": "Grafton Surrounds",
+   "state": "New South Wales",
+   "services_30min": 1,
+   "pop_0_4": 766,
+   "score_30": "0.0",
+   "aedc_dv_pct": "19.2",
+   "irsad_decile": 2,
+   "kids_added_5y": 73
+  },
+  {
+   "sa2_code": "501021009",
+   "sa2_name": "Collie",
+   "state": "Western Australia",
+   "services_30min": 1,
+   "pop_0_4": 490,
+   "score_30": "0.0",
+   "aedc_dv_pct": "26.1",
+   "irsad_decile": 1,
+   "kids_added_5y": -23
+  },
+  {
+   "sa2_code": "308041528",
+   "sa2_name": "Banana",
+   "state": "Queensland",
+   "services_30min": 1,
+   "pop_0_4": 584,
+   "score_30": "0.0",
+   "aedc_dv_pct": "27.6",
+   "irsad_decile": 4,
+   "kids_added_5y": -53
+  },
+  {
+   "sa2_code": "101051540",
+   "sa2_name": "Goulburn Surrounds",
+   "state": "New South Wales",
+   "services_30min": 1,
+   "pop_0_4": 705,
+   "score_30": "0.0",
+   "aedc_dv_pct": "18.4",
+   "irsad_decile": 5,
+   "kids_added_5y": 32
+  },
+  {
+   "sa2_code": "504031060",
+   "sa2_name": "Gidgegannup",
+   "state": "Western Australia",
+   "services_30min": 23,
+   "pop_0_4": 143,
+   "score_30": "0.0",
+   "aedc_dv_pct": "24.2",
+   "irsad_decile": 8,
+   "kids_added_5y": 29
+  },
+  {
+   "sa2_code": "103021062",
+   "sa2_name": "Condobolin",
+   "state": "New South Wales",
+   "services_30min": 1,
+   "pop_0_4": 448,
+   "score_30": "0.0",
+   "aedc_dv_pct": "28.6",
+   "irsad_decile": 3,
+   "kids_added_5y": -27
+  },
+  {
+   "sa2_code": "201031013",
+   "sa2_name": "Avoca",
+   "state": "Victoria",
+   "services_30min": 1,
+   "pop_0_4": 129,
+   "score_30": "0.0",
+   "aedc_dv_pct": "13.6",
+   "irsad_decile": 2,
+   "kids_added_5y": -9
+  },
+  {
+   "sa2_code": "319021503",
+   "sa2_name": "Gayndah - Mundubbera",
+   "state": "Queensland",
+   "services_30min": 1,
+   "pop_0_4": 289,
+   "score_30": "0.0",
+   "aedc_dv_pct": "26.3",
+   "irsad_decile": 1,
+   "kids_added_5y": -43
+  },
+  {
+   "sa2_code": "216011410",
+   "sa2_name": "Rushworth",
+   "state": "Victoria",
+   "services_30min": 1,
+   "pop_0_4": 187,
+   "score_30": "0.1",
+   "aedc_dv_pct": null,
+   "irsad_decile": 2,
+   "kids_added_5y": 1
+  },
+  {
+   "sa2_code": "601031013",
+   "sa2_name": "Austins Ferry - Granton",
+   "state": "Tasmania",
+   "services_30min": 7,
+   "pop_0_4": 293,
+   "score_30": "0.1",
+   "aedc_dv_pct": "37.1",
+   "irsad_decile": 4,
+   "kids_added_5y": 54
+  }
+ ],
+ "note": "LDC places vs kids 0-4. Bands are national tertiles among SA2s with >=100 kids 0-4. v1 (distance proxy) kept in sa2_access for comparison."
+}

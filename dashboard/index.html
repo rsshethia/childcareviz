@@ -203,6 +203,30 @@
   .mapboxgl-ctrl-group button span{ filter:none; }
   [data-theme="dark"] .mapboxgl-ctrl-group button span{ filter:invert(1); }
 
+  /* ---- Equity tab ---- */
+  #eqmap{ width:100%; height:clamp(380px,52vw,540px); border-radius:var(--r-md); border:1px solid var(--line); background:var(--surface-2); overflow:hidden; }
+  .eq-legend-item{ display:flex; align-items:center; gap:8px; margin:5px 0; font-size:.85rem; line-height:1.45; }
+  .eq-legend-item i{ width:13px; height:13px; border-radius:4px; display:inline-block; border:1px solid rgba(15,23,42,.18); flex:none; }
+  .eq-ramp{ height:10px; border-radius:999px; margin:8px 0 4px; border:1px solid var(--line); }
+  .eq-ramp-labels{ display:flex; justify-content:space-between; gap:10px; font-size:.72rem; color:var(--mut); }
+  .eq-result{ margin-top:14px; }
+  .eq-result .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-top:10px; }
+  .eq-mini{ background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; min-width:0; }
+  .eq-mini b{ display:block; font-size:1.3rem; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .eq-mini span{ font-size:.74rem; color:var(--mut); text-transform:uppercase; letter-spacing:.05em; font-weight:700; line-height:1.45; display:block; }
+  .eq-mini span.plain{ text-transform:none; letter-spacing:0; font-weight:500; font-size:.82rem; margin-top:2px; }
+  .flag{ display:inline-flex; font-size:.72rem; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--line); background:var(--surface-2); color:var(--pill-ink); margin:1px 3px 1px 0; white-space:nowrap; }
+  .flag.desert{ background:#fee2e2; border-color:#fecaca; color:#b91c1c; }
+  .flag.constrained{ background:#fef3c7; border-color:#fde68a; color:#92400e; }
+  .flag.vuln{ background:#faf5ff; border-color:#e9d5ff; color:#6d28d9; }
+  .flag.growth{ background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+  [data-theme="dark"] .flag.desert{ background:rgba(220,38,38,.22); border-color:#7f1d1d; color:#fecaca; }
+  [data-theme="dark"] .flag.constrained{ background:rgba(245,158,11,.2); border-color:#92400e; color:#fde68a; }
+  [data-theme="dark"] .flag.vuln{ background:rgba(147,51,234,.22); border-color:#5b3a8c; color:#ddd6fe; }
+  [data-theme="dark"] .flag.growth{ background:rgba(37,99,235,.22); border-color:#2f4d8a; color:#bfdbfe; }
+  @media (max-width: 960px){ #eqmap{ height:420px; } }
+  @media (max-width: 600px){ #eqmap{ height:360px; } }
+
   @media (pointer:coarse){
     .btn, nav.tabs button, .toggle{ min-height:44px; }
   }
@@ -284,6 +308,7 @@
     <button data-tab="operators" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/></svg>Operators</button>
     <button data-tab="value" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1.5"/></svg>Value</button>
     <button data-tab="supply" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Supply</button>
+    <button data-tab="equity" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Equity</button>
     <button data-tab="quality" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Quality</button>
     <button data-tab="about" role="tab" aria-selected="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Methodology</button>
     <a href="story/" class="tablink" style="align-self:center;padding:10px 14px;font-size:.9rem;color:#cbd5e1;text-decoration:none;white-space:nowrap">Stories →</a>
@@ -385,6 +410,77 @@
     </div>
   </section>
 
+  <section class="tab" id="tab-equity" role="tabpanel">
+    <div class="page-head">
+      <h2>Access &amp; equity — supply vs need</h2>
+      <p>Two-step floating-catchment (2SFCA) access to long day care, overlaid with socio-economic advantage (SEIFA IRSAD), early-childhood vulnerability (AEDC 2024) and population growth. Deserts sit in the bottom national third of drive-time access.</p>
+    </div>
+    <div class="kpi-strip" id="eqcards" aria-live="polite"></div>
+    <div class="stack">
+      <div class="panel">
+        <div class="table-panel-head" style="padding:0 0 12px; border-bottom:none">
+          <div><h3>Access choropleth</h3><p class="desc" id="eqmapstat">Loading access model…</p></div>
+          <div class="filters">
+            <label class="field">Layer
+              <select id="eqLayer">
+                <option value="access">Access band (2SFCA)</option>
+                <option value="irsad">SEIFA IRSAD decile</option>
+                <option value="aedc">AEDC vulnerability 2024</option>
+                <option value="growth">Kids 0–4 added, 5 yrs</option>
+                <option value="future">2030 scenario band</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="mapwrap">
+          <div id="eqmap" role="application" aria-label="SA2 equity choropleth"></div>
+          <div class="map-legend" id="eqlegend" aria-label="Legend"><div class="lt">Access band</div></div>
+        </div>
+        <p class="note" style="margin:10px 0 0">Hover an SA2 for its full metrics. Grey = no data. Boundaries simplified (~1 km) for browser payload.</p>
+      </div>
+
+      <div class="panel table-panel">
+        <div class="table-panel-head"><div><h3>Priority SA2s — access × vulnerability × growth</h3><p class="desc">Flagged on two or more of: desert/constrained access, top-quartile AEDC vulnerability (≥29% of children), fast growth (≥5% CAGR or +200 kids in 5 years).</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>SA2</th><th>State</th><th>Access</th><th class="num">Score</th><th class="num">AEDC DV</th><th class="num">IRSAD</th><th class="num">Kids 0–4</th><th class="num">+5y kids</th><th class="num">LDC places</th><th class="num">Places/100</th><th>Flags</th></tr></thead>
+        <tbody id="eqrows"><tr><td colspan="11" class="note" style="padding:18px">Loading priority list…</td></tr></tbody></table></div>
+        <div class="table-foot"><span id="eqrowcount"></span><span>2SFCA v2 · Mapbox drive-time isochrones · LDC places vs kids 0–4</span></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel table-panel">
+          <div class="table-panel-head"><div><h3>2030 growth-risk scenario</h3><p class="desc">Extends each SA2's 5-year kids trend to 2030 against today's places — no supply response. A scenario, not a forecast.</p></div></div>
+          <div class="table-wrap"><table style="min-width:0"><thead><tr><th>SA2</th><th>State</th><th class="num">Kids 2025</th><th class="num">Kids 2030</th><th class="num">+5y</th><th class="num">Places/100</th></tr></thead>
+          <tbody id="eqfutrows"></tbody></table></div>
+        </div>
+        <div class="panel table-panel">
+          <div class="table-panel-head"><div><h3>The 6-o'clock cliff</h3><p class="desc">Approved hours from the ACECQA register — 20% of services close before 18:00. NT is worst (52%); VIC best (4%).</p></div></div>
+          <div class="table-wrap"><table style="min-width:0"><thead><tr><th>State</th><th class="num">LDC services</th><th class="num">Close &lt;18:00</th><th class="num">Median close</th></tr></thead>
+          <tbody id="eqcliffrows"></tbody></table></div>
+          <div class="table-foot"><span>LDC only</span><span>Approved hours ≠ walk-in reality</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-eyebrow"><span class="tag blue">Address checker</span></div>
+        <h3>What can you actually reach from an address?</h3>
+        <p class="desc">Drive-time catchments (Mapbox) drawn for any address. Counts come from the live service register in your browser — nothing is sent to our servers.</p>
+        <div class="map-token" style="margin-left:0; margin-top:12px">
+          <input id="eqAddr" type="text" placeholder="e.g. 1 Treasury Place, Melbourne" aria-label="Address to check">
+          <button class="btn btn-primary" id="eqCheckBtn" type="button">Check</button>
+        </div>
+        <div class="eq-result" id="eqResult"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-eyebrow"><span class="tag">Method &amp; caveats</span></div>
+        <h3>How to read this</h3>
+        <p class="desc"><strong>Access (2SFCA v2):</strong> for each SA2 a representative point (inside the polygon, not a naive centroid) gets 15- &amp; 30-minute driving catchments (Mapbox isochrones); LDC approved places are shared across the demand they can reach with stepped decay — full weight ≤15 min, half 15–30 min (symmetric-catchment approximation). Points that would land offshore or in farmland are moved to the SA2's closest edge to care; SA2s still with no reachable LDC within 30 minutes show as "no service". Bands are national tertiles among SA2s with ≥100 kids 0–4. LDC = long day care; preschool, OSHC and family day care stay visible separately in the register views.</p>
+        <p class="desc" style="margin-top:10px"><strong>Inputs:</strong> ABS ERP 2001–25 (kids 0–4, SA2); SEIFA 2021 IRSAD; AEDC 2024 SA2 tables — "developmentally vulnerable on one or more domains" (© AEDC, used per its Data Guidelines); ACECQA registers (places, approved hours); StartingBlocks fees. <strong>2030 figures</strong> extend each SA2's 5-year population trend with today's places — a scenario for planning discussion, not a forecast. Isochrones reflect typical driving conditions; public transport, traffic peaks and part-time booking patterns are not modelled. Approved hours ≠ actual operating hours.</p>
+        <p class="note" style="margin-top:10px">Payloads: <code>equity.json</code> · <code>sa2-access.json</code> · <code>hours.json</code> · API: <code>/api/equity</code>, <code>/api/sa2/:code</code></p>
+      </div>
+    </div>
+  </section>
+
   <section class="tab" id="tab-quality" role="tabpanel">
     <div class="page-head"><h2>NQS rating vs fee</h2><p>Do higher-rated services charge more? Clean full-day medians per overall NQS rating.</p></div>
     <div class="panel table-panel">
@@ -429,6 +525,8 @@
     try{
       var m=window._ccvMap;
       if(m&&m.setStyle){ m.setStyle(st); }
+      var m2=window._ccvEqMap;
+      if(m2&&m2.setStyle){ m2.setStyle(st); }
     }catch(e){}
   }
   window.__ccvMapStyle=function(){return cur()==='dark'?'mapbox://styles/mapbox/dark-v11':'mapbox://styles/mapbox/light-v11';};
@@ -445,7 +543,7 @@
   }catch(e){}
   paint();
 })();
-let DB = null, mapDrawn = false;
+let DB = null, mapDrawn = false, eqInited = false;
 const tabs = document.querySelectorAll('#tabs button');
 tabs.forEach(b => b.addEventListener('click', () => {
   tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
@@ -453,7 +551,15 @@ tabs.forEach(b => b.addEventListener('click', () => {
   b.classList.add('active'); b.setAttribute('aria-selected','true');
   document.getElementById('tab-' + b.dataset.tab).classList.add('active');
   if (b.dataset.tab === 'map' && !mapDrawn) { mapDrawn = true; initMap(); }
+  if (b.dataset.tab === 'equity' && !eqInited) { eqInited = true; initEquityTab(); }
 }));
+// Deep links: /#equity, /#pricing, … open that tab on load.
+(function openTabFromHash(){
+  const h = (location.hash || '').replace(/^#/, '');
+  if (!h) return;
+  const btn = document.querySelector('#tabs button[data-tab="' + h + '"]');
+  if (btn) btn.click();
+})();
 fetch('data.json').then(r => r.json()).then(d => {
   DB = d;
   document.getElementById('gen').textContent = 'data ' + d.generated;
@@ -592,6 +698,271 @@ function initMap() {
     if (token) { box.value = token; draw(); }
     else draw();
   })();
+}
+
+/* ---- Equity tab ---- */
+let EQ = null, EQGEO = null, HOURS = null, eqMap = null, eqReady = false, eqToken = '', eqPopup = null, PTS = null;
+const EQ_LAYERS = {
+  access: { label: 'Access band (2SFCA v2)', kind: 'cat',
+    colors: { desert: '#dc2626', constrained: '#f59e0b', adequate: '#16a34a', 'no-service': '#7f1d1d', 'no-data': '#94a3b8' },
+    names: { desert: 'Desert — bottom third nationally', constrained: 'Constrained — middle third', adequate: 'Adequate — top third', 'no-service': 'No service within 30 min', 'no-data': 'No data' } },
+  irsad: { label: 'SEIFA IRSAD decile (2021)', kind: 'num',
+    stops: [[1, '#a50026'], [3, '#f46d43'], [5, '#fee08b'], [7, '#66bd63'], [10, '#006837']], minLabel: '1 · most disadvantaged', maxLabel: '10 · most advantaged' },
+  aedc: { label: 'AEDC vulnerability 2024 (% of children)', kind: 'num',
+    stops: [[0, '#fff5f0'], [10, '#fcbba1'], [20, '#fb6a4a'], [30, '#cb181d'], [45, '#67000d']], minLabel: '0%', maxLabel: '45%+' },
+  growth: { label: 'Kids 0–4 added, last 5 years', kind: 'num',
+    stops: [[-500, '#2166ac'], [0, '#f1f5f9'], [400, '#ef8a62'], [1200, '#b2182b'], [2500, '#67001f']], minLabel: '−500 · shrinking', maxLabel: '+2,500' },
+  future: { label: '2030 scenario band', kind: 'cat',
+    colors: { 'desert-2030': '#dc2626', 'constrained-2030': '#f59e0b', 'adequate-2030': '#16a34a', nd: '#94a3b8' },
+    names: { 'desert-2030': 'Scenario: desert in 2030', 'constrained-2030': 'Scenario: constrained in 2030', 'adequate-2030': 'Scenario: adequate in 2030', nd: 'No data' } },
+};
+function eqVal(name, f) {
+  const p = f.properties;
+  if (name === 'access') return p.b || 'no-data';
+  if (name === 'irsad') return p.ir == null ? null : p.ir;
+  if (name === 'aedc') return p.dv == null ? null : p.dv;
+  if (name === 'growth') return p.g5 == null ? null : p.g5;
+  return p.fb || 'nd';
+}
+function eqPaintExpr(cfg) {
+  if (cfg.kind === 'cat') {
+    const pairs = [];
+    for (const k in cfg.colors) pairs.push(k, cfg.colors[k]);
+    return ['match', ['get', 'v'], ...pairs, '#94a3b8'];
+  }
+  const stops = [];
+  cfg.stops.forEach(s => { stops.push(s[0], s[1]); });
+  return ['case', ['==', ['get', 'v'], null], '#94a3b8', ['interpolate', ['linear'], ['get', 'v'], ...stops]];
+}
+function eqLegendHTML(cfg) {
+  if (cfg.kind === 'cat') {
+    let h = '';
+    for (const k in cfg.colors) h += '<div class="eq-legend-item"><i style="background:' + cfg.colors[k] + '"></i>' + (cfg.names[k] || k) + '</div>';
+    return h;
+  }
+  const grad = cfg.stops.map(s => s[1]).join(',');
+  return '<div class="eq-ramp" style="background:linear-gradient(90deg,' + grad + ')"></div><div class="eq-ramp-labels"><span>' + cfg.minLabel + '</span><span>' + cfg.maxLabel + '</span></div>';
+}
+function eqApplyLayer(name) {
+  const cfg = EQ_LAYERS[name];
+  if (!cfg || !EQGEO) return;
+  EQGEO.features.forEach(f => {
+    const v = eqVal(name, f);
+    if (v === null || v === undefined) { delete f.properties.v; } else { f.properties.v = v; }
+  });
+  if (eqMap && eqReady && eqMap.getSource('sa2')) {
+    eqMap.getSource('sa2').setData(EQGEO);
+    try { eqMap.setPaintProperty('sa2-fill', 'fill-color', eqPaintExpr(cfg)); } catch (e) {}
+  }
+  const lg = document.getElementById('eqlegend');
+  if (lg) lg.innerHTML = '<div class="lt">' + cfg.label + '</div>' + eqLegendHTML(cfg);
+}
+function eqTip(p) {
+  const band = EQ_LAYERS.access.names[p.b] || p.b || '—';
+  const sgn = v => (v == null ? '—' : (v > 0 ? '+' : '') + Number(v).toLocaleString());
+  const row = (k, v) => '<span style="color:#64748b">' + k + '</span> <b>' + v + '</b>';
+  return '<b>' + p.name + '</b> · ' + p.state + '<br>' +
+    row('Access', band) + '<br>' +
+    row('Kids 0–4', Number(p.pop || 0).toLocaleString()) + ' · ' + row('added 5y', sgn(p.g5)) + '<br>' +
+    row('LDC places', p.ldc == null ? '—' : p.ldc) + ' · ' + row('per 100 kids', p.pp == null ? '—' : p.pp) + '<br>' +
+    row('AEDC vuln.', p.dv == null ? '—' : p.dv + '%') + ' · ' + row('IRSAD decile', p.ir == null ? '—' : p.ir);
+}
+function eqAddLayers() {
+  if (!eqMap || eqMap.getSource('sa2')) return;
+  eqMap.addSource('sa2', { type: 'geojson', data: EQGEO });
+  eqMap.addLayer({ id: 'sa2-fill', type: 'fill', source: 'sa2', paint: { 'fill-color': '#94a3b8', 'fill-opacity': 0.8 } });
+  eqMap.addLayer({ id: 'sa2-line', type: 'line', source: 'sa2', paint: { 'line-color': 'rgba(100,116,139,.5)', 'line-width': 0.5 } });
+  eqPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
+  eqMap.on('mousemove', 'sa2-fill', (ev) => {
+    if (!ev.features || !ev.features.length) return;
+    eqPopup.setLngLat(ev.lngLat).setHTML(eqTip(ev.features[0].properties)).addTo(eqMap);
+    eqMap.getCanvas().style.cursor = 'pointer';
+  });
+  eqMap.on('mouseleave', 'sa2-fill', () => { if (eqPopup) eqPopup.remove(); eqMap.getCanvas().style.cursor = ''; });
+}
+async function initEqMap() {
+  const stat = document.getElementById('eqmapstat');
+  const box = document.getElementById('tok');
+  eqToken = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
+  if (!eqToken) { try { const j = await (await fetch('/api/config')).json(); eqToken = j.mapboxToken || ''; } catch (e) {} }
+  if (box && box.value.trim()) eqToken = box.value.trim();
+  if (!eqToken || typeof mapboxgl === 'undefined') { stat.textContent = 'Mapbox public token needed — open the Map tab, paste your public token, then return here.'; return; }
+  mapboxgl.accessToken = eqToken;
+  const style = window.__ccvMapStyle ? window.__ccvMapStyle() : 'mapbox://styles/mapbox/light-v11';
+  eqMap = new mapboxgl.Map({ container: 'eqmap', style: style, center: [134, -28], zoom: 3.4 });
+  window._ccvEqMap = eqMap;
+  eqMap.addControl(new mapboxgl.NavigationControl());
+  eqMap.on('load', () => {
+    eqReady = true;
+    eqAddLayers();
+    eqApplyLayer(document.getElementById('eqLayer').value);
+    stat.textContent = EQGEO.features.length.toLocaleString() + ' SA2s · generated ' + EQ.generated;
+  });
+  eqMap.on('styledata', () => {
+    if (eqReady && !eqMap.getSource('sa2')) {
+      try { eqAddLayers(); eqApplyLayer(document.getElementById('eqLayer').value); } catch (e) {}
+    }
+  });
+}
+function eqPip(x, y, geom) {
+  if (!geom) return false;
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] : (geom.coordinates || []);
+  for (let i = 0; i < polys.length; i++) {
+    const ring = polys[i] && polys[i][0];
+    if (!ring) continue;
+    let inside = false;
+    for (let a = 0, b = ring.length - 1; a < ring.length; b = a++) {
+      const xi = ring[a][0], yi = ring[a][1], xj = ring[b][0], yj = ring[b][1];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    if (inside) return true;
+  }
+  return false;
+}
+function eqCatchmentStats(points, g15, g30) {
+  const s = { n15: { ldc: 0, pr: 0, os: 0, other: 0 }, ring: { ldc: 0, pr: 0, os: 0, other: 0 }, places15: 0, placesRing: 0, fees15: [], open18: 0, clKnown: 0 };
+  for (let i = 0; i < points.length; i++) {
+    const p = points[i];
+    if (p.tx) continue;
+    const in15 = eqPip(p.lo, p.la, g15);
+    const bucket = in15 ? s.n15 : (eqPip(p.lo, p.la, g30) ? s.ring : null);
+    if (!bucket) continue;
+    if (p.d) bucket.ldc++; else if (p.pr) bucket.pr++; else if (p.os) bucket.os++; else bucket.other++;
+    if (p.p) { if (in15) s.places15 += p.p; else s.placesRing += p.p; }
+    if (in15 && p.d) {
+      if (p.f) s.fees15.push(p.f);
+      if (p.cl !== null && p.cl !== undefined) { s.clKnown++; if (p.cl >= 1080) s.open18++; }
+    }
+  }
+  s.fees15.sort((a, b) => a - b);
+  s.medianFee = s.fees15.length ? s.fees15[Math.floor(s.fees15.length / 2)] : null;
+  return s;
+}
+function eqSum(o) { return o.ldc + o.pr + o.os + o.other; }
+function eqResultHTML(place, s) {
+  const fmt = n => Number(n || 0).toLocaleString();
+  const pct18 = s.clKnown ? Math.round(100 * s.open18 / s.clKnown) : null;
+  return '<p class="note" style="margin:0 0 2px"><strong>' + place + '</strong></p>' +
+    '<div class="cards">' +
+    '<div class="eq-mini"><span>Within 15 min drive</span><b>' + fmt(eqSum(s.n15)) + '</b><span class="plain">' + fmt(s.n15.ldc) + ' long day care · ' + fmt(s.n15.pr) + ' preschool · ' + fmt(s.n15.os) + ' OSHC</span></div>' +
+    '<div class="eq-mini"><span>15–30 min adds</span><b>' + fmt(eqSum(s.ring)) + '</b><span class="plain">' + fmt(s.ring.ldc) + ' more long day care</span></div>' +
+    '<div class="eq-mini"><span>LDC places ≤15 min</span><b>' + fmt(s.places15) + '</b><span class="plain">+' + fmt(s.placesRing) + ' in the 15–30 min ring</span></div>' +
+    '<div class="eq-mini"><span>Median full-day (LDC, 15 min)</span><b>' + (s.medianFee ? '$' + Math.round(s.medianFee) : '—') + '</b><span class="plain">' + (pct18 === null ? 'no approved hours reported' : pct18 + '% close at/after 18:00') + '</span></div>' +
+    '</div>' +
+    '<p class="note" style="margin:10px 0 0">Counts from the ACECQA register in your browser; temporarily-closed services excluded. Fees = service-reported full-day averages.</p>';
+}
+async function eqCheck() {
+  const inp = document.getElementById('eqAddr'), result = document.getElementById('eqResult'), btn = document.getElementById('eqCheckBtn');
+  const q = inp.value.trim();
+  if (!q) { result.innerHTML = '<p class="note">Enter an address first.</p>'; return; }
+  if (!eqToken) { result.innerHTML = '<p class="note">A Mapbox public token is needed — open the Map tab, paste it, then come back.</p>'; return; }
+  btn.disabled = true; btn.textContent = 'Checking…';
+  result.innerHTML = '<p class="note">Geocoding + drawing drive-time catchments…</p>';
+  try {
+    const g = await (await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(q + ', Australia') + '.json?country=au&limit=1&access_token=' + eqToken)).json();
+    const f0 = g.features && g.features[0];
+    if (!f0) throw new Error('Address not found — try "suburb state postcode" or a street address.');
+    const lon = f0.center[0], lat = f0.center[1];
+    const iso = await (await fetch('https://api.mapbox.com/isochrone/v1/mapbox/driving/' + lon + ',' + lat + '?contours_minutes=15,30&polygons=true&access_token=' + eqToken)).json();
+    const feats = iso.features || [];
+    const f15 = feats.find(f => f.properties && f.properties.contour === 15);
+    const f30 = feats.find(f => f.properties && f.properties.contour === 30);
+    if (!f15 || !f30) throw new Error('Could not build drive-time catchments for this location.');
+    if (PTS === null) { const gj = await (await fetch('geo.json')).json(); PTS = gj.points || []; }
+    const s = eqCatchmentStats(PTS, f15.geometry, f30.geometry);
+    if (eqMap && eqReady) {
+      const fc = { type: 'FeatureCollection', features: [f15, f30] };
+      const src = eqMap.getSource('checkiso');
+      if (src) { src.setData(fc); } else {
+        eqMap.addSource('checkiso', { type: 'geojson', data: fc });
+        eqMap.addLayer({ id: 'checkiso-30', type: 'fill', source: 'checkiso', filter: ['==', ['get', 'contour'], 30], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.10 } });
+        eqMap.addLayer({ id: 'checkiso-15', type: 'fill', source: 'checkiso', filter: ['==', ['get', 'contour'], 15], paint: { 'fill-color': '#0ea5e9', 'fill-opacity': 0.22 } });
+        eqMap.addLayer({ id: 'checkiso-line', type: 'line', source: 'checkiso', paint: { 'line-color': '#0284c7', 'line-width': 1.4, 'line-opacity': 0.85 } });
+      }
+      if (window._eqMarker) { window._eqMarker.remove(); }
+      window._eqMarker = new mapboxgl.Marker({ color: '#0284c7' }).setLngLat([lon, lat]).addTo(eqMap);
+      const bb = new mapboxgl.LngLatBounds();
+      (function walk(c) { if (typeof c[0] === 'number') { bb.extend(c); } else { c.forEach(walk); } })(f30.geometry.coordinates);
+      eqMap.fitBounds(bb, { padding: 40, duration: 600, maxZoom: 12 });
+    }
+    result.innerHTML = eqResultHTML(f0.place_name, s);
+  } catch (err) {
+    result.innerHTML = '<p class="note">' + String((err && err.message) || err) + '</p>';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Check';
+  }
+}
+const EQ_FLAGS = { 'desert-access': ['desert', 'Desert access'], 'constrained-access': ['constrained', 'Constrained'], 'high-vulnerability': ['vuln', 'High vulnerability'], 'fast-growth': ['growth', 'Fast growth'] };
+function eqFlagPills(flags) {
+  return (flags || []).map(f => EQ_FLAGS[f] ? '<span class="flag ' + EQ_FLAGS[f][0] + '">' + EQ_FLAGS[f][1] + '</span>' : '').join('');
+}
+function eqBandCell(b) {
+  if (b === 'desert') return '<span class="flag desert">Desert</span>';
+  if (b === 'constrained') return '<span class="flag constrained">Constrained</span>';
+  if (b === 'adequate') return '<span class="pill">Adequate</span>';
+  return '<span class="pill">' + (b || '—') + '</span>';
+}
+function renderEqCards() {
+  const nat = EQ.national || {}, fmt = n => Number(n || 0).toLocaleString();
+  const per100 = nat.kids ? (100 * nat.ldc_places / nat.kids).toFixed(1) : '—';
+  document.getElementById('eqcards').innerHTML =
+    '<div class="kpi"><p class="kpi-label">Kids in access deserts</p><p class="kpi-value">' + fmt(nat.kids_in_deserts) + '</p><p class="kpi-sub">across ' + fmt(nat.desert_sa2s) + ' SA2s in the bottom national third of drive-time access</p></div>' +
+    '<div class="kpi"><p class="kpi-label">2030 growth-risk scenario</p><p class="kpi-value">' + fmt(nat.kids_2030_in_future_deserts) + '</p><p class="kpi-sub">kids projected into desert conditions across ' + fmt(nat.future_desert_sa2s) + ' SA2s if places don\'t move</p></div>' +
+    '<div class="kpi"><p class="kpi-label">Long day care access</p><p class="kpi-value">' + per100 + '</p><p class="kpi-sub">LDC places per 100 kids 0–4 nationally (' + fmt(nat.ldc_places) + ' places)</p></div>' +
+    '<div class="kpi"><p class="kpi-label">Priority SA2s</p><p class="kpi-value">' + fmt(nat.priority_sa2s) + '</p><p class="kpi-sub">flagged on 2+ of access × vulnerability × growth (' + fmt(nat.high_dv_sa2s) + ' high-vulnerability)</p></div>';
+}
+function renderEqPriority() {
+  const rows = EQ.priority || [];
+  document.getElementById('eqrows').innerHTML = rows.length ? rows.map(r =>
+    '<tr><td><strong>' + r.sa2_name + '</strong></td><td>' + (r.state || '—') + '</td><td>' + eqBandCell(r.access_band) + '</td>' +
+    '<td class="num">' + (r.score_30_iso == null ? '—' : Number(r.score_30_iso).toFixed(1)) + '</td>' +
+    '<td class="num">' + (r.aedc_dv_pct == null ? '—' : r.aedc_dv_pct + '%') + '</td>' +
+    '<td class="num">' + (r.irsad_decile == null ? '—' : r.irsad_decile) + '</td>' +
+    '<td class="num">' + Number(r.pop_0_4 || 0).toLocaleString() + '</td>' +
+    '<td class="num">' + (r.kids_added_5y == null ? '—' : (r.kids_added_5y > 0 ? '+' : '') + Number(r.kids_added_5y).toLocaleString()) + '</td>' +
+    '<td class="num">' + Number(r.ldc_places || 0).toLocaleString() + '</td>' +
+    '<td class="num">' + (r.places_per_100 == null ? '—' : r.places_per_100) + '</td>' +
+    '<td>' + eqFlagPills(r.priority_flags) + '</td></tr>').join('')
+    : '<tr><td colspan="11" class="note" style="padding:18px">No flagged SA2s.</td></tr>';
+  document.getElementById('eqrowcount').textContent = rows.length + ' SA2s shown · ranked by composite priority score';
+}
+function renderEqFuture() {
+  const rows = EQ.future_risk || [];
+  document.getElementById('eqfutrows').innerHTML = rows.length ? rows.map(r =>
+    '<tr><td><strong>' + r.sa2_name + '</strong></td><td>' + (r.state || '—') + '</td>' +
+    '<td class="num">' + Number(r.pop_0_4 || 0).toLocaleString() + '</td>' +
+    '<td class="num">' + (r.kids_2030_proj == null ? '—' : Number(r.kids_2030_proj).toLocaleString()) + '</td>' +
+    '<td class="num">' + (r.kids_added_5y == null ? '—' : '+' + Number(r.kids_added_5y).toLocaleString()) + '</td>' +
+    '<td class="num">' + (r.places_per_100_2030_proj == null ? '—' : r.places_per_100_2030_proj) + '</td></tr>').join('')
+    : '<tr><td colspan="6" class="note" style="padding:18px">—</td></tr>';
+}
+function renderEqCliff() {
+  if (!HOURS || !HOURS.close_by_state_ldc) return;
+  document.getElementById('eqcliffrows').innerHTML = HOURS.close_by_state_ldc.map(r =>
+    '<tr><td><strong>' + (r.state || '—') + '</strong></td><td class="num">' + Number(r.n).toLocaleString() + '</td>' +
+    '<td class="num">' + r.pct_before_18 + '%<div class="bar" style="width:' + Math.min(100, r.pct_before_18 * 1.9) + '%;background:#dc2626;opacity:.75"></div></td>' +
+    '<td class="num">' + (r.median_close || '—') + '</td></tr>').join('');
+}
+async function initEquityTab() {
+  const stat = document.getElementById('eqmapstat');
+  try {
+    const [eqr, geor] = await Promise.all([fetch('equity.json'), fetch('sa2-geo.json')]);
+    EQ = await eqr.json(); EQGEO = await geor.json();
+  } catch (e) { stat.textContent = 'equity.json / sa2-geo.json not found — run: npm run equity:export && npm run sa2:geo'; return; }
+  try { const hr = await fetch('hours.json'); if (hr.ok) HOURS = await hr.json(); } catch (e) {}
+  const by = EQ.by_code || {};
+  EQGEO.features.forEach(f => {
+    const a = by[f.properties.code] || [];
+    const p = f.properties;
+    p.pop = a[0] == null ? 0 : a[0]; p.b = a[1] || 'no-data'; p.s30 = a[2] == null ? null : a[2];
+    p.ir = a[3] == null ? null : a[3]; p.dv = a[4] == null ? null : a[4]; p.g5 = a[5] == null ? null : a[5];
+    p.ldc = a[6] == null ? null : a[6]; p.pp = a[7] == null ? null : a[7]; p.fb = a[8] || null;
+  });
+  renderEqCards(); renderEqPriority(); renderEqFuture(); renderEqCliff();
+  document.getElementById('eqLayer').addEventListener('change', ev => eqApplyLayer(ev.target.value));
+  document.getElementById('eqCheckBtn').addEventListener('click', eqCheck);
+  document.getElementById('eqAddr').addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); eqCheck(); } });
+  initEqMap();
 }
 </script>
 </body>

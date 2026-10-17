@@ -92,6 +92,55 @@ Benchmarks the load must hit: **10,070 providers / 18,183 services / 76,083 fee 
 
 Wiring: `src/db/pool.ts` reads `DATABASE_URL` or dashboard-style `PGHOST/PGDATABASE/PGUSER/PGPASSWORD` from `.env` (gitignored). `pg` driver suits the current Node batch architecture and the future API alike.
 
+## Step 4 — Spatial access & equity (2SFCA v2)
+
+```mermaid
+flowchart TD
+    B[ASGS SA2 boundaries shp] --> SB[sa2_boundary + representative points<br/>PostGIS]
+    G[Geocoded services] --> J2[sa2:join — ST_Contains]
+    SB --> J2
+    J2 --> SUP[sa2_supply — typed places per SA2]
+    S[SEIFA 2021 SA2] --> DB[(Neon)]
+    A[AEDC 2009–24 SA2] --> DB
+    E[ERP 2001–25 SA2+LGA] --> TR[sa2_growth / lga_growth]
+    SUP --> ISO[isochrones — Mapbox batch 15/30 min<br/>isochrone_cache + disk]
+    ISO --> ACC[sa2:access:iso — 2SFCA v2]
+    TR --> EQ[equity:export]
+    ACC --> EQ
+    EQ --> DASH[equity.json · Equity tab · story nº 2]
+```
+
+The access metric (2SFCA v2): each SA2 gets a representative point (`ST_PointOnSurface`;
+re-pointed by `sa2:fallback` to its closest edge to care when the point can't reach any
+LDC — fixes island/large-rural artifacts), 15- & 30-minute Mapbox driving catchments
+(cache-first — reruns cost $0), LDC approved places shared across reachable demand with
+stepped decay (w=1 ≤15 min, w=0.5 15–30 min; symmetric-catchment approximation, v1
+distance model kept for QC, r=0.893). Bands are national tertiles among SA2s with ≥100
+kids 0–4 (ABS ERP 2025); SA2s with nothing reachable inside 30 min get an explicit zero
+and band "no-service".
+
+```bash
+npm run abs:trends      # ERP 2001–25 → sa2_growth / lga_growth + summary views
+npm run seifa:load      # SEIFA 2021 IRSAD → seifa_sa2
+npm run aedc:load       # AEDC 2009–24 → aedc_sa2
+npm run sa2:boundary    # ASGS shapefile → sa2_boundary (+ points)
+npm run sa2:fallback    # re-point SA2s whose point can't reach any LDC
+npm run sa2:join        # ST_Contains service→SA2, typed places → sa2_supply
+npm run sa2:geo         # simplified shapes → dashboard/sa2-geo.json
+npm run sa2:access      # v1 distance-proxy 2SFCA (QC / fallback)
+npm run isochrones      # Mapbox batch → isochrone_cache + data/processed/isochrones
+npm run sa2:access:iso  # v2 isochrone 2SFCA → sa2_access_iso · sa2-access.json
+npm run equity:export   # merge all → equity_sa2 · dashboard/equity.json
+npm run hours:stats     # hours coverage / 6pm cliff → dashboard/hours.json
+```
+
+Caveats: LGA rollup deferred (no SA2→LGA allocation table offline); 88 demand SA2s lack
+SEIFA; 124 SA2s (1,992 kids) have no LDC reachable inside 30 min from anywhere in the
+polygon ("no-service", counted as desert-access in priority lists); competition-adjusted
+scores can read low for supply hubs (Fremantle: 67 places/100 locally but bottom-third
+score); approved hours ≠ actual hours (61% of close times parseable); 2030 figures are a
+scenario extending the 5-year trend with today's places, not a forecast.
+
 ## Failure log (kept honest)
 
 1. Fee parser missed everything — page JSON is backslash-escaped (`\"service\"`). Fixed with normalize-first.
@@ -101,6 +150,7 @@ Wiring: `src/db/pool.ts` reads `DATABASE_URL` or dashboard-style `PGHOST/PGDATAB
 
 ## Next upgrades
 
-- Jev `Choice(provider_type)` to resolve the ~1,861 `unknown`s with confidence scores.
-- Mapbox forward-geocode → `services.lat/lon` cache → cluster map.
-- Stream crawl output to disk + progress log every 500 pages (current runner buffers in memory).
+- Jev `Choice(provider_type)` to resolve the residual `unknown`s with confidence scores.
+- LGA rollup for council planners (needs an SA2→LGA allocation table).
+- Public-transport catchments alongside driving (GTFS-based, off-peak).
+- Story nº 3 — "Out of pocket, really" (CCS subsidy modelling).

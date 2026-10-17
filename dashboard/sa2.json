@@ -1,253 +1,278 @@
 {
- "generated": "2026-10-16",
+ "generated": "2026-10-17",
  "bands": [
   {
    "band": "constrained",
-   "sa2": "698",
-   "kids": "467492"
-  },
-  {
-   "band": "desert",
-   "sa2": "658",
-   "kids": "521029"
+   "sa2": "900",
+   "kids": "719380"
   },
   {
    "band": "adequate",
-   "sa2": "468",
-   "kids": "227156"
+   "sa2": "692",
+   "kids": "418575"
+  },
+  {
+   "band": "desert",
+   "sa2": "752",
+   "kids": "379488"
   },
   {
    "band": "no-demand-data",
-   "sa2": "10",
+   "sa2": "110",
    "kids": "0"
   }
  ],
  "top_deserts": [
   {
-   "sa2_code": "122031425",
-   "sa2_name": "Cromer",
+   "sa2_code": "124011455",
+   "sa2_name": "Wentworth Falls",
+   "state": "New South Wales",
+   "services_n": 4,
+   "ldc_places": 0,
+   "pop_0_4": 249,
+   "pp100": 0,
+   "kids_added_5y": -69
+  },
+  {
+   "sa2_code": "122031694",
+   "sa2_name": "Dee Why (South) - North Curl Curl",
+   "state": "New South Wales",
+   "services_n": 2,
+   "ldc_places": 0,
+   "pop_0_4": 496,
+   "pp100": 0,
+   "kids_added_5y": -58
+  },
+  {
+   "sa2_code": "115031299",
+   "sa2_name": "Bilpin - Colo - St Albans",
    "state": "New South Wales",
    "services_n": 1,
    "ldc_places": 0,
-   "pop_0_4": 459,
-   "pp100": "0.0"
+   "pop_0_4": 107,
+   "pp100": 0,
+   "kids_added_5y": -17
   },
   {
-   "sa2_code": "116021632",
-   "sa2_name": "Schofields - East",
+   "sa2_code": "112021245",
+   "sa2_name": "Casino Surrounds",
+   "state": "New South Wales",
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 354,
+   "pp100": 0,
+   "kids_added_5y": 14
+  },
+  {
+   "sa2_code": "108021159",
+   "sa2_name": "Nambucca Heads Surrounds",
+   "state": "New South Wales",
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 444,
+   "pp100": 0,
+   "kids_added_5y": 50
+  },
+  {
+   "sa2_code": "114021288",
+   "sa2_name": "Robertson - Fitzroy Falls",
    "state": "New South Wales",
    "services_n": 1,
-   "ldc_places": 61,
-   "pop_0_4": 2953,
-   "pp100": "2.1"
+   "ldc_places": 0,
+   "pop_0_4": 127,
+   "pp100": 0,
+   "kids_added_5y": -35
   },
   {
-   "sa2_code": "203031489",
-   "sa2_name": "Barwon Heads - Armstrong Creek",
-   "state": "Victoria",
-   "services_n": 1,
-   "ldc_places": 30,
-   "pop_0_4": 1166,
-   "pp100": "2.6"
+   "sa2_code": "108011151",
+   "sa2_name": "Bulahdelah - Stroud",
+   "state": "New South Wales",
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 195,
+   "pp100": 0,
+   "kids_added_5y": -35
   },
   {
-   "sa2_code": "123021703",
-   "sa2_name": "Denham Court - Bardia",
+   "sa2_code": "114011276",
+   "sa2_name": "Huskisson - Vincentia",
    "state": "New South Wales",
    "services_n": 1,
-   "ldc_places": 50,
-   "pop_0_4": 1931,
-   "pp100": "2.6"
+   "ldc_places": 0,
+   "pop_0_4": 214,
+   "pp100": 0,
+   "kids_added_5y": -17
   },
   {
-   "sa2_code": "116021631",
-   "sa2_name": "Schofields (West) - Colebee",
+   "sa2_code": "108041165",
+   "sa2_name": "Port Macquarie Surrounds",
    "state": "New South Wales",
-   "services_n": 1,
-   "ldc_places": 36,
-   "pop_0_4": 1302,
-   "pp100": "2.8"
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 215,
+   "pp100": 0,
+   "kids_added_5y": -17
   },
   {
-   "sa2_code": "125041717",
-   "sa2_name": "Parramatta - North",
+   "sa2_code": "110021193",
+   "sa2_name": "Inverell Surrounds - West",
    "state": "New South Wales",
-   "services_n": 1,
-   "ldc_places": 28,
-   "pop_0_4": 957,
-   "pp100": "2.9"
-  },
-  {
-   "sa2_code": "210051445",
-   "sa2_name": "Mickleham - Yuroke",
-   "state": "Victoria",
    "services_n": 2,
-   "ldc_places": 135,
-   "pop_0_4": 4550,
-   "pp100": "3.0"
+   "ldc_places": 0,
+   "pop_0_4": 306,
+   "pp100": 0,
+   "kids_added_5y": 2
   },
   {
-   "sa2_code": "213041359",
-   "sa2_name": "Rockbank - Mount Cottrell",
-   "state": "Victoria",
+   "sa2_code": "106011113",
+   "sa2_name": "Singleton Surrounds",
+   "state": "New South Wales",
+   "services_n": 1,
+   "ldc_places": 0,
+   "pop_0_4": 284,
+   "pp100": 0,
+   "kids_added_5y": -46
+  },
+  {
+   "sa2_code": "102011038",
+   "sa2_name": "Saratoga - Davistown",
+   "state": "New South Wales",
+   "services_n": 1,
+   "ldc_places": 0,
+   "pop_0_4": 374,
+   "pp100": 0,
+   "kids_added_5y": -45
+  },
+  {
+   "sa2_code": "105021098",
+   "sa2_name": "Far West",
+   "state": "New South Wales",
    "services_n": 2,
-   "ldc_places": 129,
-   "pop_0_4": 4066,
-   "pp100": "3.2"
+   "ldc_places": 0,
+   "pop_0_4": 131,
+   "pp100": 0,
+   "kids_added_5y": 3
   },
   {
-   "sa2_code": "317011445",
-   "sa2_name": "Cambooya - Wyreema",
-   "state": "Queensland",
-   "services_n": 1,
-   "ldc_places": 20,
-   "pop_0_4": 621,
-   "pp100": "3.2"
+   "sa2_code": "110021192",
+   "sa2_name": "Inverell Surrounds - East",
+   "state": "New South Wales",
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 291,
+   "pp100": 0,
+   "kids_added_5y": -8
   },
   {
-   "sa2_code": "403021062",
-   "sa2_name": "Morphettville",
-   "state": "South Australia",
+   "sa2_code": "101041024",
+   "sa2_name": "Eurobodalla Hinterland",
+   "state": "New South Wales",
    "services_n": 1,
-   "ldc_places": 30,
-   "pop_0_4": 928,
-   "pp100": "3.2"
+   "ldc_places": 0,
+   "pop_0_4": 173,
+   "pp100": 0,
+   "kids_added_5y": 21
   },
   {
-   "sa2_code": "406011133",
-   "sa2_name": "Port Lincoln",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 30,
-   "pop_0_4": 901,
-   "pp100": "3.3"
-  },
-  {
-   "sa2_code": "316021580",
-   "sa2_name": "Caloundra West - Baringa",
-   "state": "Queensland",
-   "services_n": 1,
-   "ldc_places": 62,
-   "pop_0_4": 1813,
-   "pp100": "3.4"
-  },
-  {
-   "sa2_code": "311031313",
-   "sa2_name": "Chambers Flat - Logan Reserve",
-   "state": "Queensland",
-   "services_n": 1,
-   "ldc_places": 56,
-   "pop_0_4": 1617,
-   "pp100": "3.5"
+   "sa2_code": "106041127",
+   "sa2_name": "Muswellbrook Surrounds",
+   "state": "New South Wales",
+   "services_n": 2,
+   "ldc_places": 0,
+   "pop_0_4": 215,
+   "pp100": 0,
+   "kids_added_5y": -19
   },
   {
    "sa2_code": "112031252",
    "sa2_name": "Murwillumbah Surrounds",
    "state": "New South Wales",
-   "services_n": 1,
-   "ldc_places": 20,
+   "services_n": 3,
+   "ldc_places": 0,
    "pop_0_4": 522,
-   "pp100": "3.8"
+   "pp100": 0,
+   "kids_added_5y": 16
   },
   {
-   "sa2_code": "212041310",
-   "sa2_name": "Clayton South",
-   "state": "Victoria",
-   "services_n": 1,
-   "ldc_places": 33,
-   "pop_0_4": 807,
-   "pp100": "4.1"
-  },
-  {
-   "sa2_code": "404021102",
-   "sa2_name": "The Parks",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 45,
-   "pop_0_4": 1100,
-   "pp100": "4.1"
-  },
-  {
-   "sa2_code": "403021064",
-   "sa2_name": "Warradale",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 42,
-   "pop_0_4": 1016,
-   "pp100": "4.1"
-  },
-  {
-   "sa2_code": "309071556",
-   "sa2_name": "Upper Coomera (South) - Wongawallan",
-   "state": "Queensland",
-   "services_n": 1,
-   "ldc_places": 30,
-   "pop_0_4": 711,
-   "pp100": "4.2"
-  },
-  {
-   "sa2_code": "111031232",
-   "sa2_name": "Stockton - Fullerton Cove",
-   "state": "New South Wales",
-   "services_n": 1,
-   "ldc_places": 20,
-   "pop_0_4": 455,
-   "pp100": "4.4"
-  },
-  {
-   "sa2_code": "404011091",
-   "sa2_name": "Flinders Park",
-   "state": "South Australia",
-   "services_n": 2,
-   "ldc_places": 45,
-   "pop_0_4": 984,
-   "pp100": "4.6"
-  },
-  {
-   "sa2_code": "119011655",
-   "sa2_name": "Greenacre - North",
+   "sa2_code": "103031073",
+   "sa2_name": "Mudgee Surrounds - East",
    "state": "New South Wales",
    "services_n": 2,
-   "ldc_places": 49,
-   "pop_0_4": 1061,
-   "pp100": "4.6"
+   "ldc_places": 0,
+   "pop_0_4": 152,
+   "pp100": 0,
+   "kids_added_5y": -19
   },
   {
-   "sa2_code": "213051589",
-   "sa2_name": "Wyndham Vale - North",
+   "sa2_code": "101031015",
+   "sa2_name": "Cooma Surrounds",
+   "state": "New South Wales",
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 158,
+   "pp100": 0,
+   "kids_added_5y": 10
+  },
+  {
+   "sa2_code": "105031103",
+   "sa2_name": "Dubbo Surrounds",
+   "state": "New South Wales",
+   "services_n": 0,
+   "ldc_places": 0,
+   "pop_0_4": 343,
+   "pp100": 0,
+   "kids_added_5y": 0
+  },
+  {
+   "sa2_code": "103011060",
+   "sa2_name": "Bathurst Surrounds",
+   "state": "New South Wales",
+   "services_n": 1,
+   "ldc_places": 0,
+   "pop_0_4": 325,
+   "pp100": 0,
+   "kids_added_5y": -9
+  },
+  {
+   "sa2_code": "103021064",
+   "sa2_name": "Cowra Surrounds",
+   "state": "New South Wales",
+   "services_n": 2,
+   "ldc_places": 0,
+   "pop_0_4": 289,
+   "pp100": 0,
+   "kids_added_5y": 25
+  },
+  {
+   "sa2_code": "101041020",
+   "sa2_name": "Bega-Eden Hinterland",
+   "state": "New South Wales",
+   "services_n": 2,
+   "ldc_places": 0,
+   "pop_0_4": 456,
+   "pp100": 0,
+   "kids_added_5y": -1
+  },
+  {
+   "sa2_code": "106011109",
+   "sa2_name": "Cessnock Surrounds",
+   "state": "New South Wales",
+   "services_n": 0,
+   "ldc_places": 0,
+   "pop_0_4": 517,
+   "pp100": 0,
+   "kids_added_5y": 17
+  },
+  {
+   "sa2_code": "201011007",
+   "sa2_name": "Smythes Creek",
    "state": "Victoria",
-   "services_n": 1,
-   "ldc_places": 75,
-   "pop_0_4": 1620,
-   "pp100": "4.6"
-  },
-  {
-   "sa2_code": "403011057",
-   "sa2_name": "Glenelg (SA)",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 34,
-   "pop_0_4": 710,
-   "pp100": "4.8"
-  },
-  {
-   "sa2_code": "402041044",
-   "sa2_name": "Paralowie",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 52,
-   "pop_0_4": 1079,
-   "pp100": "4.8"
-  },
-  {
-   "sa2_code": "404031107",
-   "sa2_name": "Plympton",
-   "state": "South Australia",
-   "services_n": 1,
-   "ldc_places": 68,
-   "pop_0_4": 1403,
-   "pp100": "4.8"
+   "services_n": 3,
+   "ldc_places": 0,
+   "pop_0_4": 176,
+   "pp100": 0,
+   "kids_added_5y": -45
   }
  ],
- "note": "Provisional bands: desert <30, constrained 30-60, adequate 60+ LDC places per 100 kids 0-4. Excludes SA2s with <100 kids."
+ "note": "v2 (2026-10-17): LDC-only places per 100 kids 0-4. Bands provisional: desert <30, constrained 30-60, adequate 60+. SA2 assignment via PostGIS. See sa2-access.json for the 2SFCA access model."
 }

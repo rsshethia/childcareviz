@@ -24,6 +24,10 @@ create table if not exists services (
   overall_rating text,
   provider_type text, -- for-profit | nfp | govt | unknown (heuristic; Jev upgrade later)
   provider_type_confidence double precision,
+  -- service flavours + operating profile (backfilled from ACECQA CSV by scripts/db-backfill-services-extras.mts)
+  is_ldc boolean, is_preschool boolean, is_oshc boolean, is_fdc boolean, is_other boolean,
+  temporarily_closed boolean, granted_date date,
+  hours jsonb, days_open int, weekday_open_min int, weekday_close_min int,
   startingblocks_ulid text unique,
   startingblocks_url text,
   lat double precision, lon double precision, geocode_source text,

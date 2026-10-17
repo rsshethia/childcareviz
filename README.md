@@ -7,7 +7,7 @@ ChildCareViz is an open national data platform for Australian early childhood ed
 ## Who is it for?
 
 - **Parents** – find nearby centres, compare daily fees out-of-pocket (after Child Care Subsidy), check NQS quality ratings, hours and vacancies.
-- **Policymakers** – see for-profit vs not-for-profit vs council-run share, fee vs quality patterns, and childcare deserts by SA2.
+- **Policymakers** – see for-profit vs not-for-profit vs council-run share, fee vs quality patterns, 2SFCA drive-time deserts, vulnerability overlays and 2030 growth-risk scenarios by SA2.
 - **Planners / researchers** – site selection, supply-per-child analytics, bulk data + API.
 
 ## Where does the data come from?
@@ -20,7 +20,8 @@ Every row keeps its `source_url + fetched_at`:
 | Fees, vacancies, inclusions per service | [StartingBlocks Find Child Care](https://startingblocks.gov.au/find-child-care) (service pages, server-rendered) |
 | Large providers (66 with 25+ services) + financials | [StartingBlocks large providers](https://startingblocks.gov.au/large-providers) |
 | Subsidy benchmarks + hourly caps | [Dept of Education CCS reports](https://www.education.gov.au/early-childhood/about/data-and-reports/quarterly-reports) |
-| Demand + boundaries (next) | ABS Census SA2, SEIFA, ASGS, AEDC |
+| Demand, boundaries, vulnerability | ABS ERP 2025 (SA2/LGA), SEIFA 2021 IRSAD, ASGS boundaries; AEDC 2024 (© AEDC, per its Data Guidelines) |
+| Drive times | [Mapbox Isochrone API](https://docs.mapbox.com/api/navigation/isochrone/) — 15/30-min catchments, cached in Neon (never re-billed) |
 
 Current snapshot (verified): FULLDY median ~$172/day, OSHC before-school ~$24 / after-school ~$33. ~57% of service pages report fees; the rest say "contact the service".
 
@@ -28,9 +29,11 @@ Current snapshot (verified): FULLDY median ~$172/day, OSHC before-school ~$24 / 
 
 - [x] StartingBlocks fee scraper (LDC + OSHC session types, polite crawl, resumable)
 - [x] Neon Postgres schema (`providers`, `services`, `service_fees_history`)
-- [ ] Full 18.5k-page crawl → fee history load
-- [ ] Provider-type classification (for-profit / not-for-profit / council-run via ABR + ACNC + Jev)
-- [ ] Mapbox search + dashboard, Render deploy
+- [x] Full 18.5k-page crawl → fee history load (76k fee rows; 40.7k clean)
+- [x] Provider-type classification (heuristic taxonomy + chain overrides); Jev queue for the residual `unknown`s
+- [x] Mapbox geocoding + dashboard + Render deploy (~18k map points)
+- [x] Demand joins (ABS ERP SA2/LGA), SEIFA 2021, AEDC 2024, ERP growth trends
+- [x] Spatial access & equity: 2SFCA v2 on Mapbox drive-time isochrones, desert bands, priority list, 6pm cliff, address checker, story nº 2
 
 ## Quick start
 
@@ -51,6 +54,10 @@ npm run scrape:fees
 
 # 5. Load into Neon Postgres
 psql $DATABASE_URL -f db/schema.sql
+
+# 6. Analytics pipeline — demand joins, access model, equity exports (see docs/etl.md)
+npm run abs:trends && npm run seifa:load && npm run aedc:load   # ABS inputs
+npm run sa2:join && npm run isochrones && npm run sa2:access:iso && npm run equity:export
 ```
 
 Copy `.env.example` to `.env` and set `DATABASE_URL` (Neon), `TYPESAFE_API_KEY` (Jev classification), `MAPBOX_TOKEN` (maps).

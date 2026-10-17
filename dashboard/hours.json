@@ -1,0 +1,192 @@
+{
+ "generated": "2026-10-17",
+ "coverage": {
+  "services_total": 18183,
+  "with_hours": 18025,
+  "close_known": 11114,
+  "temporarily_closed": 55,
+  "pct_close_known": 61.1
+ },
+ "six_pm_cliff": {
+  "closes_before_18": 2234,
+  "pct_closes_before_18": 20.1
+ },
+ "close_distribution": [
+  {
+   "bucket": "before 16:00",
+   "n": 451,
+   "pct": 4.1
+  },
+  {
+   "bucket": "16:00-16:59",
+   "n": 587,
+   "pct": 5.3
+  },
+  {
+   "bucket": "17:00-17:59",
+   "n": 1196,
+   "pct": 10.8
+  },
+  {
+   "bucket": "18:00-18:29",
+   "n": 5745,
+   "pct": 51.7
+  },
+  {
+   "bucket": "18:30+",
+   "n": 3135,
+   "pct": 28.2
+  }
+ ],
+ "close_by_provider_type": [
+  {
+   "provider_type": "for-profit",
+   "n_known": 7517,
+   "pct_before_18": 10.9,
+   "median_close": "18:00",
+   "median_open": "07:00"
+  },
+  {
+   "provider_type": "nfp-community",
+   "n_known": 1336,
+   "pct_before_18": 51.2,
+   "median_close": "17:45",
+   "median_open": "07:30"
+  },
+  {
+   "provider_type": "nfp-other",
+   "n_known": 1205,
+   "pct_before_18": 20.2,
+   "median_close": "18:00",
+   "median_open": "07:00"
+  },
+  {
+   "provider_type": "unknown",
+   "n_known": 615,
+   "pct_before_18": 41,
+   "median_close": "18:00",
+   "median_open": "07:30"
+  },
+  {
+   "provider_type": "govt-local",
+   "n_known": 269,
+   "pct_before_18": 39,
+   "median_close": "18:00",
+   "median_open": "07:30"
+  },
+  {
+   "provider_type": "govt-state",
+   "n_known": 172,
+   "pct_before_18": 77.3,
+   "median_close": "15:00",
+   "median_open": "08:50"
+  }
+ ],
+ "close_by_state_ldc": [
+  {
+   "state": "ACT",
+   "n": 179,
+   "pct_before_18": 17.9,
+   "median_close": "18:00"
+  },
+  {
+   "state": "NSW",
+   "n": 3720,
+   "pct_before_18": 16.4,
+   "median_close": "18:00"
+  },
+  {
+   "state": "NT",
+   "n": 77,
+   "pct_before_18": 51.9,
+   "median_close": "17:45"
+  },
+  {
+   "state": "QLD",
+   "n": 1938,
+   "pct_before_18": 9.2,
+   "median_close": "18:00"
+  },
+  {
+   "state": "SA",
+   "n": 495,
+   "pct_before_18": 9.1,
+   "median_close": "18:30"
+  },
+  {
+   "state": "TAS",
+   "n": 135,
+   "pct_before_18": 16.3,
+   "median_close": "18:00"
+  },
+  {
+   "state": "VIC",
+   "n": 2106,
+   "pct_before_18": 4.4,
+   "median_close": "18:30"
+  },
+  {
+   "state": "WA",
+   "n": 944,
+   "pct_before_18": 18.9,
+   "median_close": "18:00"
+  },
+  {
+   "state": null,
+   "n": 1,
+   "pct_before_18": 0,
+   "median_close": "18:00"
+  }
+ ],
+ "days_open": {
+  "dist": [
+   {
+    "days": 1,
+    "n": 28
+   },
+   {
+    "days": 2,
+    "n": 15
+   },
+   {
+    "days": 3,
+    "n": 77
+   },
+   {
+    "days": 4,
+    "n": 107
+   },
+   {
+    "days": 5,
+    "n": 10735
+   },
+   {
+    "days": 6,
+    "n": 86
+   },
+   {
+    "days": 7,
+    "n": 114
+   }
+  ],
+  "weekend_any": 201
+ },
+ "vacation_care": {
+  "oshc_total": 6381,
+  "oshc_with_holiday": 4400,
+  "other_with_holiday": 617
+ },
+ "late_fee_ldc": [
+  {
+   "closes_before_18": false,
+   "n": 6243,
+   "median_fulldy_fee": 165.04
+  },
+  {
+   "closes_before_18": true,
+   "n": 760,
+   "median_fulldy_fee": 142.9
+  }
+ ],
+ "note": "Approved hours per ACECQA register (not verified operating hours). Weekday close = latest Mon-Fri end time. \"Before 18:00\" = closes at or before 17:59."
+}
