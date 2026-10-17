@@ -330,9 +330,6 @@
   <section class="tab" id="tab-map" role="tabpanel">
     <div class="page-head"><h2>Every service, coloured by who runs it</h2><p id="mapstat" class="note" style="margin:0">Loading points…</p></div>
     <div class="panel">
-      <div class="map-toolbar">
-        <div class="map-token"><input id="tok" type="text" placeholder="Optional: paste your own Mapbox token" aria-label="Mapbox public token"><button class="btn btn-primary" id="drawBtn" type="button">Draw map</button></div>
-      </div>
       <div class="mapwrap">
         <div id="map" role="application" aria-label="Map of childcare services"></div>
         <div class="map-legend" role="group" aria-label="Provider-type layers">
@@ -344,7 +341,7 @@
           <label class="toggle"><input type="checkbox" data-t="govt-state" checked><span class="sw" style="background:#94a3b8"></span>State govt</label>
         </div>
       </div>
-      <p class="note" style="margin:10px 0 0">Keys are never shown here: the built-in token is used automatically, and any token you paste is saved in your browser only. Clusters aggregate at low zoom; click a dot for service detail.</p>
+      <p class="note" style="margin:10px 0 0">The map loads with the site's built-in key — nothing to set up. Clusters aggregate at low zoom; click a dot for service detail.</p>
     </div>
   </section>
 
@@ -629,7 +626,6 @@ fetch('data.json').then(r => r.json()).then(d => {
   document.getElementById('cards').innerHTML = '<div class="kpi"><p class="kpi-label">Dataset</p><p class="kpi-value">—</p><p class="kpi-sub">data.json not found beside index.html</p></div>';
 });
 function initMap() {
-  const box = document.getElementById('tok');
   async function serverToken() {
     try {
       const r = await fetch('/api/config');
@@ -651,7 +647,7 @@ function initMap() {
   function draw() {
     const t = activeToken;
     if (!t || typeof mapboxgl === 'undefined') {
-      document.getElementById('mapstat').textContent = t ? 'Map library failed to load (offline?)' : 'Paste a Mapbox public token to draw the map';
+      document.getElementById('mapstat').textContent = t ? 'Map library failed to load (offline?)' : 'Map unavailable — no Mapbox token configured.';
       return;
     }
     mapboxgl.accessToken = t;
@@ -688,22 +684,10 @@ function initMap() {
       map.addControl(new mapboxgl.NavigationControl());
     });
   }
-  function applyTokenInput() {
-    const t = box.value.trim();
-    if (!t) { draw(); return; }
-    activeToken = t;
-    localStorage.setItem('mapbox', t);
-    box.value = '';
-    box.placeholder = 'Token saved — paste a new one to replace';
-    draw();
-  }
-  document.getElementById('drawBtn').addEventListener('click', applyTokenInput);
-  box.addEventListener('change', applyTokenInput);
   (async () => {
     const urlTok = new URLSearchParams(location.search).get('token');
     const saved = localStorage.getItem('mapbox');
     activeToken = urlTok || saved || await serverToken();
-    if (saved && !urlTok) box.placeholder = 'Using your saved token — paste a new one to replace';
     draw();
   })();
 }
@@ -790,11 +774,9 @@ function eqAddLayers() {
 }
 async function initEqMap() {
   const stat = document.getElementById('eqmapstat');
-  const box = document.getElementById('tok');
   eqToken = new URLSearchParams(location.search).get('token') || localStorage.getItem('mapbox') || '';
   if (!eqToken) { try { const j = await (await fetch('/api/config')).json(); eqToken = j.mapboxToken || ''; } catch (e) {} }
-  if (box && box.value.trim()) eqToken = box.value.trim();
-  if (!eqToken || typeof mapboxgl === 'undefined') { stat.textContent = 'Mapbox public token needed — open the Map tab, paste your public token, then return here.'; return; }
+  if (!eqToken || typeof mapboxgl === 'undefined') { stat.textContent = 'Map unavailable — no Mapbox token configured.'; return; }
   mapboxgl.accessToken = eqToken;
   const style = window.__ccvMapStyle ? window.__ccvMapStyle() : 'mapbox://styles/mapbox/light-v11';
   eqMap = new mapboxgl.Map({ container: 'eqmap', style: style, center: [134, -28], zoom: 3.4 });
@@ -863,7 +845,7 @@ async function eqCheck() {
   const inp = document.getElementById('eqAddr'), result = document.getElementById('eqResult'), btn = document.getElementById('eqCheckBtn');
   const q = inp.value.trim();
   if (!q) { result.innerHTML = '<p class="note">Enter an address first.</p>'; return; }
-  if (!eqToken) { result.innerHTML = '<p class="note">A Mapbox public token is needed — open the Map tab, paste it, then come back.</p>'; return; }
+  if (!eqToken) { result.innerHTML = '<p class="note">Address checking needs a Mapbox token — none is configured on this site.</p>'; return; }
   btn.disabled = true; btn.textContent = 'Checking…';
   result.innerHTML = '<p class="note">Geocoding + drawing drive-time catchments…</p>';
   try {
