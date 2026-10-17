@@ -71,14 +71,23 @@ full chain re-run and verified. Final numbers:
   Deep links: `/#equity` etc. open a tab.
 - **Payloads**: `equity.json` (by_code compact arrays + priority + future_risk +
   national), `sa2-access.json` (v2 detail + QC), `sa2.json` (supply), `hours.json`,
-  `sa2-geo.json` (2,454 simplified shapes, 1.66 MB), `geo.json` (~17k points with
-  type flags/places/close time for the checker)
+  `sa2-geo.json` (2,454 shapes, 2.06 MB — valid FeatureCollection, CCW rings, small
+  SA2s kept unsimplified), `geo.json` (~17k points with type flags/places/close time
+  for the checker)
 - **API**: `/api/equity?band=&state=&min_kids=&limit=` · `/api/sa2/:code` ·
   existing `/api/config|stats|pricing|services|geo`
 - **Story nº 2 "Where the deserts are"** (`dashboard/story/deserts/`): 7-step scrolly —
   the number, the method, growth corridors (11 of top-12 desert/constrained),
   IRSAD gradient, need×access matrix (196 both), 6pm cliff, takeaways. Story index updated.
   All in-story numbers are computed from equity.json/hours.json at load — no stale copy.
+
+**Choropleth bug fixed (17 Oct, late)** — the sa2-geo.json payload had never rendered:
+it lacked `type:"FeatureCollection"` (Mapbox GL silently drops such sources) and its
+rings were clockwise from the ABS shapefile (rendered as holes). Exporter now emits a
+proper FeatureCollection with `ST_ForcePolygonCCW` rings, and keeps full geometry for
+SA2s whose simplified area falls under ~1 km² (metro slivers like Melbourne CBD).
+Verified end-to-end with a headless browser: fill, legend, layer switch and hover
+tooltips all working at national and city zoom.
 
 ## Taxonomy / quarantine (unchanged)
 for-profit · nfp-community · nfp-other · govt-local · govt-state · unknown (rules in
@@ -98,6 +107,8 @@ for-profit · nfp-community · nfp-other · govt-local · govt-state · unknown 
 ## Running / pending when session paused
 - B1–B6 committed (`f37222f`) and pushed to `main`; Render deploy verified live —
   `/api/equity`, `/api/sa2/:code`, Equity tab and story nº 2 all return 200.
+- Equity choropleth payload fix (valid GeoJSON + CCW rings + small-SA2 fallback)
+  committed and verified in a headless browser before push; live check after deploy.
 - `/api/config` hardened to first-party pages only (Referer/Origin allowlist).
   **Owner action:** re-add the Mapbox URL restriction on the public token — it is
   currently unlocked and works from any origin.
