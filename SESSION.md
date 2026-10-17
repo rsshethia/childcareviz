@@ -1,4 +1,4 @@
-# ChildCareViz — session handoff (17 Oct 2026)
+# ChildCareViz — session handoff (17–18 Oct 2026)
 
 Live: https://childcareviz.onrender.com · Repo: https://github.com/rsshethia/childcareviz (`main`)
 
@@ -104,19 +104,34 @@ for-profit · nfp-community · nfp-other · govt-local · govt-state · unknown 
   the URL restriction is what keeps a copied key unusable elsewhere. /api/config only serves
   it to first-party pages.
 
-## Running / pending when session paused
+## Running / pending when session paused (18 Oct)
 - B1–B6 committed (`f37222f`) and pushed to `main`; Render deploy verified live —
   `/api/equity`, `/api/sa2/:code`, Equity tab and story nº 2 all return 200.
-- Equity choropleth payload fix (valid GeoJSON + CCW rings + small-SA2 fallback)
-  committed and verified in a headless browser before push; live check after deploy.
-- `/api/config` hardened to first-party pages only (Referer/Origin allowlist).
-  **Owner action:** re-add the Mapbox URL restriction on the public token — it is
-  currently unlocked and works from any origin.
-- Optional follow-ups: story nº 3, LGA rollup, PT catchments.
+- Equity choropleth fix `2745967` pushed + live-verified. Root cause: `sa2-geo.json` was
+  not valid GeoJSON (no `type` field → Mapbox silently dropped the source) and rings were
+  clockwise (rendered as holes). Export now: FeatureCollection + `ST_ForcePolygonCCW` +
+  full geometry for SA2s under ~1 km². Verified locally and on live in a headless
+  browser: fill, layer switch, hover tooltips all render.
+- `/api/config` hardened to first-party pages only (Referer/Origin allowlist). ✅
+- **Mapbox URL restriction — NOT active yet (re-verified 18 Oct)**: owner added the URL
+  in Mapbox, but the token still returns 200 from foreign/no referer. Recheck: the site
+  token ends `j8wg`; every account token shares the `pk.eyJ1IjoiZm9yY2VseW9wZW4i` prefix,
+  so it's easy to edit the wrong one — also click Save changes. Add
+  `https://childcareviz.onrender.com/` (+ `http://localhost:3000/` for local dev).
+  Verify: foreign referer → 401, onrender → 200.
+- **Equity tab copy rewrite — awaiting owner answers**: say "area" vs "SA2" in prose;
+  keep the word "desert" with a one-line gloss; plain first layer + collapsible method
+  details. Copy-only, then commit + push.
+- Front-end verification method (reusable): `npm i --no-save puppeteer-core` (nothing
+  added to package.json) + headless Edge
+  (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`) with
+  `--enable-unsafe-swiftshader`; capture screenshot + console + `queryRenderedFeatures`.
+  Quirk: at low zoom `queryRenderedFeatures` can return 0 fills while the choropleth is
+  visibly rendering — trust the screenshot. Scratch scripts deleted after use.
 
 ## Next up (in order)
-1. Final pipeline rerun + spot checks (Mickleham, Rockbank, Schofields, NT desert).
-2. Commit + push (feature: spatial access & equity) → verify Render deploy.
+1. Re-verify Mapbox URL restriction after owner saves → expect foreign referer 401.
+2. Equity tab copy simplification (3 answers) → implement, commit, push.
 3. Jev (`TYPESAFE_API_KEY`): residual unknowns + operator-name dedup.
 4. LGA rollup for council planners (needs SA2→LGA allocation table).
 5. Story nº 3 "Out of pocket, really" (CCS modelling).
